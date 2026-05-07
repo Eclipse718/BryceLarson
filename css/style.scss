@@ -1,0 +1,96 @@
+---
+---
+@import "minima";
+
+/* ── Fonts ── */
+body {
+  font-family: Georgia, "Times New Roman", serif;
+  background-color: #faf8f3;
+  color: #2c2c2c;
+}
+
+/* ── Hero section ── */
+.hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 480px;
+  padding: 4rem 3rem;
+  overflow: hidden;
+  border-radius: 4px;
+  margin-bottom: 3rem;
+  background-image: url("/website images/interior-of-library-at-the-university-of-washington-in-seattle.webp");
+  background-size: cover;
+  background-position: center;
+}
+
+/* Dark overlay so text is readable */
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, rgba(10, 8, 6, 0.80) 40%, rgba(10, 8, 6, 0.40) 100%);
+  z-index: 1;
+}
+
+.hero-left,
+.hero-right {
+  position: relative;
+  z-index: 2;
+}
+
+/* ── Name ── */
+.hero-name {
+  font-size: 3rem;
+  font-weight: normal;
+  color: #f5f0e8;
+  letter-spacing: 0.04em;
+  margin: 0 0 1rem 0;
+  line-height: 1.1;
+}
+
+/* ── Gold divider line ── */
+.hero-divider {
+  width: 48px;
+  height: 1px;
+  background-color: #c9a96e;
+  margin-bottom: 1.5rem;
+}
+
+/* ── LinkedIn icon link ── */
+.linkedin-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: #c9a96e;
+  font-size: 1rem;
+  text-decoration: none;
+  letter-spacing: 0.05em;
+  border: 1px solid rgba(201, 169, 110, 0.4);
+  padding: 0.5rem 1rem;
+  transition: color 0.25s ease, border-color 0.25s ease;
+}
+
+.linkedin-link:hover {
+  color: #e8c87a;
+  border-color: rgba(232, 200, 122, 0.7);
+  text-decoration: none;
+}
+
+/* ── LinkedIn SVG icon ── */
+.linkedin-icon {
+  width: 22px;
+  height: 22px;
+  fill: currentColor;
+}
+
+/* ── Circular photo ── */
+.hero-photo {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center top;
+  border: 2px solid #c9a96e;
+}
