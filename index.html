@@ -49,10 +49,6 @@
       }
     }
 
-    /* ======================
-       Top Bar
-    ====================== */
-
     .topbar {
       position: fixed;
       top: 0;
@@ -128,10 +124,6 @@
       color: #f0d899;
       transform: translateY(-1px);
     }
-
-    /* ======================
-       Scroll Container
-    ====================== */
 
     .scroll-container {
       position: fixed;
@@ -258,10 +250,6 @@
       letter-spacing: 0.05em;
     }
 
-    /* ======================
-       Sidebar
-    ====================== */
-
     .sidebar {
       position: fixed;
       right: 2rem;
@@ -300,6 +288,332 @@
     .sidebar-btn:hover:not(.active) {
       background: rgba(255, 255, 255, 0.08);
       transform: scale(1.08);
+    }
+
+    /* ======================
+       Projects Arcade Computer
+    ====================== */
+
+    .projects-stage {
+      width: min(980px, 95vw);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.15rem;
+    }
+
+    .projects-subtitle {
+      margin: 0;
+      color: #c9a96e;
+      font-size: 0.95rem;
+      letter-spacing: 0.08em;
+    }
+
+    .arcade-workstation {
+      width: min(900px, 94vw);
+      display: grid;
+      grid-template-columns: 1fr;
+      justify-items: center;
+      gap: 0.7rem;
+    }
+
+    .pixel-computer {
+      position: relative;
+      width: min(680px, 90vw);
+      padding: 1.1rem;
+      background: #d8c9a5;
+      border: 5px solid #2a1f1a;
+      box-shadow:
+        0 0 0 4px #8b7449,
+        0 18px 35px rgba(0, 0, 0, 0.45);
+      image-rendering: pixelated;
+    }
+
+    .pixel-computer::before {
+      content: "";
+      position: absolute;
+      left: 18%;
+      right: 18%;
+      bottom: -36px;
+      height: 32px;
+      background: #9d8557;
+      border: 4px solid #2a1f1a;
+      border-top: none;
+      z-index: -1;
+    }
+
+    .pixel-computer::after {
+      content: "";
+      position: absolute;
+      left: 12%;
+      right: 12%;
+      bottom: -54px;
+      height: 18px;
+      background: #6d5a3b;
+      border: 4px solid #2a1f1a;
+      z-index: -2;
+    }
+
+    .computer-screen {
+      position: relative;
+      min-height: 330px;
+      padding: 1.1rem;
+      background:
+        linear-gradient(rgba(119, 255, 168, 0.05) 50%, rgba(0, 0, 0, 0.08) 50%),
+        #07170d;
+      background-size: 100% 6px;
+      border: 5px solid #2a1f1a;
+      box-shadow:
+        inset 0 0 0 4px #153e22,
+        inset 0 0 28px rgba(119, 255, 168, 0.22);
+      color: #9dffb6;
+      font-family: "Courier New", monospace;
+      text-align: left;
+      overflow: hidden;
+    }
+
+    .computer-screen::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at center, transparent 50%, rgba(0, 0, 0, 0.35) 100%);
+      pointer-events: none;
+    }
+
+    .screen-header {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      padding-bottom: 0.7rem;
+      margin-bottom: 0.8rem;
+      border-bottom: 2px solid rgba(157, 255, 182, 0.45);
+      color: #d3ffd9;
+      font-size: 0.9rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .screen-body {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: minmax(180px, 0.88fr) minmax(220px, 1.12fr);
+      gap: 1.2rem;
+    }
+
+    .project-menu {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .project-menu li {
+      margin: 0 0 0.45rem;
+    }
+
+    .project-option {
+      width: 100%;
+      border: none;
+      background: transparent;
+      color: #9dffb6;
+      font: inherit;
+      text-align: left;
+      padding: 0.28rem 0.4rem;
+      cursor: pointer;
+      letter-spacing: 0.03em;
+    }
+
+    .project-option.active {
+      background: rgba(157, 255, 182, 0.14);
+      color: #ffffff;
+    }
+
+    .project-option.active::before {
+      content: "▶ ";
+      color: #f0d899;
+    }
+
+    .project-option:not(.active)::before {
+      content: "  ";
+    }
+
+    .project-detail {
+      padding: 0.75rem;
+      border: 2px solid rgba(157, 255, 182, 0.35);
+      background: rgba(0, 0, 0, 0.22);
+      min-height: 210px;
+    }
+
+    .project-detail h3 {
+      margin: 0 0 0.7rem;
+      color: #f0d899;
+      font-size: 1.1rem;
+      font-weight: normal;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .project-detail p {
+      margin: 0 0 0.8rem;
+      color: #c9ffd2;
+      font-size: 0.9rem;
+      line-height: 1.45;
+      letter-spacing: 0.02em;
+    }
+
+    .project-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 0.8rem;
+    }
+
+    .project-tag {
+      border: 1px solid rgba(157, 255, 182, 0.45);
+      padding: 0.18rem 0.38rem;
+      color: #9dffb6;
+      font-size: 0.75rem;
+    }
+
+    .project-link {
+      display: inline-block;
+      margin-top: 0.9rem;
+      color: #f0d899;
+      text-decoration: none;
+      letter-spacing: 0.05em;
+    }
+
+    .project-link:hover {
+      text-decoration: underline;
+    }
+
+    .controller-cable {
+      width: 8px;
+      height: 54px;
+      background: #161616;
+      border-left: 2px solid #333;
+      border-right: 2px solid #050505;
+    }
+
+    .arcade-controller {
+      width: min(560px, 88vw);
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      align-items: center;
+      gap: 1.2rem;
+      padding: 1rem 1.3rem;
+      background: #312845;
+      border: 5px solid #120f1f;
+      box-shadow:
+        0 0 0 4px #594c77,
+        0 16px 28px rgba(0, 0, 0, 0.35);
+    }
+
+    .dpad {
+      position: relative;
+      width: 116px;
+      height: 116px;
+      justify-self: center;
+    }
+
+    .dpad-btn {
+      position: absolute;
+      width: 38px;
+      height: 38px;
+      border: 3px solid #0a0a0a;
+      background: #1b1b1b;
+      color: #f5f0e8;
+      cursor: pointer;
+      font-size: 0.9rem;
+      box-shadow: inset -3px -3px 0 rgba(0, 0, 0, 0.45);
+    }
+
+    .dpad-btn:hover {
+      background: #303030;
+    }
+
+    .dpad-up {
+      top: 0;
+      left: 39px;
+    }
+
+    .dpad-down {
+      bottom: 0;
+      left: 39px;
+    }
+
+    .dpad-left {
+      top: 39px;
+      left: 0;
+    }
+
+    .dpad-right {
+      top: 39px;
+      right: 0;
+    }
+
+    .dpad-center {
+      position: absolute;
+      top: 39px;
+      left: 39px;
+      width: 38px;
+      height: 38px;
+      background: #1b1b1b;
+      border: 3px solid #0a0a0a;
+    }
+
+    .controller-label {
+      justify-self: center;
+      color: #c9a96e;
+      font-family: "Courier New", monospace;
+      font-size: 0.85rem;
+      letter-spacing: 0.1em;
+      text-align: center;
+      text-transform: uppercase;
+      line-height: 1.4;
+    }
+
+    .action-buttons {
+      justify-self: center;
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .action-btn {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      border: 4px solid #110c0c;
+      cursor: pointer;
+      color: white;
+      font-family: "Courier New", monospace;
+      font-weight: bold;
+      box-shadow:
+        inset -5px -5px 0 rgba(0, 0, 0, 0.25),
+        0 5px 0 rgba(0, 0, 0, 0.35);
+    }
+
+    .action-btn.select {
+      background: #b84a4a;
+    }
+
+    .action-btn.info {
+      background: #2f74b8;
+    }
+
+    .action-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .action-btn:active {
+      transform: translateY(3px);
+      box-shadow:
+        inset -3px -3px 0 rgba(0, 0, 0, 0.25),
+        0 2px 0 rgba(0, 0, 0, 0.35);
     }
 
     /* ======================
@@ -714,10 +1028,6 @@
       transform: translateY(-2px);
     }
 
-    /* ======================
-       Mobile
-    ====================== */
-
     @media screen and (max-width: 760px) {
       .topbar {
         height: 50px;
@@ -764,6 +1074,34 @@
         width: 38px;
         height: 38px;
         font-size: 1.1rem;
+      }
+
+      .pixel-computer {
+        padding: 0.75rem;
+      }
+
+      .computer-screen {
+        min-height: 315px;
+        padding: 0.8rem;
+      }
+
+      .screen-body {
+        grid-template-columns: 1fr;
+        gap: 0.8rem;
+      }
+
+      .project-detail {
+        min-height: auto;
+      }
+
+      .arcade-controller {
+        grid-template-columns: 1fr;
+        gap: 0.9rem;
+        width: min(360px, 86vw);
+      }
+
+      .controller-label {
+        order: -1;
       }
 
       .book-carousel {
@@ -934,9 +1272,56 @@
     </section>
 
     <section class="page-section" id="projects">
-      <div class="section-content">
+      <div class="section-content projects-stage">
         <h2>PROJECTS</h2>
-        <p>Coming soon.</p>
+        <p class="projects-subtitle">Use the arcade controls to browse.</p>
+
+        <div class="arcade-workstation">
+          <div class="pixel-computer">
+            <div class="computer-screen">
+              <div class="screen-header">
+                <span>BRYCE_OS / PROJECTS</span>
+                <span id="projectCounter">01 / 04</span>
+              </div>
+
+              <div class="screen-body">
+                <ul class="project-menu" id="projectMenu"></ul>
+
+                <div class="project-detail">
+                  <h3 id="projectTitle"></h3>
+                  <p id="projectDescription"></p>
+                  <div class="project-tags" id="projectTags"></div>
+                  <a class="project-link" id="projectLink" href="#" target="_blank" rel="noopener noreferrer">
+                    Open Project →
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="controller-cable"></div>
+
+          <div class="arcade-controller">
+            <div class="dpad">
+              <button class="dpad-btn dpad-up" type="button" aria-label="Move up">▲</button>
+              <button class="dpad-btn dpad-left" type="button" aria-label="Move left">◀</button>
+              <div class="dpad-center"></div>
+              <button class="dpad-btn dpad-right" type="button" aria-label="Move right">▶</button>
+              <button class="dpad-btn dpad-down" type="button" aria-label="Move down">▼</button>
+            </div>
+
+            <div class="controller-label">
+              Arcade<br>
+              Project<br>
+              Navigator
+            </div>
+
+            <div class="action-buttons">
+              <button class="action-btn select" type="button" aria-label="Open selected project">A</button>
+              <button class="action-btn info" type="button" aria-label="Next project">B</button>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -1039,6 +1424,144 @@
     const contactOpenBtn = document.querySelector('.contact-open-btn');
     const contactModal = document.querySelector('#contactModal');
     const contactCloseBtn = document.querySelector('.contact-close');
+
+    /* ======================
+       Projects Arcade Logic
+    ====================== */
+
+    const projectMenu = document.querySelector('#projectMenu');
+    const projectTitle = document.querySelector('#projectTitle');
+    const projectDescription = document.querySelector('#projectDescription');
+    const projectTags = document.querySelector('#projectTags');
+    const projectLink = document.querySelector('#projectLink');
+    const projectCounter = document.querySelector('#projectCounter');
+
+    const projectUpBtn = document.querySelector('.dpad-up');
+    const projectDownBtn = document.querySelector('.dpad-down');
+    const projectLeftBtn = document.querySelector('.dpad-left');
+    const projectRightBtn = document.querySelector('.dpad-right');
+    const projectSelectBtn = document.querySelector('.action-btn.select');
+    const projectInfoBtn = document.querySelector('.action-btn.info');
+
+    const projects = [
+      {
+        title: 'Digital Archive',
+        description: 'A prototype for organizing local history materials, metadata, and research notes into a browsable public-facing archive.',
+        tags: ['Archives', 'Metadata', 'Research'],
+        link: '#'
+      },
+      {
+        title: 'Seattle Reading Map',
+        description: 'An interactive map concept connecting books, libraries, neighborhoods, and literary history across Seattle.',
+        tags: ['Mapping', 'Seattle', 'Libraries'],
+        link: '#'
+      },
+      {
+        title: 'Collection Interface',
+        description: 'A minimal interface experiment for browsing curated collections with emphasis on clarity, hierarchy, and discoverability.',
+        tags: ['UX', 'Collections', 'Design'],
+        link: '#'
+      },
+      {
+        title: 'Personal Knowledge Base',
+        description: 'A private research system for collecting notes, sources, citations, and project ideas across long-term writing work.',
+        tags: ['Writing', 'Notes', 'Research'],
+        link: '#'
+      }
+    ];
+
+    let currentProject = 0;
+
+    function renderProjectMenu() {
+      projectMenu.innerHTML = '';
+
+      projects.forEach((project, index) => {
+        const li = document.createElement('li');
+        const button = document.createElement('button');
+
+        button.className = 'project-option';
+        button.type = 'button';
+        button.textContent = project.title;
+        button.classList.toggle('active', index === currentProject);
+
+        button.addEventListener('click', () => {
+          currentProject = index;
+          renderProject();
+        });
+
+        li.appendChild(button);
+        projectMenu.appendChild(li);
+      });
+    }
+
+    function renderProject() {
+      const project = projects[currentProject];
+
+      projectTitle.textContent = project.title;
+      projectDescription.textContent = project.description;
+      projectCounter.textContent = `${String(currentProject + 1).padStart(2, '0')} / ${String(projects.length).padStart(2, '0')}`;
+
+      projectTags.innerHTML = '';
+
+      project.tags.forEach((tag) => {
+        const span = document.createElement('span');
+        span.className = 'project-tag';
+        span.textContent = tag;
+        projectTags.appendChild(span);
+      });
+
+      projectLink.href = project.link;
+
+      renderProjectMenu();
+    }
+
+    function moveProject(direction) {
+      currentProject = (currentProject + direction + projects.length) % projects.length;
+      renderProject();
+    }
+
+    function openCurrentProject() {
+      const project = projects[currentProject];
+
+      if (project.link && project.link !== '#') {
+        window.open(project.link, '_blank', 'noopener,noreferrer');
+      }
+    }
+
+    projectUpBtn.addEventListener('click', () => moveProject(-1));
+    projectLeftBtn.addEventListener('click', () => moveProject(-1));
+    projectDownBtn.addEventListener('click', () => moveProject(1));
+    projectRightBtn.addEventListener('click', () => moveProject(1));
+    projectInfoBtn.addEventListener('click', () => moveProject(1));
+    projectSelectBtn.addEventListener('click', openCurrentProject);
+
+    document.addEventListener('keydown', (event) => {
+      const projectsSection = document.querySelector('#projects');
+      const rect = projectsSection.getBoundingClientRect();
+      const projectsVisible = rect.top < window.innerHeight && rect.bottom > 0;
+
+      if (!projectsVisible) {
+        return;
+      }
+
+      if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') {
+        moveProject(-1);
+      }
+
+      if (event.key === 'ArrowDown' || event.key === 'ArrowRight') {
+        moveProject(1);
+      }
+
+      if (event.key === 'Enter') {
+        openCurrentProject();
+      }
+    });
+
+    renderProject();
+
+    /* ======================
+       Writing Book Logic
+    ====================== */
 
     const prevBookBtn = document.querySelector('.book-control.prev');
     const nextBookBtn = document.querySelector('.book-control.next');
@@ -1190,6 +1713,10 @@
     });
 
     renderBook();
+
+    /* ======================
+       Page Navigation
+    ====================== */
 
     allPageNavBtns.forEach((btn) => {
       btn.addEventListener('click', () => {
