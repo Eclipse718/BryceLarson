@@ -6,56 +6,86 @@
   <title>Bryce Larson</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
     html, body {
       margin: 0;
       width: 100%;
       height: 100%;
-    }
-    body {
-      position: relative;
-      background-image: url("website-images/Suzzallo_Library_at_UW_9572958209-1030x773.jpg");
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-family: "Times New Roman", Times, serif;
       overflow: hidden;
+      font-family: "Times New Roman", Times, serif;
     }
-    body::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: #1B2133BF;
-      z-index: 1;
-    }
-    /* Fade in overlay */
+
+    /* ── Fade overlay ── */
     .fade-overlay {
       position: fixed;
       inset: 0;
       background: black;
-      z-index: 100;
-      animation: fadeOut 1.8s ease forwards;
+      z-index: 200;
+      animation: fadeOut 3s ease forwards;
+      pointer-events: none;
     }
     @keyframes fadeOut {
       0%   { opacity: 1; }
-      100% { opacity: 0; pointer-events: none; }
+      100% { opacity: 0; }
     }
-    .hero {
+
+    /* ── Pages wrapper ── */
+    .pages {
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+
+    /* ── Individual page ── */
+    .page {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.6s ease;
+    }
+    .page.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    /* ── Home page background ── */
+    #home {
+      background-image: url("website-images/Suzzallo_Library_at_UW_9572958209-1030x773.jpg");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+    #home::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-color: #1B2133BF;
+    }
+
+    /* ── Other pages ── */
+    #experience, #projects, #writing {
+      background-color: #0f1420;
+    }
+
+    /* ── Page content ── */
+    .page-content {
       position: relative;
       z-index: 2;
       text-align: center;
-      margin-bottom: 8vh;
+      color: white;
     }
-    h1 {
+
+    /* ── Home hero ── */
+    .hero h1 {
       color: white;
       font-size: 4rem;
       font-weight: normal;
-      letter-spacing: 0.65em;
+      letter-spacing: 0.2em;
       text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
       margin: 0 0 1.2rem 0;
     }
@@ -79,24 +109,149 @@
     .social-links a:hover {
       color: #f0d899;
     }
+
+    /* ── Other page placeholder text ── */
+    .page-content h2 {
+      font-size: 2.5rem;
+      font-weight: normal;
+      letter-spacing: 0.15em;
+      color: #f5f0e8;
+      margin: 0;
+    }
+    .page-content p {
+      color: #8a8a8a;
+      font-size: 1rem;
+      margin-top: 0.8rem;
+      letter-spacing: 0.05em;
+    }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      position: fixed;
+      left: 1.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 150;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+    .sidebar-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      font-size: 1.3rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.25s ease;
+    }
+    .sidebar-btn.active {
+      background: #1B2C52;
+    }
+    .sidebar-btn:hover:not(.active) {
+      background: rgba(255,255,255,0.08);
+    }
   </style>
 </head>
 <body>
+
   <div class="fade-overlay"></div>
-  <div class="hero">
-    <h1>BRYCE LARSON</h1>
-    <div class="divider"></div>
-    <div class="social-links">
-      <a href="https://linkedin.com/in/YOUR_USERNAME" target="_blank" aria-label="LinkedIn">
-        <i class="fa-brands fa-linkedin"></i>
-      </a>
-      <a href="https://instagram.com/YOUR_USERNAME" target="_blank" aria-label="Instagram">
-        <i class="fa-brands fa-instagram"></i>
-      </a>
-      <a href="https://github.com/Eclipse718" target="_blank" aria-label="GitHub">
-        <i class="fa-brands fa-github"></i>
-      </a>
-    </div>
+
+  <!-- Sidebar -->
+  <nav class="sidebar" aria-label="Page navigation">
+    <button class="sidebar-btn active" data-page="0" title="Home">🏠</button>
+    <button class="sidebar-btn" data-page="1" title="Experience">💼</button>
+    <button class="sidebar-btn" data-page="2" title="Projects">🚀</button>
+    <button class="sidebar-btn" data-page="3" title="Writing">📖</button>
+  </nav>
+
+  <!-- Pages -->
+  <div class="pages">
+
+    <section class="page active" id="home">
+      <div class="page-content hero">
+        <h1>BRYCE LARSON</h1>
+        <div class="divider"></div>
+        <div class="social-links">
+          <a href="https://linkedin.com/in/YOUR_USERNAME" target="_blank" aria-label="LinkedIn">
+            <i class="fa-brands fa-linkedin"></i>
+          </a>
+          <a href="https://instagram.com/YOUR_USERNAME" target="_blank" aria-label="Instagram">
+            <i class="fa-brands fa-instagram"></i>
+          </a>
+          <a href="https://github.com/Eclipse718" target="_blank" aria-label="GitHub">
+            <i class="fa-brands fa-github"></i>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" id="experience">
+      <div class="page-content">
+        <h2>EXPERIENCE</h2>
+        <p>Coming soon.</p>
+      </div>
+    </section>
+
+    <section class="page" id="projects">
+      <div class="page-content">
+        <h2>PROJECTS</h2>
+        <p>Coming soon.</p>
+      </div>
+    </section>
+
+    <section class="page" id="writing">
+      <div class="page-content">
+        <h2>WRITING</h2>
+        <p>Coming soon.</p>
+      </div>
+    </section>
+
   </div>
+
+  <script>
+    const pages = document.querySelectorAll('.page');
+    const btns = document.querySelectorAll('.sidebar-btn');
+    let current = 0;
+    let locked = false;
+
+    function goTo(index) {
+      if (index === current || locked) return;
+      locked = true;
+      pages[current].classList.remove('active');
+      btns[current].classList.remove('active');
+      current = index;
+      pages[current].classList.add('active');
+      btns[current].classList.add('active');
+      setTimeout(() => { locked = false; }, 700);
+    }
+
+    // Scroll wheel
+    window.addEventListener('wheel', (e) => {
+      if (locked) return;
+      if (e.deltaY > 0 && current < pages.length - 1) goTo(current + 1);
+      if (e.deltaY < 0 && current > 0) goTo(current - 1);
+    }, { passive: true });
+
+    // Touch swipe
+    let touchStartY = 0;
+    window.addEventListener('touchstart', (e) => { touchStartY = e.touches[0].clientY; });
+    window.addEventListener('touchend', (e) => {
+      const diff = touchStartY - e.changedTouches[0].clientY;
+      if (Math.abs(diff) < 40) return;
+      if (diff > 0 && current < pages.length - 1) goTo(current + 1);
+      if (diff < 0 && current > 0) goTo(current - 1);
+    });
+
+    // Sidebar buttons
+    btns.forEach(btn => {
+      btn.addEventListener('click', () => goTo(parseInt(btn.dataset.page)));
+    });
+  </script>
+
 </body>
 </html>
