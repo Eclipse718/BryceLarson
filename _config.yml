@@ -70,19 +70,4 @@ exclude:
   - README.md
   - node_modules/
   - vendor/
-A few notes:
-For the librarian aesthetic, the Minima classic skin with a serif font override goes a long way. You can add a assets/css/style.scss file with something like:
-scss---
----
-@import "minima";
 
-body {
-  font-family: "Georgia", "Times New Roman", serif;
-  color: #2c2c2c;
-  background-color: #faf8f3;  /* warm off-white, like aged paper */
-}
-
-h1, h2, h3 {
-  font-weight: normal;
-  letter-spacing: 0.02em;
-}
