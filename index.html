@@ -3,17 +3,11 @@
 <head>
   <meta charset="UTF-8">
 
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>Bryce Larson</title>
 
-  <link
-    rel="stylesheet"
-    href="css/style.css"
-  >
+  <link rel="stylesheet" href="css/style.css?v=6">
 
   <link
     rel="stylesheet"
@@ -25,7 +19,6 @@
 
   <div class="fade-overlay"></div>
 
-  <!-- Top Bar -->
   <nav class="topbar" aria-label="Top navigation">
     <div class="topbar-brand">
       <img
@@ -34,42 +27,42 @@
         class="topbar-photo"
       >
 
-      <span class="topbar-name">
-        Bryce Larson
-      </span>
+      <span class="topbar-name">Bryce Larson</span>
     </div>
 
     <div class="topbar-links">
-      <button class="topbar-btn active" data-index="0" title="Home">
+      <button class="topbar-btn active" data-index="0" title="Home" type="button">
         🏠 <span>Home</span>
       </button>
 
-      <button class="topbar-btn" data-index="1" title="Experience">
+      <button class="topbar-btn" data-index="1" title="Experience" type="button">
         💼 <span>Experience</span>
       </button>
 
-      <button class="topbar-btn" data-index="2" title="Projects">
+      <button class="topbar-btn" data-index="2" title="Projects" type="button">
         🚀 <span>Projects</span>
       </button>
 
-      <button class="topbar-btn" data-index="3" title="Writing">
+      <button class="topbar-btn" data-index="3" title="Writing" type="button">
         📖 <span>Writing</span>
+      </button>
+
+      <button class="topbar-btn contact-open-btn" title="Contact" type="button">
+        ☎️ <span>Contact</span>
       </button>
     </div>
   </nav>
 
-  <!-- Sidebar -->
   <nav class="sidebar" aria-label="Side page navigation">
-    <button class="sidebar-btn active" data-index="0" title="Home">🏠</button>
-    <button class="sidebar-btn" data-index="1" title="Experience">💼</button>
-    <button class="sidebar-btn" data-index="2" title="Projects">🚀</button>
-    <button class="sidebar-btn" data-index="3" title="Writing">📖</button>
+    <button class="sidebar-btn active" data-index="0" title="Home" type="button">🏠</button>
+    <button class="sidebar-btn" data-index="1" title="Experience" type="button">💼</button>
+    <button class="sidebar-btn" data-index="2" title="Projects" type="button">🚀</button>
+    <button class="sidebar-btn" data-index="3" title="Writing" type="button">📖</button>
   </nav>
 
-  <!-- Scroll Container -->
   <main class="scroll-container" id="scroller">
 
-    <section class="page" id="home">
+    <section class="page-section" id="home">
       <div class="section-content hero">
         <h1>BRYCE LARSON</h1>
 
@@ -106,7 +99,7 @@
       </div>
     </section>
 
-    <section class="page" id="experience">
+    <section class="page-section" id="experience">
       <div class="section-content experience-content">
         <h2>EXPERIENCE</h2>
 
@@ -146,45 +139,322 @@
       </div>
     </section>
 
-    <section class="page" id="projects">
+    <section class="page-section" id="projects">
       <div class="section-content">
         <h2>PROJECTS</h2>
         <p>Coming soon.</p>
       </div>
     </section>
 
-    <section class="page" id="writing">
-      <div class="section-content">
+    <section class="page-section" id="writing">
+      <div class="section-content writing-stage">
         <h2>WRITING</h2>
-        <p>Coming soon.</p>
+
+        <p class="writing-subtitle">
+          Browse the archive.
+        </p>
+
+        <div class="book-carousel" aria-label="Writing archive book carousel">
+          <button class="book-control prev" type="button" aria-label="Previous page">
+            <i class="fa-solid fa-chevron-left"></i>
+          </button>
+
+          <div class="book-shell">
+            <div class="book-base">
+              <div class="book-page left">
+                <h3 id="leftPageTitle">Essays</h3>
+                <ul id="leftPageList"></ul>
+                <span class="page-number" id="leftPageNumber">1</span>
+              </div>
+
+              <div class="book-page right">
+                <h3 id="rightPageTitle">Notes</h3>
+                <ul id="rightPageList"></ul>
+                <span class="page-number" id="rightPageNumber">2</span>
+              </div>
+            </div>
+
+            <div class="turning-page" id="turningPage"></div>
+            <div class="book-shadow"></div>
+          </div>
+
+          <button class="book-control next" type="button" aria-label="Next page">
+            <i class="fa-solid fa-chevron-right"></i>
+          </button>
+
+          <div class="book-dots" id="bookDots" aria-label="Book page indicators"></div>
+        </div>
       </div>
     </section>
 
   </main>
 
-  <script>
-    const pages = document.querySelectorAll('.page');
-    const topbarBtns = document.querySelectorAll('.topbar-btn');
-    const sidebarBtns = document.querySelectorAll('.sidebar-btn');
-    const allNavBtns = document.querySelectorAll('.topbar-btn, .sidebar-btn');
+  <div class="contact-modal" id="contactModal" aria-hidden="true">
+    <div class="contact-card" role="dialog" aria-modal="true" aria-labelledby="contactTitle">
+      <button class="contact-close" type="button" aria-label="Close contact information">
+        ×
+      </button>
 
-    allNavBtns.forEach(btn => {
+      <h2 id="contactTitle">Contact Information</h2>
+
+      <div class="contact-row">
+        <i class="fa-solid fa-envelope"></i>
+        <a href="mailto:brycelarson718@gmail.com">brycelarson718@gmail.com</a>
+      </div>
+
+      <div class="contact-row">
+        <i class="fa-solid fa-location-dot"></i>
+        <span>Seattle, Washington</span>
+      </div>
+
+      <div class="contact-socials">
+        <a
+          href="https://instagram.com/YOUR_USERNAME"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Instagram"
+        >
+          <i class="fa-brands fa-instagram"></i>
+        </a>
+
+        <a
+          href="https://linkedin.com/in/YOUR_USERNAME"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="LinkedIn"
+        >
+          <i class="fa-brands fa-linkedin"></i>
+        </a>
+
+        <a
+          href="https://github.com/Eclipse718"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="GitHub"
+        >
+          <i class="fa-brands fa-github"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const scroller = document.querySelector('#scroller');
+    const pages = document.querySelectorAll('.page-section');
+    const topbarPageBtns = document.querySelectorAll('.topbar-btn[data-index]');
+    const sidebarBtns = document.querySelectorAll('.sidebar-btn');
+    const allPageNavBtns = document.querySelectorAll('.topbar-btn[data-index], .sidebar-btn');
+
+    const contactOpenBtn = document.querySelector('.contact-open-btn');
+    const contactModal = document.querySelector('#contactModal');
+    const contactCloseBtn = document.querySelector('.contact-close');
+
+    const prevBookBtn = document.querySelector('.book-control.prev');
+    const nextBookBtn = document.querySelector('.book-control.next');
+    const turningPage = document.querySelector('#turningPage');
+    const bookDots = document.querySelector('#bookDots');
+
+    const leftPageTitle = document.querySelector('#leftPageTitle');
+    const rightPageTitle = document.querySelector('#rightPageTitle');
+    const leftPageList = document.querySelector('#leftPageList');
+    const rightPageList = document.querySelector('#rightPageList');
+    const leftPageNumber = document.querySelector('#leftPageNumber');
+    const rightPageNumber = document.querySelector('#rightPageNumber');
+
+    const spreads = [
+      {
+        leftTitle: 'Essays',
+        leftItems: [
+          ['The Library as Memory', '#'],
+          ['Notes on Research and Attention', '#'],
+          ['Curating the Digital Shelf', '#'],
+          ['Public Knowledge and Place', '#']
+        ],
+        rightTitle: 'Notes',
+        rightItems: [
+          ['Reading in the Stacks', '#'],
+          ['A Field Guide to Quiet Spaces', '#'],
+          ['Cataloging What Remains', '#'],
+          ['Archives, Margins, and Metadata', '#']
+        ]
+      },
+      {
+        leftTitle: 'Research',
+        leftItems: [
+          ['Classification and Care', '#'],
+          ['Indexes, Archives, and Access', '#'],
+          ['The Social Life of Metadata', '#'],
+          ['Preservation as Practice', '#']
+        ],
+        rightTitle: 'Reviews',
+        rightItems: [
+          ['On Quiet Rooms', '#'],
+          ['The Book as Interface', '#'],
+          ['Libraries After Midnight', '#'],
+          ['Margins and Footnotes', '#']
+        ]
+      },
+      {
+        leftTitle: 'Projects',
+        leftItems: [
+          ['Digital Collections Study', '#'],
+          ['Seattle Reading Map', '#'],
+          ['Personal Archive Notes', '#'],
+          ['Open Bibliography Draft', '#']
+        ],
+        rightTitle: 'Fragments',
+        rightItems: [
+          ['A Note on Place', '#'],
+          ['Small Catalogs', '#'],
+          ['The Shape of a Shelf', '#'],
+          ['Future Reading List', '#']
+        ]
+      }
+    ];
+
+    let currentSpread = 0;
+    let isTurning = false;
+
+    function renderList(container, items) {
+      container.innerHTML = '';
+
+      items.forEach(([title, href]) => {
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+
+        a.textContent = title;
+        a.href = href;
+
+        li.appendChild(a);
+        container.appendChild(li);
+      });
+    }
+
+    function renderBook() {
+      const spread = spreads[currentSpread];
+
+      leftPageTitle.textContent = spread.leftTitle;
+      rightPageTitle.textContent = spread.rightTitle;
+
+      renderList(leftPageList, spread.leftItems);
+      renderList(rightPageList, spread.rightItems);
+
+      leftPageNumber.textContent = String(currentSpread * 2 + 1);
+      rightPageNumber.textContent = String(currentSpread * 2 + 2);
+
+      prevBookBtn.disabled = currentSpread === 0;
+      nextBookBtn.disabled = currentSpread === spreads.length - 1;
+
+      const dots = bookDots.querySelectorAll('.book-dot');
+
+      dots.forEach((dot, index) => {
+        dot.classList.toggle('active', index === currentSpread);
+      });
+    }
+
+    function turnBook(direction, targetSpread) {
+      if (
+        isTurning ||
+        targetSpread < 0 ||
+        targetSpread >= spreads.length ||
+        targetSpread === currentSpread
+      ) {
+        return;
+      }
+
+      isTurning = true;
+
+      turningPage.classList.remove('forward', 'backward');
+      void turningPage.offsetWidth;
+      turningPage.classList.add(direction);
+
+      window.setTimeout(() => {
+        currentSpread = targetSpread;
+        renderBook();
+      }, 330);
+
+      window.setTimeout(() => {
+        turningPage.classList.remove('forward', 'backward');
+        isTurning = false;
+      }, 720);
+    }
+
+    spreads.forEach((_, index) => {
+      const dot = document.createElement('button');
+      dot.className = 'book-dot';
+      dot.type = 'button';
+      dot.setAttribute('aria-label', `Go to writing spread ${index + 1}`);
+
+      dot.addEventListener('click', () => {
+        if (index > currentSpread) {
+          turnBook('forward', index);
+        } else if (index < currentSpread) {
+          turnBook('backward', index);
+        }
+      });
+
+      bookDots.appendChild(dot);
+    });
+
+    prevBookBtn.addEventListener('click', () => {
+      turnBook('backward', currentSpread - 1);
+    });
+
+    nextBookBtn.addEventListener('click', () => {
+      turnBook('forward', currentSpread + 1);
+    });
+
+    renderBook();
+
+    allPageNavBtns.forEach((btn) => {
       btn.addEventListener('click', () => {
-        const index = parseInt(btn.dataset.index, 10);
-        pages[index].scrollIntoView({ behavior: 'smooth' });
+        const index = Number.parseInt(btn.dataset.index, 10);
+
+        if (pages[index]) {
+          pages[index].scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
       });
     });
 
+    contactOpenBtn.addEventListener('click', () => {
+      contactModal.classList.add('open');
+      contactModal.setAttribute('aria-hidden', 'false');
+      contactOpenBtn.classList.add('active');
+    });
+
+    function closeContactModal() {
+      contactModal.classList.remove('open');
+      contactModal.setAttribute('aria-hidden', 'true');
+      contactOpenBtn.classList.remove('active');
+    }
+
+    contactCloseBtn.addEventListener('click', closeContactModal);
+
+    contactModal.addEventListener('click', (event) => {
+      if (event.target === contactModal) {
+        closeContactModal();
+      }
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && contactModal.classList.contains('open')) {
+        closeContactModal();
+      }
+    });
+
     const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
+      entries.forEach((entry) => {
         if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
           const index = Array.from(pages).indexOf(entry.target);
 
-          topbarBtns.forEach(btn => btn.classList.remove('active'));
-          sidebarBtns.forEach(btn => btn.classList.remove('active'));
+          topbarPageBtns.forEach((btn) => btn.classList.remove('active'));
+          sidebarBtns.forEach((btn) => btn.classList.remove('active'));
 
-          if (topbarBtns[index]) {
-            topbarBtns[index].classList.add('active');
+          if (topbarPageBtns[index]) {
+            topbarPageBtns[index].classList.add('active');
           }
 
           if (sidebarBtns[index]) {
@@ -192,9 +462,12 @@
           }
         }
       });
-    }, { threshold: 0.5 });
+    }, {
+      threshold: 0.5,
+      root: scroller
+    });
 
-    pages.forEach(page => observer.observe(page));
+    pages.forEach((page) => observer.observe(page));
   </script>
 
 </body>
