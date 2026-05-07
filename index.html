@@ -1,70 +1,342 @@
----
-layout: default
-title: Bryce Larson
----
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bryce Larson</title>
 
-<nav class="topbar">
-  <div class="topbar-left">
-    <img
-      src="/website-images/circlecroppedme.png"
-      alt="Bryce Larson"
-      class="topbar-photo"
-    >
-    <span class="topbar-name">Bryce Larson</span>
-  </div>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-  <div class="topbar-links">
-    <a href="#experience">Experience</a>
-    <a href="#projects">Projects</a>
-    <a href="#writing">Writing</a>
-  </div>
-</nav>
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
 
-<section class="hero">
-  <div class="hero-overlay"></div>
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: "Times New Roman", Times, serif;
+      background: #0f1420;
+    }
 
-  <div class="hero-content">
-    <div class="hero-left">
-      <h1 class="hero-name">Bryce Larson</h1>
+    .fade-overlay {
+      position: fixed;
+      inset: 0;
+      background: black;
+      z-index: 200;
+      animation: fadeOut 3s ease forwards;
+      pointer-events: none;
+    }
 
-      <div class="hero-divider"></div>
+    @keyframes fadeOut {
+      from { opacity: 1; }
+      to { opacity: 0; }
+    }
 
-      <p class="hero-tagline">
-        Computer Science student at the University of Washington focused on
-        software engineering, machine learning, and building thoughtful systems.
-      </p>
+    /* Top Bar */
 
-      <a
-        class="linkedin-link"
-        href="https://linkedin.com/in/YOUR_USERNAME"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        LinkedIn
-      </a>
-    </div>
+    .topbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 68px;
+      z-index: 150;
 
-    <div class="hero-right">
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      padding: 0 2rem;
+
+      background: rgba(15, 20, 32, 0.9);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(201, 169, 110, 0.35);
+    }
+
+    .topbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+
+      color: #f5f0e8;
+      font-size: 1.25rem;
+      letter-spacing: 0.08em;
+      white-space: nowrap;
+    }
+
+    .topbar-photo {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      object-fit: cover;
+      object-position: center top;
+      border: 2px solid #c9a96e;
+      background: white;
+    }
+
+    .topbar-links {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .topbar-btn {
+      border: none;
+      background: transparent;
+      color: #c9a96e;
+      cursor: pointer;
+
+      font-family: inherit;
+      font-size: 1rem;
+
+      padding: 0.55rem 0.9rem;
+      border-radius: 999px;
+
+      transition: background 0.25s ease, color 0.25s ease;
+    }
+
+    .topbar-btn.active {
+      background: #1B2C52;
+      color: #f5f0e8;
+    }
+
+    .topbar-btn:hover:not(.active) {
+      background: rgba(255,255,255,0.08);
+      color: #f0d899;
+    }
+
+    /* Scroll container */
+
+    .scroll-container {
+      width: 100%;
+      height: 100vh;
+      overflow-y: scroll;
+      scroll-snap-type: y mandatory;
+      scrollbar-width: thin;
+      scrollbar-color: #c9a96e #1a1a2e;
+    }
+
+    .scroll-container::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .scroll-container::-webkit-scrollbar-track {
+      background: #1a1a2e;
+    }
+
+    .scroll-container::-webkit-scrollbar-thumb {
+      background-color: #c9a96e;
+      border-radius: 3px;
+    }
+
+    .page {
+      width: 100%;
+      height: 100vh;
+      scroll-snap-align: center;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      position: relative;
+      padding-top: 68px;
+    }
+
+    #home {
+      background-image: url("website-images/Suzzallo_Library_at_UW_9572958209-1030x773.jpg");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    #home::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-color: #1B2133BF;
+    }
+
+    #experience,
+    #projects,
+    #writing {
+      background-color: #0f1420;
+    }
+
+    .page-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      color: white;
+    }
+
+    .hero h1 {
+      color: white;
+      font-size: 4rem;
+      font-weight: normal;
+      letter-spacing: 0.2em;
+      text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
+      margin: 0 0 1.2rem 0;
+    }
+
+    .divider {
+      width: 150px;
+      height: 1px;
+      background-color: #c9a96e;
+      margin: 0 auto 1.4rem auto;
+    }
+
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 1.8rem;
+    }
+
+    .social-links a {
+      color: #c9a96e;
+      font-size: 2.4rem;
+      text-decoration: none;
+      transition: color 0.25s ease;
+    }
+
+    .social-links a:hover {
+      color: #f0d899;
+    }
+
+    .page-content h2 {
+      font-size: 2.5rem;
+      font-weight: normal;
+      letter-spacing: 0.15em;
+      color: #f5f0e8;
+      margin: 0;
+    }
+
+    .page-content p {
+      color: #8a8a8a;
+      font-size: 1rem;
+      margin-top: 0.8rem;
+      letter-spacing: 0.05em;
+    }
+
+    @media screen and (max-width: 700px) {
+      .topbar {
+        height: auto;
+        min-height: 68px;
+        padding: 0.8rem 1rem;
+        flex-direction: column;
+        gap: 0.7rem;
+      }
+
+      .page {
+        padding-top: 110px;
+      }
+
+      .topbar-links {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .hero h1 {
+        font-size: 2.6rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="fade-overlay"></div>
+
+  <nav class="topbar" aria-label="Page navigation">
+    <div class="topbar-brand">
       <img
-        src="/website-images/circlecroppedme.png"
+        src="website-images/circlecroppedme.png"
         alt="Bryce Larson"
-        class="hero-photo"
+        class="topbar-photo"
       >
+      <span>Bryce Larson</span>
     </div>
+
+    <div class="topbar-links">
+      <button class="topbar-btn active" data-index="0">Home</button>
+      <button class="topbar-btn" data-index="1">Experience</button>
+      <button class="topbar-btn" data-index="2">Projects</button>
+      <button class="topbar-btn" data-index="3">Writing</button>
+    </div>
+  </nav>
+
+  <div class="scroll-container" id="scroller">
+
+    <section class="page" id="home">
+      <div class="page-content hero">
+        <h1>BRYCE LARSON</h1>
+        <div class="divider"></div>
+
+        <div class="social-links">
+          <a href="https://linkedin.com/in/YOUR_USERNAME" target="_blank" aria-label="LinkedIn">
+            <i class="fa-brands fa-linkedin"></i>
+          </a>
+
+          <a href="https://instagram.com/YOUR_USERNAME" target="_blank" aria-label="Instagram">
+            <i class="fa-brands fa-instagram"></i>
+          </a>
+
+          <a href="https://github.com/Eclipse718" target="_blank" aria-label="GitHub">
+            <i class="fa-brands fa-github"></i>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" id="experience">
+      <div class="page-content">
+        <h2>EXPERIENCE</h2>
+        <p>Coming soon.</p>
+      </div>
+    </section>
+
+    <section class="page" id="projects">
+      <div class="page-content">
+        <h2>PROJECTS</h2>
+        <p>Coming soon.</p>
+      </div>
+    </section>
+
+    <section class="page" id="writing">
+      <div class="page-content">
+        <h2>WRITING</h2>
+        <p>Coming soon.</p>
+      </div>
+    </section>
+
   </div>
-</section>
 
-<section id="experience" class="section">
-  <h2>Experience</h2>
-  <p>Coming soon.</p>
-</section>
+  <script>
+    const pages = document.querySelectorAll('.page');
+    const btns = document.querySelectorAll('.topbar-btn');
 
-<section id="projects" class="section">
-  <h2>Projects</h2>
-  <p>Coming soon.</p>
-</section>
+    btns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const index = parseInt(btn.dataset.index);
+        pages[index].scrollIntoView({ behavior: 'smooth' });
+      });
+    });
 
-<section id="writing" class="section">
-  <h2>Writing</h2>
-  <p>Coming soon.</p>
-</section>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
+          const index = Array.from(pages).indexOf(entry.target);
+
+          btns.forEach(btn => btn.classList.remove('active'));
+          btns[index].classList.add('active');
+        }
+      });
+    }, { threshold: 0.5 });
+
+    pages.forEach(page => observer.observe(page));
+  </script>
+
+</body>
+</html>
