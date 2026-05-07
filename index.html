@@ -1,142 +1,170 @@
 ---
-layout: default
+layout: null
 title: Bryce Larson
 ---
 
-<div class="fade-overlay"></div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
 
-<nav class="topbar" aria-label="Top navigation">
-  <div class="topbar-brand">
-    <img
-      src="website-images/circlecroppedme.png"
-      alt="Bryce Larson"
-      class="topbar-photo"
-    >
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
 
-    <span class="topbar-name">
-      Bryce Larson
-    </span>
-  </div>
+  <title>Bryce Larson</title>
 
-  <div class="topbar-links">
-    <button class="topbar-btn active" data-index="0" title="Home">
-      🏠 <span>Home</span>
-    </button>
+  <link
+    rel="stylesheet"
+    href="{{ '/css/style.css' | relative_url }}"
+  >
 
-    <button class="topbar-btn" data-index="1" title="Experience">
-      💼 <span>Experience</span>
-    </button>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+  >
+</head>
 
-    <button class="topbar-btn" data-index="2" title="Projects">
-      🚀 <span>Projects</span>
-    </button>
+<body>
 
-    <button class="topbar-btn" data-index="3" title="Writing">
-      📖 <span>Writing</span>
-    </button>
-  </div>
-</nav>
+  <div class="fade-overlay"></div>
 
-<nav class="sidebar" aria-label="Side page navigation">
-  <button class="sidebar-btn active" data-index="0" title="Home">🏠</button>
-  <button class="sidebar-btn" data-index="1" title="Experience">💼</button>
-  <button class="sidebar-btn" data-index="2" title="Projects">🚀</button>
-  <button class="sidebar-btn" data-index="3" title="Writing">📖</button>
-</nav>
+  <nav class="topbar" aria-label="Top navigation">
+    <div class="topbar-brand">
+      <img
+        src="{{ '/website-images/circlecroppedme.png' | relative_url }}"
+        alt="Bryce Larson"
+        class="topbar-photo"
+      >
 
-<div class="scroll-container" id="scroller">
+      <span class="topbar-name">
+        Bryce Larson
+      </span>
+    </div>
 
-  <section class="page" id="home">
-    <div class="section-content hero">
-      <h1>BRYCE LARSON</h1>
+    <div class="topbar-links">
+      <button class="topbar-btn active" data-index="0" title="Home">
+        🏠 <span>Home</span>
+      </button>
 
-      <div class="divider"></div>
+      <button class="topbar-btn" data-index="1" title="Experience">
+        💼 <span>Experience</span>
+      </button>
 
-      <div class="social-links">
-        <a
-          href="https://linkedin.com/in/YOUR_USERNAME"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="LinkedIn"
-        >
-          <i class="fa-brands fa-linkedin"></i>
-        </a>
+      <button class="topbar-btn" data-index="2" title="Projects">
+        🚀 <span>Projects</span>
+      </button>
 
-        <a
-          href="https://instagram.com/YOUR_USERNAME"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="Instagram"
-        >
-          <i class="fa-brands fa-instagram"></i>
-        </a>
+      <button class="topbar-btn" data-index="3" title="Writing">
+        📖 <span>Writing</span>
+      </button>
+    </div>
+  </nav>
 
-        <a
-          href="https://github.com/Eclipse718"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="GitHub"
-        >
-          <i class="fa-brands fa-github"></i>
-        </a>
+  <nav class="sidebar" aria-label="Side page navigation">
+    <button class="sidebar-btn active" data-index="0" title="Home">🏠</button>
+    <button class="sidebar-btn" data-index="1" title="Experience">💼</button>
+    <button class="sidebar-btn" data-index="2" title="Projects">🚀</button>
+    <button class="sidebar-btn" data-index="3" title="Writing">📖</button>
+  </nav>
+
+  <main class="scroll-container" id="scroller">
+
+    <section class="page" id="home">
+      <div class="section-content hero">
+        <h1>BRYCE LARSON</h1>
+
+        <div class="divider"></div>
+
+        <div class="social-links">
+          <a
+            href="https://linkedin.com/in/YOUR_USERNAME"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="LinkedIn"
+          >
+            <i class="fa-brands fa-linkedin"></i>
+          </a>
+
+          <a
+            href="https://instagram.com/YOUR_USERNAME"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Instagram"
+          >
+            <i class="fa-brands fa-instagram"></i>
+          </a>
+
+          <a
+            href="https://github.com/Eclipse718"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="GitHub"
+          >
+            <i class="fa-brands fa-github"></i>
+          </a>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <section class="page" id="experience">
-    <div class="section-content">
-      <h2>EXPERIENCE</h2>
-      <p>Coming soon.</p>
-    </div>
-  </section>
+    <section class="page" id="experience">
+      <div class="section-content">
+        <h2>EXPERIENCE</h2>
+        <p>Coming soon.</p>
+      </div>
+    </section>
 
-  <section class="page" id="projects">
-    <div class="section-content">
-      <h2>PROJECTS</h2>
-      <p>Coming soon.</p>
-    </div>
-  </section>
+    <section class="page" id="projects">
+      <div class="section-content">
+        <h2>PROJECTS</h2>
+        <p>Coming soon.</p>
+      </div>
+    </section>
 
-  <section class="page" id="writing">
-    <div class="section-content">
-      <h2>WRITING</h2>
-      <p>Coming soon.</p>
-    </div>
-  </section>
+    <section class="page" id="writing">
+      <div class="section-content">
+        <h2>WRITING</h2>
+        <p>Coming soon.</p>
+      </div>
+    </section>
 
-</div>
+  </main>
 
-<script>
-  const pages = document.querySelectorAll('.page');
-  const topbarBtns = document.querySelectorAll('.topbar-btn');
-  const sidebarBtns = document.querySelectorAll('.sidebar-btn');
-  const allNavBtns = document.querySelectorAll('.topbar-btn, .sidebar-btn');
+  <script>
+    const pages = document.querySelectorAll('.page');
+    const topbarBtns = document.querySelectorAll('.topbar-btn');
+    const sidebarBtns = document.querySelectorAll('.sidebar-btn');
+    const allNavBtns = document.querySelectorAll('.topbar-btn, .sidebar-btn');
 
-  allNavBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const index = parseInt(btn.dataset.index, 10);
-      pages[index].scrollIntoView({ behavior: 'smooth' });
+    allNavBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const index = parseInt(btn.dataset.index, 10);
+        pages[index].scrollIntoView({ behavior: 'smooth' });
+      });
     });
-  });
 
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
-        const index = Array.from(pages).indexOf(entry.target);
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
+          const index = Array.from(pages).indexOf(entry.target);
 
-        topbarBtns.forEach(btn => btn.classList.remove('active'));
-        sidebarBtns.forEach(btn => btn.classList.remove('active'));
+          topbarBtns.forEach(btn => btn.classList.remove('active'));
+          sidebarBtns.forEach(btn => btn.classList.remove('active'));
 
-        if (topbarBtns[index]) {
-          topbarBtns[index].classList.add('active');
+          if (topbarBtns[index]) {
+            topbarBtns[index].classList.add('active');
+          }
+
+          if (sidebarBtns[index]) {
+            sidebarBtns[index].classList.add('active');
+          }
         }
+      });
+    }, { threshold: 0.5 });
 
-        if (sidebarBtns[index]) {
-          sidebarBtns[index].classList.add('active');
-        }
-      }
-    });
-  }, { threshold: 0.5 });
+    pages.forEach(page => observer.observe(page));
+  </script>
 
-  pages.forEach(page => observer.observe(page));
-</script>
+</body>
+</html>
