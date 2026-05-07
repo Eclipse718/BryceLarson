@@ -1,73 +1,60 @@
-# _config.yml
-
-# --- Site Info ---
-title: "Your Name"
+title: "Bryce Larson"
 tagline: "Librarian · Researcher · Curator"
 description: >
-  Personal portfolio and writing of [Your Name].
-  Exploring ideas at the intersection of knowledge, craft, and curiosity.
-baseurl: ""          # Leave empty for username.github.io sites
+  Personal portfolio and writing of Bryce Larson.
+
+baseurl: ""
 url: "https://yourusername.github.io"
 
-# --- Author ---
 author:
-  name: "Your Name"
+  name: "Bryce Larson"
   email: "you@example.com"
 
-# --- Theme ---
 theme: minima
-minima:
-  skin: "classic"      # Options: classic, dark, solarized, solarized-dark
 
-# --- Navigation ---
+minima:
+  skin: classic
+
+  social_links:
+    - { platform: github, user_url: "https://github.com/yourusername" }
+    - { platform: linkedin, user_url: "https://linkedin.com/in/yourprofile" }
+
 header_pages:
   - about.md
   - writing.md
   - projects.md
   - contact.md
 
-# --- Social Links (shown in footer) ---
-minima:
-  social_links:
-    - { platform: github,   user_url: "https://github.com/yourusername" }
-    - { platform: linkedin, user_url: "https://linkedin.com/in/yourprofile" }
-
-# --- Blog / Posts ---
 show_excerpts: true
 permalink: /writing/:year/:month/:day/:title/
 
-# --- Plugins (all supported by GitHub Pages) ---
 plugins:
   - jekyll-feed
   - jekyll-seo-tag
   - jekyll-sitemap
 
-# --- Markdown & Syntax ---
 markdown: kramdown
 highlighter: rouge
+
 kramdown:
   input: GFM
   syntax_highlighter: rouge
 
-# --- Defaults ---
 defaults:
   - scope:
       path: ""
       type: "posts"
     values:
       layout: "post"
-      author: "Your Name"
+
   - scope:
       path: ""
       type: "pages"
     values:
       layout: "page"
 
-# --- Exclude from build ---
 exclude:
   - Gemfile
   - Gemfile.lock
-  - README.md
-  - node_modules/
-  - vendor/
-
+  - node_modules
+  - vendor
