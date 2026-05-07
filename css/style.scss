@@ -3,38 +3,53 @@
 
 @import "minima";
 
-/* Page background */
+/* ======================
+   Global
+====================== */
+
 body {
-  background: #faf8f3;
-  font-family: Georgia, serif;
+  background-color: #faf8f3;
+  color: #2c2c2c;
+  font-family: Georgia, "Times New Roman", serif;
 }
 
-/* Hero */
+/* ======================
+   Hero Section
+====================== */
+
 .hero {
   position: relative;
 
   margin-top: 2rem;
   margin-bottom: 3rem;
 
-  border-radius: 8px;
+  border-radius: 6px;
   overflow: hidden;
 
-  background-image: url("/assets/images/library.webp");
+  min-height: 520px;
+
+  background-image: url("/website-images/interior-of-library-at-the-university-of-washington-in-seattle.webp");
   background-size: cover;
   background-position: center;
-
-  min-height: 520px;
 }
 
-/* Overlay */
+/* Dark overlay */
+
 .hero-overlay {
   position: absolute;
   inset: 0;
 
-  background: rgba(0, 0, 0, 0.45);
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.78) 35%,
+    rgba(0, 0, 0, 0.45) 100%
+  );
+
+  z-index: 1;
 }
 
-/* Content */
+/* Layout */
+
 .hero-content {
   position: relative;
   z-index: 2;
@@ -45,80 +60,119 @@ body {
   align-items: center;
   justify-content: space-between;
 
-  gap: 2rem;
+  gap: 3rem;
 
   padding: 4rem;
 }
 
-/* Text */
-.hero-text {
-  color: white;
-  max-width: 500px;
+/* Left side */
+
+.hero-left {
+  max-width: 520px;
 }
 
-.hero-text h1 {
+.hero-name {
+  margin: 0 0 1rem 0;
+
   font-size: 4rem;
-  margin-bottom: 1rem;
-  color: white;
+  font-weight: 400;
+  line-height: 1.05;
+
+  color: #f5f0e8;
 }
 
-.hero-line {
+.hero-divider {
   width: 60px;
   height: 2px;
+
   background: #c9a96e;
+
   margin-bottom: 1.5rem;
 }
 
-.hero-text p {
-  font-size: 1.2rem;
+.hero-tagline {
   margin-bottom: 2rem;
-  color: #f2f2f2;
+
+  font-size: 1.2rem;
+  line-height: 1.7;
+
+  color: #e7ddd0;
 }
 
-/* Button */
-.linkedin-button {
+/* LinkedIn button */
+
+.linkedin-link {
   display: inline-block;
 
   padding: 0.8rem 1.3rem;
 
-  border: 1px solid #c9a96e;
+  border: 1px solid rgba(201, 169, 110, 0.6);
 
-  color: #c9a96e;
+  color: #d8b97c;
+  text-decoration: none;
+
+  transition: 0.2s ease;
+}
+
+.linkedin-link:hover {
+  color: #f1d59d;
+
+  border-color: #f1d59d;
+
   text-decoration: none;
 }
 
-.linkedin-button:hover {
-  background: rgba(201, 169, 110, 0.15);
-  text-decoration: none;
+/* Right side */
+
+.hero-right {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* Photo */
-.hero-image {
-  width: 220px;
-  height: 220px;
+/* Profile image */
+
+.hero-photo {
+  width: 240px;
+  height: 240px;
 
   border-radius: 50%;
 
   object-fit: cover;
+  object-position: center top;
 
   border: 3px solid #c9a96e;
+
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
 
   background: white;
 }
 
-/* Mobile */
-@media (max-width: 800px) {
+/* ======================
+   Mobile
+====================== */
+
+@media screen and (max-width: 850px) {
+
   .hero-content {
     flex-direction: column;
+
     text-align: center;
+
+    padding: 3rem 2rem;
   }
 
-  .hero-line {
+  .hero-divider {
     margin-left: auto;
     margin-right: auto;
   }
 
-  .hero-text h1 {
+  .hero-name {
     font-size: 3rem;
+  }
+
+  .hero-photo {
+    width: 190px;
+    height: 190px;
   }
 }
