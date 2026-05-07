@@ -3,194 +3,122 @@
 
 @import "minima";
 
-/* =========================
-   Global
-========================= */
-
+/* Page background */
 body {
-  font-family: Georgia, "Times New Roman", serif;
   background: #faf8f3;
-  color: #2c2c2c;
+  font-family: Georgia, serif;
 }
 
-/* Wider layout */
-.wrapper {
-  max-width: 1200px;
-}
-
-/* =========================
-   Hero Section
-========================= */
-
+/* Hero */
 .hero {
   position: relative;
-  overflow: hidden;
-  border-radius: 8px;
+
   margin-top: 2rem;
   margin-bottom: 3rem;
 
-  background-image: url("/website-images/interior-of-library-at-the-university-of-washington-in-seattle.webp");
+  border-radius: 8px;
+  overflow: hidden;
+
+  background-image: url("/assets/images/library.webp");
   background-size: cover;
   background-position: center;
 
   min-height: 520px;
 }
 
-/* Dark overlay */
+/* Overlay */
 .hero-overlay {
   position: absolute;
   inset: 0;
 
-  background: linear-gradient(
-    to right,
-    rgba(10, 8, 6, 0.82) 35%,
-    rgba(10, 8, 6, 0.45) 100%
-  );
-
-  z-index: 1;
+  background: rgba(0, 0, 0, 0.45);
 }
 
-/* Content container */
+/* Content */
 .hero-content {
   position: relative;
   z-index: 2;
+
+  min-height: 520px;
 
   display: flex;
   align-items: center;
   justify-content: space-between;
 
-  gap: 3rem;
-
-  min-height: 520px;
+  gap: 2rem;
 
   padding: 4rem;
 }
 
-/* Left text */
-.hero-left {
-  max-width: 520px;
+/* Text */
+.hero-text {
+  color: white;
+  max-width: 500px;
 }
 
-/* Name */
-.hero-name {
-  margin: 0;
-
+.hero-text h1 {
   font-size: 4rem;
-  line-height: 1.05;
-  font-weight: 400;
-  letter-spacing: 0.03em;
-
-  color: #f5f0e8;
+  margin-bottom: 1rem;
+  color: white;
 }
 
-/* Divider */
-.hero-divider {
+.hero-line {
   width: 60px;
   height: 2px;
-
-  margin: 1.5rem 0;
-
   background: #c9a96e;
+  margin-bottom: 1.5rem;
 }
 
-/* Tagline */
-.hero-tagline {
+.hero-text p {
+  font-size: 1.2rem;
   margin-bottom: 2rem;
-
-  color: #ddd2c2;
-
-  font-size: 1.15rem;
-  line-height: 1.7;
-  letter-spacing: 0.04em;
+  color: #f2f2f2;
 }
 
-/* LinkedIn button */
-.linkedin-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.7rem;
+/* Button */
+.linkedin-button {
+  display: inline-block;
 
-  padding: 0.8rem 1.2rem;
+  padding: 0.8rem 1.3rem;
 
-  color: #d9b97a;
+  border: 1px solid #c9a96e;
+
+  color: #c9a96e;
   text-decoration: none;
-  font-size: 1rem;
-
-  border: 1px solid rgba(217, 185, 122, 0.45);
-
-  transition: all 0.25s ease;
 }
 
-.linkedin-link:hover {
-  color: #f0d39b;
-  border-color: rgba(240, 211, 155, 0.8);
-
+.linkedin-button:hover {
+  background: rgba(201, 169, 110, 0.15);
   text-decoration: none;
-
-  transform: translateY(-1px);
 }
 
-/* FIXED LinkedIn icon size */
-.linkedin-icon {
-  width: 18px;
-  height: 18px;
-
-  fill: currentColor;
-
-  flex-shrink: 0;
-}
-
-/* Right image container */
-.hero-right {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-/* FIXED profile image */
-.hero-photo {
-  width: 240px;
-  height: 240px;
-
-  object-fit: cover;
-  object-position: center top;
+/* Photo */
+.hero-image {
+  width: 220px;
+  height: 220px;
 
   border-radius: 50%;
 
+  object-fit: cover;
+
   border: 3px solid #c9a96e;
 
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
-
-  display: block;
+  background: white;
 }
 
-/* =========================
-   Mobile
-========================= */
-
-@media screen and (max-width: 900px) {
+/* Mobile */
+@media (max-width: 800px) {
   .hero-content {
     flex-direction: column;
     text-align: center;
-
-    padding: 3rem 2rem;
   }
 
-  .hero-left {
-    max-width: 100%;
-  }
-
-  .hero-divider {
+  .hero-line {
     margin-left: auto;
     margin-right: auto;
   }
 
-  .hero-name {
+  .hero-text h1 {
     font-size: 3rem;
-  }
-
-  .hero-photo {
-    width: 190px;
-    height: 190px;
   }
 }
