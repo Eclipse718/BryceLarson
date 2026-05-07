@@ -1,8 +1,3 @@
----
-layout: null
-title: Bryce Larson
----
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,7 +12,7 @@ title: Bryce Larson
 
   <link
     rel="stylesheet"
-    href="{{ '/css/style.css' | relative_url }}"
+    href="css/style.css"
   >
 
   <link
@@ -30,10 +25,11 @@ title: Bryce Larson
 
   <div class="fade-overlay"></div>
 
+  <!-- Top Bar -->
   <nav class="topbar" aria-label="Top navigation">
     <div class="topbar-brand">
       <img
-        src="{{ '/website-images/circlecroppedme.png' | relative_url }}"
+        src="website-images/circlecroppedme.png"
         alt="Bryce Larson"
         class="topbar-photo"
       >
@@ -62,6 +58,7 @@ title: Bryce Larson
     </div>
   </nav>
 
+  <!-- Sidebar -->
   <nav class="sidebar" aria-label="Side page navigation">
     <button class="sidebar-btn active" data-index="0" title="Home">🏠</button>
     <button class="sidebar-btn" data-index="1" title="Experience">💼</button>
@@ -69,6 +66,7 @@ title: Bryce Larson
     <button class="sidebar-btn" data-index="3" title="Writing">📖</button>
   </nav>
 
+  <!-- Scroll Container -->
   <main class="scroll-container" id="scroller">
 
     <section class="page" id="home">
@@ -119,7 +117,7 @@ title: Bryce Larson
         <div class="experience-options">
           <a
             class="experience-card"
-            href="{{ '/documents/BryceLarsonResume.pdf' | relative_url }}"
+            href="documents/BryceLarsonResume.pdf"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -134,7 +132,7 @@ title: Bryce Larson
 
           <a
             class="experience-card"
-            href="{{ '/timeline.html' | relative_url }}"
+            href="timeline.html"
           >
             <div class="experience-card-emoji">🕰️</div>
 
