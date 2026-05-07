@@ -33,6 +33,18 @@
       background-color: #1B2133BF;
       z-index: 1;
     }
+    /* Fade in overlay */
+    .fade-overlay {
+      position: fixed;
+      inset: 0;
+      background: black;
+      z-index: 100;
+      animation: fadeOut 1.8s ease forwards;
+    }
+    @keyframes fadeOut {
+      0%   { opacity: 1; }
+      100% { opacity: 0; pointer-events: none; }
+    }
     .hero {
       position: relative;
       z-index: 2;
@@ -43,12 +55,12 @@
       color: white;
       font-size: 4rem;
       font-weight: normal;
-      letter-spacing: 0.2em;
+      letter-spacing: 0.65em;
       text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
       margin: 0 0 1.2rem 0;
     }
     .divider {
-      width: 60px;
+      width: 150px;
       height: 1px;
       background-color: #c9a96e;
       margin: 0 auto 1.4rem auto;
@@ -60,7 +72,7 @@
     }
     .social-links a {
       color: #c9a96e;
-      font-size: 1.6rem;
+      font-size: 2.4rem;
       text-decoration: none;
       transition: color 0.25s ease;
     }
@@ -70,17 +82,18 @@
   </style>
 </head>
 <body>
+  <div class="fade-overlay"></div>
   <div class="hero">
     <h1>BRYCE LARSON</h1>
     <div class="divider"></div>
     <div class="social-links">
-      <a href="https://instagram.com/YOUR_USERNAME" target="_blank" aria-label="Instagram">
-        <i class="fa-brands fa-instagram"></i>
-      </a>
       <a href="https://linkedin.com/in/YOUR_USERNAME" target="_blank" aria-label="LinkedIn">
         <i class="fa-brands fa-linkedin"></i>
       </a>
-      <a href="https://github.com/YOUR_USERNAME" target="_blank" aria-label="GitHub">
+      <a href="https://instagram.com/YOUR_USERNAME" target="_blank" aria-label="Instagram">
+        <i class="fa-brands fa-instagram"></i>
+      </a>
+      <a href="https://github.com/Eclipse718" target="_blank" aria-label="GitHub">
         <i class="fa-brands fa-github"></i>
       </a>
     </div>
