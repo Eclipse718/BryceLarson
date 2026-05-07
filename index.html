@@ -1,34 +1,38 @@
 ---
 layout: default
-title: Home
+title: Bryce Larson
 ---
 
-<div class="hero">
+<link rel="stylesheet" href="{{ '/css/style.css' | relative_url }}">
+
+<section class="hero">
   <div class="hero-overlay"></div>
 
   <div class="hero-content">
-    <div class="hero-text">
-      <h1>Bryce Larson</h1>
+    <div class="hero-left">
+      <h1 class="hero-name">Bryce Larson</h1>
 
-      <div class="hero-line"></div>
+      <div class="hero-divider"></div>
 
-      <p>
+      <p class="hero-tagline">
         Librarian · Researcher · Curator
       </p>
 
       <a
-        class="linkedin-button"
         href="https://linkedin.com/in/YOURPROFILE"
         target="_blank"
+        class="linkedin-link"
       >
         LinkedIn
       </a>
     </div>
 
-    <img
-      class="hero-image"
-      src="{{ '/assets/images/editedme.jpg' | relative_url }}"
-      alt="Bryce Larson"
-    />
+    <div class="hero-right">
+      <img
+        src="{{ '/website-images/editedme.jpg' | relative_url }}"
+        alt="Bryce Larson"
+        class="hero-photo"
+      >
+    </div>
   </div>
-</div>
+</section>
