@@ -161,7 +161,7 @@
       border: 2px solid #1a1a2e;
     }
 
-    .page {
+    .page-section {
       width: 100%;
       min-height: calc(100vh - 54px);
       scroll-snap-align: start;
@@ -303,255 +303,307 @@
     }
 
     /* ======================
-       Writing Book
+       Writing Book Carousel
     ====================== */
 
     .writing-stage {
-      width: min(900px, 92vw);
+      width: min(980px, 94vw);
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 1.6rem;
+      gap: 1.25rem;
     }
 
-    .book-instruction {
+    .writing-subtitle {
       margin: 0;
       color: #c9a96e;
-      font-size: 1rem;
+      font-size: 0.95rem;
       letter-spacing: 0.08em;
-      opacity: 0.9;
     }
 
-    .book-wrapper {
-      position: relative;
-      width: min(560px, 88vw);
-      height: 360px;
-      perspective: 1500px;
+    .book-carousel {
+      width: min(820px, 92vw);
+      display: grid;
+      grid-template-columns: 60px 1fr 60px;
+      grid-template-areas:
+        "left book right"
+        ". dots .";
+      align-items: center;
+      gap: 1rem;
     }
 
-    .book {
+    .book-shell {
+      grid-area: book;
       position: relative;
-      width: 100%;
-      height: 100%;
-      border: none;
+      height: 430px;
+      perspective: 1600px;
+    }
+
+    .book-base {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-radius: 18px;
+      background:
+        linear-gradient(90deg, #c7a56b 0 2%, #f2e2bd 2% 48%, #7b5731 49%, #f2e2bd 52% 98%, #c7a56b 98%);
+      box-shadow:
+        0 28px 55px rgba(0, 0, 0, 0.45),
+        inset 0 0 35px rgba(84, 45, 18, 0.2);
+      overflow: hidden;
+    }
+
+    .book-base::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 34px;
+      transform: translateX(-50%);
+      background:
+        linear-gradient(
+          90deg,
+          rgba(0, 0, 0, 0.25),
+          rgba(255, 255, 255, 0.15),
+          rgba(0, 0, 0, 0.25)
+        );
+      z-index: 5;
+    }
+
+    .book-base::after {
+      content: "";
+      position: absolute;
+      inset: 12px;
+      border: 1px solid rgba(108, 70, 30, 0.18);
+      border-radius: 12px;
+      pointer-events: none;
+    }
+
+    .book-page {
+      position: relative;
+      padding: 2.1rem 2.3rem;
+      color: #1b2133;
+      background:
+        repeating-linear-gradient(
+          0deg,
+          rgba(120, 83, 42, 0.08),
+          rgba(120, 83, 42, 0.08) 1px,
+          transparent 1px,
+          transparent 25px
+        ),
+        #f7ecd2;
+      overflow: hidden;
+    }
+
+    .book-page.left {
+      border-radius: 18px 0 0 18px;
+      box-shadow: inset -18px 0 28px rgba(82, 45, 18, 0.18);
+    }
+
+    .book-page.right {
+      border-radius: 0 18px 18px 0;
+      box-shadow: inset 18px 0 28px rgba(82, 45, 18, 0.16);
+    }
+
+    .book-page h3 {
+      margin: 0 0 1rem;
+      color: #5b321f;
+      font-size: 1.25rem;
+      font-weight: normal;
+      letter-spacing: 0.1em;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .book-page ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .book-page li {
+      border-bottom: 1px solid rgba(91, 50, 31, 0.18);
+    }
+
+    .book-page a {
+      display: block;
+      padding: 0.68rem 0;
+      color: #1b2133;
+      text-decoration: none;
+      font-size: 1rem;
+      line-height: 1.2;
+      letter-spacing: 0.025em;
+      transition:
+        color 0.25s ease,
+        transform 0.25s ease;
+    }
+
+    .book-page a:hover {
+      color: #8a4423;
+      transform: translateX(4px);
+    }
+
+    .page-number {
+      position: absolute;
+      bottom: 1.1rem;
+      color: rgba(91, 50, 31, 0.72);
+      font-size: 0.85rem;
+      letter-spacing: 0.08em;
+    }
+
+    .book-page.left .page-number {
+      left: 2.3rem;
+    }
+
+    .book-page.right .page-number {
+      right: 2.3rem;
+    }
+
+    .turning-page {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 50%;
+      transform-origin: left center;
+      transform: rotateY(0deg);
+      background:
+        repeating-linear-gradient(
+          0deg,
+          rgba(120, 83, 42, 0.08),
+          rgba(120, 83, 42, 0.08) 1px,
+          transparent 1px,
+          transparent 25px
+        ),
+        #f7ecd2;
+      border-radius: 0 18px 18px 0;
+      box-shadow:
+        inset 18px 0 28px rgba(82, 45, 18, 0.14),
+        0 20px 40px rgba(0, 0, 0, 0.26);
+      pointer-events: none;
+      opacity: 0;
+      z-index: 20;
+    }
+
+    .turning-page.forward {
+      animation: pageFlipForward 0.7s ease both;
+    }
+
+    .turning-page.backward {
+      left: 0;
+      width: 50%;
+      transform-origin: right center;
+      border-radius: 18px 0 0 18px;
+      animation: pageFlipBackward 0.7s ease both;
+    }
+
+    @keyframes pageFlipForward {
+      0% {
+        opacity: 1;
+        transform: rotateY(0deg);
+      }
+
+      45% {
+        opacity: 1;
+      }
+
+      100% {
+        opacity: 0;
+        transform: rotateY(-178deg);
+      }
+    }
+
+    @keyframes pageFlipBackward {
+      0% {
+        opacity: 1;
+        transform: rotateY(0deg);
+      }
+
+      45% {
+        opacity: 1;
+      }
+
+      100% {
+        opacity: 0;
+        transform: rotateY(178deg);
+      }
+    }
+
+    .book-control {
+      width: 54px;
+      height: 54px;
+      border: 1px solid rgba(201, 169, 110, 0.36);
+      border-radius: 50%;
+      background: rgba(15, 20, 32, 0.72);
+      color: #c9a96e;
+      font-size: 1.3rem;
+      cursor: pointer;
+      transition:
+        color 0.25s ease,
+        background 0.25s ease,
+        transform 0.25s ease,
+        opacity 0.25s ease;
+    }
+
+    .book-control:hover:not(:disabled) {
+      color: #f0d899;
+      background: rgba(255, 255, 255, 0.08);
+      transform: scale(1.06);
+    }
+
+    .book-control:disabled {
+      opacity: 0.35;
+      cursor: default;
+    }
+
+    .book-control.prev {
+      grid-area: left;
+    }
+
+    .book-control.next {
+      grid-area: right;
+    }
+
+    .book-dots {
+      grid-area: dots;
+      display: flex;
+      justify-content: center;
+      gap: 0.45rem;
+      margin-top: 0.9rem;
+    }
+
+    .book-dot {
+      width: 34px;
+      height: 7px;
+      border: 1px solid rgba(201, 169, 110, 0.45);
       background: transparent;
       cursor: pointer;
-      transform-style: preserve-3d;
-      outline: none;
+      padding: 0;
+      transition:
+        background 0.25s ease,
+        transform 0.25s ease;
+    }
+
+    .book-dot.active {
+      background: #c9a96e;
+    }
+
+    .book-dot:hover {
+      transform: translateY(-1px);
     }
 
     .book-shadow {
       position: absolute;
       left: 50%;
-      bottom: -24px;
-      width: 78%;
-      height: 32px;
+      bottom: -28px;
+      width: 86%;
+      height: 36px;
       transform: translateX(-50%);
       border-radius: 50%;
       background: rgba(0, 0, 0, 0.38);
-      filter: blur(8px);
-      transition:
-        width 0.7s ease,
-        opacity 0.7s ease;
-    }
-
-    .book-cover {
-      position: absolute;
-      inset: 0;
-      transform-origin: left center;
-      transform-style: preserve-3d;
-      border-radius: 12px 22px 22px 12px;
-      background:
-        linear-gradient(90deg, rgba(45, 18, 14, 0.95), rgba(98, 42, 27, 0.98) 42%, rgba(138, 68, 35, 0.98));
-      box-shadow:
-        inset 10px 0 18px rgba(0, 0, 0, 0.28),
-        inset -6px 0 14px rgba(255, 220, 150, 0.12),
-        0 24px 45px rgba(0, 0, 0, 0.48);
-      border: 2px solid rgba(201, 169, 110, 0.5);
-      transition: transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
-      z-index: 4;
-    }
-
-    .book-cover::before {
-      content: "";
-      position: absolute;
-      top: 16px;
-      left: 18px;
-      right: 18px;
-      bottom: 16px;
-      border: 1px solid rgba(240, 216, 153, 0.55);
-      border-radius: 8px 18px 18px 8px;
-      pointer-events: none;
-    }
-
-    .book-cover::after {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 52px;
-      width: 16px;
-      height: 100%;
-      background:
-        linear-gradient(
-          90deg,
-          rgba(0, 0, 0, 0.28),
-          rgba(255, 255, 255, 0.08),
-          rgba(0, 0, 0, 0.2)
-        );
-      opacity: 0.9;
-    }
-
-    .book-cover-content {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding: 2rem;
-      color: #f5f0e8;
-      text-align: center;
-      backface-visibility: hidden;
-    }
-
-    .book-cover-content i {
-      color: #c9a96e;
-      font-size: 4rem;
-      margin-bottom: 1.1rem;
-      text-shadow: 0 3px 8px rgba(0, 0, 0, 0.35);
-    }
-
-    .book-cover-title {
-      margin: 0;
-      font-size: clamp(2rem, 6vw, 3.6rem);
-      font-weight: normal;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      text-shadow: 0 3px 8px rgba(0, 0, 0, 0.45);
-    }
-
-    .book-cover-subtitle {
-      margin: 0.8rem 0 0;
-      color: #c9a96e;
-      font-size: 1rem;
-      letter-spacing: 0.12em;
-    }
-
-    .book-pages {
-      position: absolute;
-      inset: 12px 10px 12px 16px;
-      border-radius: 9px 18px 18px 9px;
-      background:
-        repeating-linear-gradient(
-          0deg,
-          #efe5d0,
-          #efe5d0 10px,
-          #e3d4bb 11px
-        );
-      box-shadow:
-        0 20px 35px rgba(0, 0, 0, 0.38),
-        inset -10px 0 18px rgba(139, 100, 62, 0.2);
-      z-index: 2;
-    }
-
-    .book-page {
-      position: absolute;
-      top: 18px;
-      bottom: 18px;
-      width: calc(50% - 18px);
-      background: #f7eedb;
-      color: #1b2133;
-      box-shadow: inset 0 0 18px rgba(90, 54, 24, 0.1);
-      z-index: 3;
-      overflow: hidden;
-    }
-
-    .book-page-left {
-      left: 20px;
-      border-radius: 8px 2px 2px 8px;
-    }
-
-    .book-page-right {
-      right: 18px;
-      border-radius: 2px 12px 12px 2px;
-    }
-
-    .book-page::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background:
-        linear-gradient(
-          90deg,
-          rgba(0, 0, 0, 0.08),
-          transparent 18%,
-          transparent 80%,
-          rgba(0, 0, 0, 0.05)
-        );
-      pointer-events: none;
-    }
-
-    .writing-list {
-      position: relative;
-      z-index: 5;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 1.4rem;
-      opacity: 0;
-      transform: translateY(8px);
-      transition:
-        opacity 0.5s ease 0.35s,
-        transform 0.5s ease 0.35s;
-    }
-
-    .writing-list h3 {
-      margin: 0 0 0.9rem;
-      color: #5a2e1e;
-      font-size: 1.25rem;
-      font-weight: normal;
-      letter-spacing: 0.08em;
-      text-align: center;
-    }
-
-    .writing-list ul {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-    }
-
-    .writing-list li {
-      padding: 0.45rem 0;
-      border-bottom: 1px solid rgba(90, 46, 30, 0.18);
-      color: #1b2133;
-      font-size: 0.98rem;
-      letter-spacing: 0.03em;
-      text-align: left;
-    }
-
-    .writing-list a {
-      color: #1b2133;
-      text-decoration: none;
-      transition: color 0.25s ease;
-    }
-
-    .writing-list a:hover {
-      color: #8a4423;
-    }
-
-    .book.open .book-cover {
-      transform: rotateY(-142deg);
-    }
-
-    .book.open .writing-list {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .book.open + .book-shadow {
-      width: 92%;
-      opacity: 0.75;
+      filter: blur(9px);
+      z-index: -1;
     }
 
     /* ======================
@@ -695,7 +747,7 @@
         top: 50px;
       }
 
-      .page {
+      .page-section {
         min-height: calc(100vh - 50px);
       }
 
@@ -714,29 +766,32 @@
         font-size: 1.1rem;
       }
 
-      .book-wrapper {
-        height: 315px;
+      .book-carousel {
+        grid-template-columns: 46px 1fr 46px;
+        gap: 0.55rem;
       }
 
-      .book-cover-content i {
-        font-size: 3.2rem;
+      .book-shell {
+        height: 360px;
       }
 
-      .book-cover-title {
-        letter-spacing: 0.12em;
+      .book-page {
+        padding: 1.5rem 1.35rem;
       }
 
-      .writing-list {
-        padding: 1rem;
+      .book-page h3 {
+        font-size: 1rem;
       }
 
-      .writing-list h3 {
-        font-size: 1.05rem;
+      .book-page a {
+        font-size: 0.82rem;
+        padding: 0.52rem 0;
       }
 
-      .writing-list li {
-        font-size: 0.86rem;
-        padding: 0.35rem 0;
+      .book-control {
+        width: 42px;
+        height: 42px;
+        font-size: 1rem;
       }
 
       .contact-card {
@@ -761,28 +816,41 @@
         font-size: 0.76rem;
         padding: 0.28rem 0.38rem;
       }
-    }
 
-    @media screen and (max-width: 520px) {
-      .book-wrapper {
-        height: 280px;
+      .book-carousel {
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas:
+          "book book"
+          "left right"
+          "dots dots";
+      }
+
+      .book-control.prev {
+        justify-self: end;
+      }
+
+      .book-control.next {
+        justify-self: start;
+      }
+
+      .book-shell {
+        height: 330px;
       }
 
       .book-page {
-        top: 15px;
-        bottom: 15px;
+        padding: 1.25rem 1rem;
       }
 
-      .book-page-left {
-        left: 16px;
+      .book-page h3 {
+        font-size: 0.9rem;
       }
 
-      .book-page-right {
-        right: 14px;
+      .book-page a {
+        font-size: 0.74rem;
       }
 
-      .writing-list li {
-        font-size: 0.78rem;
+      .page-number {
+        display: none;
       }
     }
   </style>
@@ -821,7 +889,7 @@
 
   <main class="scroll-container" id="scroller">
 
-    <section class="page" id="home">
+    <section class="page-section" id="home">
       <div class="section-content hero">
         <h1>BRYCE LARSON</h1>
 
@@ -858,64 +926,54 @@
       </div>
     </section>
 
-    <section class="page" id="experience">
+    <section class="page-section" id="experience">
       <div class="section-content">
         <h2>EXPERIENCE</h2>
         <p>Coming soon.</p>
       </div>
     </section>
 
-    <section class="page" id="projects">
+    <section class="page-section" id="projects">
       <div class="section-content">
         <h2>PROJECTS</h2>
         <p>Coming soon.</p>
       </div>
     </section>
 
-    <section class="page" id="writing">
+    <section class="page-section" id="writing">
       <div class="section-content writing-stage">
         <h2>WRITING</h2>
+        <p class="writing-subtitle">Browse the archive.</p>
 
-        <p class="book-instruction">Click the book to open the archive.</p>
-
-        <div class="book-wrapper">
-          <button class="book" type="button" aria-expanded="false" aria-label="Open writing archive">
-            <div class="book-pages"></div>
-
-            <div class="book-page book-page-left">
-              <div class="writing-list">
-                <h3>Essays</h3>
-                <ul>
-                  <li><a href="#">The Library as Memory</a></li>
-                  <li><a href="#">Notes on Research and Attention</a></li>
-                  <li><a href="#">Curating the Digital Shelf</a></li>
-                  <li><a href="#">Public Knowledge and Place</a></li>
-                </ul>
-              </div>
-            </div>
-
-            <div class="book-page book-page-right">
-              <div class="writing-list">
-                <h3>Reviews</h3>
-                <ul>
-                  <li><a href="#">Reading in the Stacks</a></li>
-                  <li><a href="#">Archives, Margins, and Metadata</a></li>
-                  <li><a href="#">A Field Guide to Quiet Spaces</a></li>
-                  <li><a href="#">Cataloging What Remains</a></li>
-                </ul>
-              </div>
-            </div>
-
-            <div class="book-cover">
-              <div class="book-cover-content">
-                <i class="fa-solid fa-book-open-reader"></i>
-                <p class="book-cover-title">Writing</p>
-                <p class="book-cover-subtitle">Open Archive</p>
-              </div>
-            </div>
+        <div class="book-carousel" aria-label="Writing archive book carousel">
+          <button class="book-control prev" type="button" aria-label="Previous page">
+            <i class="fa-solid fa-chevron-left"></i>
           </button>
 
-          <div class="book-shadow"></div>
+          <div class="book-shell">
+            <div class="book-base">
+              <div class="book-page left">
+                <h3 id="leftPageTitle">Essays</h3>
+                <ul id="leftPageList"></ul>
+                <span class="page-number" id="leftPageNumber">1</span>
+              </div>
+
+              <div class="book-page right">
+                <h3 id="rightPageTitle">Notes</h3>
+                <ul id="rightPageList"></ul>
+                <span class="page-number" id="rightPageNumber">2</span>
+              </div>
+            </div>
+
+            <div class="turning-page" id="turningPage"></div>
+            <div class="book-shadow"></div>
+          </div>
+
+          <button class="book-control next" type="button" aria-label="Next page">
+            <i class="fa-solid fa-chevron-right"></i>
+          </button>
+
+          <div class="book-dots" id="bookDots" aria-label="Book page indicators"></div>
         </div>
       </div>
     </section>
@@ -973,7 +1031,7 @@
 
   <script>
     const scroller = document.querySelector('#scroller');
-    const pages = document.querySelectorAll('.page');
+    const pages = document.querySelectorAll('.page-section');
     const topbarPageBtns = document.querySelectorAll('.topbar-btn[data-index]');
     const sidebarBtns = document.querySelectorAll('.sidebar-btn');
     const allPageNavBtns = document.querySelectorAll('.topbar-btn[data-index], .sidebar-btn');
@@ -982,7 +1040,156 @@
     const contactModal = document.querySelector('#contactModal');
     const contactCloseBtn = document.querySelector('.contact-close');
 
-    const book = document.querySelector('.book');
+    const prevBookBtn = document.querySelector('.book-control.prev');
+    const nextBookBtn = document.querySelector('.book-control.next');
+    const turningPage = document.querySelector('#turningPage');
+    const bookDots = document.querySelector('#bookDots');
+
+    const leftPageTitle = document.querySelector('#leftPageTitle');
+    const rightPageTitle = document.querySelector('#rightPageTitle');
+    const leftPageList = document.querySelector('#leftPageList');
+    const rightPageList = document.querySelector('#rightPageList');
+    const leftPageNumber = document.querySelector('#leftPageNumber');
+    const rightPageNumber = document.querySelector('#rightPageNumber');
+
+    const spreads = [
+      {
+        leftTitle: 'Essays',
+        leftItems: [
+          ['The Library as Memory', '#'],
+          ['Notes on Research and Attention', '#'],
+          ['Curating the Digital Shelf', '#'],
+          ['Public Knowledge and Place', '#']
+        ],
+        rightTitle: 'Notes',
+        rightItems: [
+          ['Reading in the Stacks', '#'],
+          ['A Field Guide to Quiet Spaces', '#'],
+          ['Cataloging What Remains', '#'],
+          ['Archives, Margins, and Metadata', '#']
+        ]
+      },
+      {
+        leftTitle: 'Research',
+        leftItems: [
+          ['Classification and Care', '#'],
+          ['Indexes, Archives, and Access', '#'],
+          ['The Social Life of Metadata', '#'],
+          ['Preservation as Practice', '#']
+        ],
+        rightTitle: 'Reviews',
+        rightItems: [
+          ['On Quiet Rooms', '#'],
+          ['The Book as Interface', '#'],
+          ['Libraries After Midnight', '#'],
+          ['Margins and Footnotes', '#']
+        ]
+      },
+      {
+        leftTitle: 'Projects',
+        leftItems: [
+          ['Digital Collections Study', '#'],
+          ['Seattle Reading Map', '#'],
+          ['Personal Archive Notes', '#'],
+          ['Open Bibliography Draft', '#']
+        ],
+        rightTitle: 'Fragments',
+        rightItems: [
+          ['A Note on Place', '#'],
+          ['Small Catalogs', '#'],
+          ['The Shape of a Shelf', '#'],
+          ['Future Reading List', '#']
+        ]
+      }
+    ];
+
+    let currentSpread = 0;
+    let isTurning = false;
+
+    function renderList(container, items) {
+      container.innerHTML = '';
+
+      items.forEach(([title, href]) => {
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+
+        a.textContent = title;
+        a.href = href;
+
+        li.appendChild(a);
+        container.appendChild(li);
+      });
+    }
+
+    function renderBook() {
+      const spread = spreads[currentSpread];
+
+      leftPageTitle.textContent = spread.leftTitle;
+      rightPageTitle.textContent = spread.rightTitle;
+
+      renderList(leftPageList, spread.leftItems);
+      renderList(rightPageList, spread.rightItems);
+
+      leftPageNumber.textContent = String(currentSpread * 2 + 1);
+      rightPageNumber.textContent = String(currentSpread * 2 + 2);
+
+      prevBookBtn.disabled = currentSpread === 0;
+      nextBookBtn.disabled = currentSpread === spreads.length - 1;
+
+      const dots = bookDots.querySelectorAll('.book-dot');
+      dots.forEach((dot, index) => {
+        dot.classList.toggle('active', index === currentSpread);
+      });
+    }
+
+    function turnBook(direction, targetSpread) {
+      if (isTurning || targetSpread < 0 || targetSpread >= spreads.length || targetSpread === currentSpread) {
+        return;
+      }
+
+      isTurning = true;
+
+      turningPage.classList.remove('forward', 'backward');
+      void turningPage.offsetWidth;
+      turningPage.classList.add(direction);
+
+      window.setTimeout(() => {
+        currentSpread = targetSpread;
+        renderBook();
+      }, 330);
+
+      window.setTimeout(() => {
+        turningPage.classList.remove('forward', 'backward');
+        isTurning = false;
+      }, 720);
+    }
+
+    spreads.forEach((_, index) => {
+      const dot = document.createElement('button');
+      dot.className = 'book-dot';
+      dot.type = 'button';
+      dot.setAttribute('aria-label', `Go to writing spread ${index + 1}`);
+
+      dot.addEventListener('click', () => {
+        if (index > currentSpread) {
+          turnBook('forward', index);
+        } else if (index < currentSpread) {
+          turnBook('backward', index);
+        }
+      });
+
+      bookDots.appendChild(dot);
+    });
+
+    prevBookBtn.addEventListener('click', () => {
+      turnBook('backward', currentSpread - 1);
+    });
+
+    nextBookBtn.addEventListener('click', () => {
+      turnBook('forward', currentSpread + 1);
+    });
+
+    renderBook();
 
     allPageNavBtns.forEach((btn) => {
       btn.addEventListener('click', () => {
@@ -995,11 +1202,6 @@
           });
         }
       });
-    });
-
-    book.addEventListener('click', () => {
-      const isOpen = book.classList.toggle('open');
-      book.setAttribute('aria-expanded', String(isOpen));
     });
 
     contactOpenBtn.addEventListener('click', () => {
