@@ -299,7 +299,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 1.15rem;
+      gap: 1rem;
     }
 
     .projects-subtitle {
@@ -310,11 +310,12 @@
     }
 
     .arcade-workstation {
-      width: min(900px, 94vw);
+      width: min(920px, 95vw);
       display: grid;
       grid-template-columns: 1fr;
       justify-items: center;
-      gap: 0.7rem;
+      gap: 0;
+      position: relative;
     }
 
     .pixel-computer {
@@ -327,31 +328,8 @@
         0 0 0 4px #8b7449,
         0 18px 35px rgba(0, 0, 0, 0.45);
       image-rendering: pixelated;
-    }
-
-    .pixel-computer::before {
-      content: "";
-      position: absolute;
-      left: 18%;
-      right: 18%;
-      bottom: -36px;
-      height: 32px;
-      background: #9d8557;
-      border: 4px solid #2a1f1a;
-      border-top: none;
-      z-index: -1;
-    }
-
-    .pixel-computer::after {
-      content: "";
-      position: absolute;
-      left: 12%;
-      right: 12%;
-      bottom: -54px;
-      height: 18px;
-      background: #6d5a3b;
-      border: 4px solid #2a1f1a;
-      z-index: -2;
+      transform: translateY(-18px);
+      z-index: 3;
     }
 
     .computer-screen {
@@ -491,25 +469,76 @@
     }
 
     .controller-cable {
-      width: 8px;
-      height: 54px;
-      background: #161616;
-      border-left: 2px solid #333;
-      border-right: 2px solid #050505;
+      width: min(700px, 90vw);
+      height: 88px;
+      margin-top: -4px;
+      margin-bottom: -2px;
+      z-index: 2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      pointer-events: none;
+    }
+
+    .controller-cable svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
     }
 
     .arcade-controller {
       width: min(560px, 88vw);
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-columns: 1fr 1fr;
       align-items: center;
-      gap: 1.2rem;
+      gap: 2rem;
       padding: 1rem 1.3rem;
       background: #312845;
       border: 5px solid #120f1f;
       box-shadow:
         0 0 0 4px #594c77,
         0 16px 28px rgba(0, 0, 0, 0.35);
+      z-index: 1;
+    }
+
+    .action-buttons {
+      justify-self: center;
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .action-btn {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      border: 4px solid #110c0c;
+      cursor: pointer;
+      color: white;
+      font-family: "Courier New", monospace;
+      font-weight: bold;
+      box-shadow:
+        inset -5px -5px 0 rgba(0, 0, 0, 0.25),
+        0 5px 0 rgba(0, 0, 0, 0.35);
+    }
+
+    .action-btn.select {
+      background: #b84a4a;
+    }
+
+    .action-btn.info {
+      background: #2f74b8;
+    }
+
+    .action-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .action-btn:active {
+      transform: translateY(3px);
+      box-shadow:
+        inset -3px -3px 0 rgba(0, 0, 0, 0.25),
+        0 2px 0 rgba(0, 0, 0, 0.35);
     }
 
     .dpad {
@@ -563,57 +592,6 @@
       height: 38px;
       background: #1b1b1b;
       border: 3px solid #0a0a0a;
-    }
-
-    .controller-label {
-      justify-self: center;
-      color: #c9a96e;
-      font-family: "Courier New", monospace;
-      font-size: 0.85rem;
-      letter-spacing: 0.1em;
-      text-align: center;
-      text-transform: uppercase;
-      line-height: 1.4;
-    }
-
-    .action-buttons {
-      justify-self: center;
-      display: flex;
-      gap: 1rem;
-      align-items: center;
-    }
-
-    .action-btn {
-      width: 58px;
-      height: 58px;
-      border-radius: 50%;
-      border: 4px solid #110c0c;
-      cursor: pointer;
-      color: white;
-      font-family: "Courier New", monospace;
-      font-weight: bold;
-      box-shadow:
-        inset -5px -5px 0 rgba(0, 0, 0, 0.25),
-        0 5px 0 rgba(0, 0, 0, 0.35);
-    }
-
-    .action-btn.select {
-      background: #b84a4a;
-    }
-
-    .action-btn.info {
-      background: #2f74b8;
-    }
-
-    .action-btn:hover {
-      transform: translateY(-2px);
-    }
-
-    .action-btn:active {
-      transform: translateY(3px);
-      box-shadow:
-        inset -3px -3px 0 rgba(0, 0, 0, 0.25),
-        0 2px 0 rgba(0, 0, 0, 0.35);
     }
 
     /* ======================
@@ -1078,6 +1056,7 @@
 
       .pixel-computer {
         padding: 0.75rem;
+        transform: translateY(-12px);
       }
 
       .computer-screen {
@@ -1094,14 +1073,58 @@
         min-height: auto;
       }
 
-      .arcade-controller {
-        grid-template-columns: 1fr;
-        gap: 0.9rem;
-        width: min(360px, 86vw);
+      .controller-cable {
+        height: 72px;
+        width: min(520px, 86vw);
       }
 
-      .controller-label {
-        order: -1;
+      .arcade-controller {
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        width: min(360px, 86vw);
+        padding: 0.9rem 1rem;
+      }
+
+      .action-buttons {
+        gap: 0.7rem;
+      }
+
+      .action-btn {
+        width: 48px;
+        height: 48px;
+      }
+
+      .dpad {
+        width: 98px;
+        height: 98px;
+      }
+
+      .dpad-btn {
+        width: 32px;
+        height: 32px;
+      }
+
+      .dpad-up {
+        left: 33px;
+      }
+
+      .dpad-down {
+        left: 33px;
+      }
+
+      .dpad-left {
+        top: 33px;
+      }
+
+      .dpad-right {
+        top: 33px;
+      }
+
+      .dpad-center {
+        top: 33px;
+        left: 33px;
+        width: 32px;
+        height: 32px;
       }
 
       .book-carousel {
@@ -1299,26 +1322,46 @@
             </div>
           </div>
 
-          <div class="controller-cable"></div>
+          <div class="controller-cable" aria-hidden="true">
+            <svg viewBox="0 0 700 90" preserveAspectRatio="none">
+              <path
+                d="M350 0
+                   C 320 10, 405 18, 380 30
+                   C 350 42, 250 38, 270 52
+                   C 295 67, 430 60, 415 76
+                   C 405 86, 360 88, 350 90"
+                fill="none"
+                stroke="#121212"
+                stroke-width="8"
+                stroke-linecap="round"
+              ></path>
+              <path
+                d="M350 0
+                   C 320 10, 405 18, 380 30
+                   C 350 42, 250 38, 270 52
+                   C 295 67, 430 60, 415 76
+                   C 405 86, 360 88, 350 90"
+                fill="none"
+                stroke="#353535"
+                stroke-width="3"
+                stroke-linecap="round"
+                opacity="0.55"
+              ></path>
+            </svg>
+          </div>
 
           <div class="arcade-controller">
+            <div class="action-buttons">
+              <button class="action-btn select" type="button" aria-label="Open selected project">A</button>
+              <button class="action-btn info" type="button" aria-label="Next project">B</button>
+            </div>
+
             <div class="dpad">
               <button class="dpad-btn dpad-up" type="button" aria-label="Move up">▲</button>
               <button class="dpad-btn dpad-left" type="button" aria-label="Move left">◀</button>
               <div class="dpad-center"></div>
               <button class="dpad-btn dpad-right" type="button" aria-label="Move right">▶</button>
               <button class="dpad-btn dpad-down" type="button" aria-label="Move down">▼</button>
-            </div>
-
-            <div class="controller-label">
-              Arcade<br>
-              Project<br>
-              Navigator
-            </div>
-
-            <div class="action-buttons">
-              <button class="action-btn select" type="button" aria-label="Open selected project">A</button>
-              <button class="action-btn info" type="button" aria-label="Next project">B</button>
             </div>
           </div>
         </div>
