@@ -30,30 +30,38 @@
       100% { opacity: 0; }
     }
 
-    /* ── Pages wrapper ── */
-    .pages {
+    /* ── Scroll container ── */
+    .scroll-container {
       width: 100%;
-      height: 100%;
-      position: relative;
+      height: 100vh;
+      overflow-y: scroll;
+      scroll-snap-type: y mandatory;
+      scrollbar-width: thin;
+      scrollbar-color: #c9a96e #1a1a2e;
+    }
+    .scroll-container::-webkit-scrollbar {
+      width: 6px;
+    }
+    .scroll-container::-webkit-scrollbar-track {
+      background: #1a1a2e;
+    }
+    .scroll-container::-webkit-scrollbar-thumb {
+      background-color: #c9a96e;
+      border-radius: 3px;
     }
 
     /* ── Individual page ── */
     .page {
-      position: absolute;
-      inset: 0;
+      width: 100%;
+      height: 100vh;
+      scroll-snap-align: center;
       display: flex;
       justify-content: center;
       align-items: center;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.6s ease;
-    }
-    .page.active {
-      opacity: 1;
-      pointer-events: all;
+      position: relative;
     }
 
-    /* ── Home page background ── */
+    /* ── Home background ── */
     #home {
       background-image: url("website-images/Suzzallo_Library_at_UW_9572958209-1030x773.jpg");
       background-size: cover;
@@ -110,7 +118,7 @@
       color: #f0d899;
     }
 
-    /* ── Other page placeholder text ── */
+    /* ── Other page text ── */
     .page-content h2 {
       font-size: 2.5rem;
       font-weight: normal;
@@ -128,7 +136,7 @@
     /* ── Sidebar ── */
     .sidebar {
       position: fixed;
-      left: 1.5rem;
+      right: 2rem;
       top: 50%;
       transform: translateY(-50%);
       z-index: 150;
@@ -163,16 +171,16 @@
 
   <!-- Sidebar -->
   <nav class="sidebar" aria-label="Page navigation">
-    <button class="sidebar-btn active" data-page="0" title="Home">🏠</button>
-    <button class="sidebar-btn" data-page="1" title="Experience">💼</button>
-    <button class="sidebar-btn" data-page="2" title="Projects">🚀</button>
-    <button class="sidebar-btn" data-page="3" title="Writing">📖</button>
+    <button class="sidebar-btn active" data-index="0" title="Home">🏠</button>
+    <button class="sidebar-btn" data-index="1" title="Experience">💼</button>
+    <button class="sidebar-btn" data-index="2" title="Projects">🚀</button>
+    <button class="sidebar-btn" data-index="3" title="Writing">📖</button>
   </nav>
 
-  <!-- Pages -->
-  <div class="pages">
+  <!-- Scroll container -->
+  <div class="scroll-container" id="scroller">
 
-    <section class="page active" id="home">
+    <section class="page" id="home">
       <div class="page-content hero">
         <h1>BRYCE LARSON</h1>
         <div class="divider"></div>
@@ -214,43 +222,30 @@
   </div>
 
   <script>
+    const scroller = document.getElementById('scroller');
     const pages = document.querySelectorAll('.page');
     const btns = document.querySelectorAll('.sidebar-btn');
-    let current = 0;
-    let locked = false;
 
-    function goTo(index) {
-      if (index === current || locked) return;
-      locked = true;
-      pages[current].classList.remove('active');
-      btns[current].classList.remove('active');
-      current = index;
-      pages[current].classList.add('active');
-      btns[current].classList.add('active');
-      setTimeout(() => { locked = false; }, 700);
-    }
-
-    // Scroll wheel
-    window.addEventListener('wheel', (e) => {
-      if (locked) return;
-      if (e.deltaY > 0 && current < pages.length - 1) goTo(current + 1);
-      if (e.deltaY < 0 && current > 0) goTo(current - 1);
-    }, { passive: true });
-
-    // Touch swipe
-    let touchStartY = 0;
-    window.addEventListener('touchstart', (e) => { touchStartY = e.touches[0].clientY; });
-    window.addEventListener('touchend', (e) => {
-      const diff = touchStartY - e.changedTouches[0].clientY;
-      if (Math.abs(diff) < 40) return;
-      if (diff > 0 && current < pages.length - 1) goTo(current + 1);
-      if (diff < 0 && current > 0) goTo(current - 1);
-    });
-
-    // Sidebar buttons
+    // Sidebar click → scroll to page
     btns.forEach(btn => {
-      btn.addEventListener('click', () => goTo(parseInt(btn.dataset.page)));
+      btn.addEventListener('click', () => {
+        const index = parseInt(btn.dataset.index);
+        pages[index].scrollIntoView({ behavior: 'smooth' });
+      });
     });
+
+    // Update active sidebar btn based on scroll position
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
+          const index = Array.from(pages).indexOf(entry.target);
+          btns.forEach(b => b.classList.remove('active'));
+          btns[index].classList.add('active');
+        }
+      });
+    }, { threshold: 0.5 });
+
+    pages.forEach(page => observer.observe(page));
   </script>
 
 </body>
