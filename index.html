@@ -44,29 +44,29 @@ title: Bryce Larson
     </div>
 
     <div class="topbar-links">
-      <button class="topbar-btn active" data-index="0" title="Home">
+      <button class="topbar-btn active" data-index="0" title="Home" type="button">
         🏠 <span>Home</span>
       </button>
 
-      <button class="topbar-btn" data-index="1" title="Experience">
+      <button class="topbar-btn" data-index="1" title="Experience" type="button">
         💼 <span>Experience</span>
       </button>
 
-      <button class="topbar-btn" data-index="2" title="Projects">
+      <button class="topbar-btn" data-index="2" title="Projects" type="button">
         🚀 <span>Projects</span>
       </button>
 
-      <button class="topbar-btn" data-index="3" title="Writing">
+      <button class="topbar-btn" data-index="3" title="Writing" type="button">
         📖 <span>Writing</span>
       </button>
     </div>
   </nav>
 
   <nav class="sidebar" aria-label="Side page navigation">
-    <button class="sidebar-btn active" data-index="0" title="Home">🏠</button>
-    <button class="sidebar-btn" data-index="1" title="Experience">💼</button>
-    <button class="sidebar-btn" data-index="2" title="Projects">🚀</button>
-    <button class="sidebar-btn" data-index="3" title="Writing">📖</button>
+    <button class="sidebar-btn active" data-index="0" title="Home" type="button">🏠</button>
+    <button class="sidebar-btn" data-index="1" title="Experience" type="button">💼</button>
+    <button class="sidebar-btn" data-index="2" title="Projects" type="button">🚀</button>
+    <button class="sidebar-btn" data-index="3" title="Writing" type="button">📖</button>
   </nav>
 
   <main class="scroll-container" id="scroller">
@@ -137,20 +137,26 @@ title: Bryce Larson
     const sidebarBtns = document.querySelectorAll('.sidebar-btn');
     const allNavBtns = document.querySelectorAll('.topbar-btn, .sidebar-btn');
 
-    allNavBtns.forEach(btn => {
+    allNavBtns.forEach((btn) => {
       btn.addEventListener('click', () => {
-        const index = parseInt(btn.dataset.index, 10);
-        pages[index].scrollIntoView({ behavior: 'smooth' });
+        const index = Number.parseInt(btn.dataset.index, 10);
+
+        if (pages[index]) {
+          pages[index].scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
       });
     });
 
     const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
+      entries.forEach((entry) => {
         if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
           const index = Array.from(pages).indexOf(entry.target);
 
-          topbarBtns.forEach(btn => btn.classList.remove('active'));
-          sidebarBtns.forEach(btn => btn.classList.remove('active'));
+          topbarBtns.forEach((btn) => btn.classList.remove('active'));
+          sidebarBtns.forEach((btn) => btn.classList.remove('active'));
 
           if (topbarBtns[index]) {
             topbarBtns[index].classList.add('active');
@@ -161,9 +167,11 @@ title: Bryce Larson
           }
         }
       });
-    }, { threshold: 0.5 });
+    }, {
+      threshold: 0.5
+    });
 
-    pages.forEach(page => observer.observe(page));
+    pages.forEach((page) => observer.observe(page));
   </script>
 
 </body>
