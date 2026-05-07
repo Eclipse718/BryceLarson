@@ -1,252 +1,111 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bryce Larson</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <style>
-    *, *::before, *::after { box-sizing: border-box; }
+---
+layout: default
+title: Home
+---
 
-    html, body {
-      margin: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      font-family: "Times New Roman", Times, serif;
-    }
+<nav class="topbar">
 
-    /* ── Fade overlay ── */
-    .fade-overlay {
-      position: fixed;
-      inset: 0;
-      background: black;
-      z-index: 200;
-      animation: fadeOut 3s ease forwards;
-      pointer-events: none;
-    }
-    @keyframes fadeOut {
-      0%   { opacity: 1; }
-      100% { opacity: 0; }
-    }
+  <div class="topbar-left">
+    <img
+      src="/website-images/circlecroppedme.png"
+      alt="Bryce Larson"
+      class="topbar-photo"
+    >
 
-    /* ── Scroll container ── */
-    .scroll-container {
-      width: 100%;
-      height: 100vh;
-      overflow-y: scroll;
-      scroll-snap-type: y mandatory;
-      scrollbar-width: thin;
-      scrollbar-color: #c9a96e #1a1a2e;
-    }
-    .scroll-container::-webkit-scrollbar {
-      width: 6px;
-    }
-    .scroll-container::-webkit-scrollbar-track {
-      background: #1a1a2e;
-    }
-    .scroll-container::-webkit-scrollbar-thumb {
-      background-color: #c9a96e;
-      border-radius: 3px;
-    }
+    <a href="/" class="topbar-name">
+      Bryce Larson
+    </a>
+  </div>
 
-    /* ── Individual page ── */
-    .page {
-      width: 100%;
-      height: 100vh;
-      scroll-snap-align: center;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      position: relative;
-    }
+  <div class="topbar-links">
+    <a href="#experience">Experience</a>
+    <a href="#projects">Projects</a>
+    <a href="#writing">Writing</a>
+  </div>
 
-    /* ── Home background ── */
-    #home {
-      background-image: url("website-images/Suzzallo_Library_at_UW_9572958209-1030x773.jpg");
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-    }
-    #home::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background-color: #1B2133BF;
-    }
+</nav>
 
-    /* ── Other pages ── */
-    #experience, #projects, #writing {
-      background-color: #0f1420;
-    }
+<!-- HERO -->
 
-    /* ── Page content ── */
-    .page-content {
-      position: relative;
-      z-index: 2;
-      text-align: center;
-      color: white;
-    }
+<section class="hero">
 
-    /* ── Home hero ── */
-    .hero h1 {
-      color: white;
-      font-size: 4rem;
-      font-weight: normal;
-      letter-spacing: 0.2em;
-      text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
-      margin: 0 0 1.2rem 0;
-    }
-    .divider {
-      width: 150px;
-      height: 1px;
-      background-color: #c9a96e;
-      margin: 0 auto 1.4rem auto;
-    }
-    .social-links {
-      display: flex;
-      justify-content: center;
-      gap: 1.8rem;
-    }
-    .social-links a {
-      color: #c9a96e;
-      font-size: 2.4rem;
-      text-decoration: none;
-      transition: color 0.25s ease;
-    }
-    .social-links a:hover {
-      color: #f0d899;
-    }
+  <div class="hero-overlay"></div>
 
-    /* ── Other page text ── */
-    .page-content h2 {
-      font-size: 2.5rem;
-      font-weight: normal;
-      letter-spacing: 0.15em;
-      color: #f5f0e8;
-      margin: 0;
-    }
-    .page-content p {
-      color: #8a8a8a;
-      font-size: 1rem;
-      margin-top: 0.8rem;
-      letter-spacing: 0.05em;
-    }
+  <div class="hero-content">
 
-    /* ── Sidebar ── */
-    .sidebar {
-      position: fixed;
-      right: 2rem;
-      top: 50%;
-      transform: translateY(-50%);
-      z-index: 150;
-      display: flex;
-      flex-direction: column;
-      gap: 0.6rem;
-    }
-    .sidebar-btn {
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      border: none;
-      background: transparent;
-      cursor: pointer;
-      font-size: 1.3rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.25s ease;
-    }
-    .sidebar-btn.active {
-      background: #1B2C52;
-    }
-    .sidebar-btn:hover:not(.active) {
-      background: rgba(255,255,255,0.08);
-    }
-  </style>
-</head>
-<body>
+    <!-- LEFT SIDE -->
 
-  <div class="fade-overlay"></div>
+    <div class="hero-left">
 
-  <!-- Sidebar -->
-  <nav class="sidebar" aria-label="Page navigation">
-    <button class="sidebar-btn active" data-index="0" title="Home">🏠</button>
-    <button class="sidebar-btn" data-index="1" title="Experience">💼</button>
-    <button class="sidebar-btn" data-index="2" title="Projects">🚀</button>
-    <button class="sidebar-btn" data-index="3" title="Writing">📖</button>
-  </nav>
+      <h1 class="hero-name">
+        Bryce Larson
+      </h1>
 
-  <!-- Scroll container -->
-  <div class="scroll-container" id="scroller">
+      <div class="hero-divider"></div>
 
-    <section class="page" id="home">
-      <div class="page-content hero">
-        <h1>BRYCE LARSON</h1>
-        <div class="divider"></div>
-        <div class="social-links">
-          <a href="https://linkedin.com/in/YOUR_USERNAME" target="_blank" aria-label="LinkedIn">
-            <i class="fa-brands fa-linkedin"></i>
-          </a>
-          <a href="https://instagram.com/YOUR_USERNAME" target="_blank" aria-label="Instagram">
-            <i class="fa-brands fa-instagram"></i>
-          </a>
-          <a href="https://github.com/Eclipse718" target="_blank" aria-label="GitHub">
-            <i class="fa-brands fa-github"></i>
-          </a>
-        </div>
-      </div>
-    </section>
+      <p class="hero-tagline">
+        Computer Science student at the University of Washington focused on
+        software engineering, machine learning, and building thoughtful systems.
+      </p>
 
-    <section class="page" id="experience">
-      <div class="page-content">
-        <h2>EXPERIENCE</h2>
-        <p>Coming soon.</p>
-      </div>
-    </section>
+      <a
+        class="linkedin-link"
+        href="https://linkedin.com/in/YOUR_USERNAME"
+        target="_blank"
+      >
+        LinkedIn
+      </a>
 
-    <section class="page" id="projects">
-      <div class="page-content">
-        <h2>PROJECTS</h2>
-        <p>Coming soon.</p>
-      </div>
-    </section>
+    </div>
 
-    <section class="page" id="writing">
-      <div class="page-content">
-        <h2>WRITING</h2>
-        <p>Coming soon.</p>
-      </div>
-    </section>
+    <!-- RIGHT SIDE -->
+
+    <div class="hero-right">
+
+      <img
+        src="/website-images/circlecroppedme.png"
+        alt="Bryce Larson"
+        class="hero-photo"
+      >
+
+    </div>
 
   </div>
 
-  <script>
-    const scroller = document.getElementById('scroller');
-    const pages = document.querySelectorAll('.page');
-    const btns = document.querySelectorAll('.sidebar-btn');
+</section>
 
-    // Sidebar click → scroll to page
-    btns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const index = parseInt(btn.dataset.index);
-        pages[index].scrollIntoView({ behavior: 'smooth' });
-      });
-    });
+<!-- EXPERIENCE -->
 
-    // Update active sidebar btn based on scroll position
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
-          const index = Array.from(pages).indexOf(entry.target);
-          btns.forEach(b => b.classList.remove('active'));
-          btns[index].classList.add('active');
-        }
-      });
-    }, { threshold: 0.5 });
+<section id="experience" class="section">
 
-    pages.forEach(page => observer.observe(page));
-  </script>
+  <h2>Experience</h2>
 
-</body>
-</html>
+  <p>
+    Coming soon.
+  </p>
+
+</section>
+
+<!-- PROJECTS -->
+
+<section id="projects" class="section">
+
+  <h2>Projects</h2>
+
+  <p>
+    Coming soon.
+  </p>
+
+</section>
+
+<!-- WRITING -->
+
+<section id="writing" class="section">
+
+  <h2>Writing</h2>
+
+  <p>
+    Coming soon.
+  </p>
+
+</section>
