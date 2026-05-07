@@ -13,6 +13,7 @@
     }
 
     body {
+      position: relative;
       background-image: url("website-images/Suzzallo_Library_at_UW_9572958209-1030x773.jpg");
       background-size: cover;
       background-position: center;
@@ -23,9 +24,24 @@
       align-items: center;
 
       font-family: "Times New Roman", Times, serif;
+      overflow: hidden;
+    }
+
+    /* Overlay */
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #1B2133BF;
+      z-index: 1;
     }
 
     h1 {
+      position: relative;
+      z-index: 2;
       color: white;
       font-size: 4rem;
       font-weight: normal;
@@ -34,6 +50,7 @@
     }
   </style>
 </head>
+
 <body>
   <h1>Bryce Larson</h1>
 </body>
