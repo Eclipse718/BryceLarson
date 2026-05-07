@@ -3,85 +3,105 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bryce Larson</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <title>BRYCE LARSON</title>
+
   <style>
     html, body {
       margin: 0;
       width: 100%;
       height: 100%;
     }
+
     body {
       position: relative;
       background-image: url("website-images/Suzzallo_Library_at_UW_9572958209-1030x773.jpg");
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
+
       display: flex;
       justify-content: center;
       align-items: center;
+
       font-family: "Times New Roman", Times, serif;
       overflow: hidden;
     }
+
+    /* Overlay */
     body::before {
       content: "";
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      inset: 0;
       background-color: #1B2133BF;
       z-index: 1;
     }
-    .hero {
+
+    .content {
       position: relative;
       z-index: 2;
       text-align: center;
-      margin-bottom: 8vh;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      transform: translateY(-40px); /* moves everything slightly upward */
     }
+
     h1 {
+      margin: 0;
       color: white;
       font-size: 4rem;
+      letter-spacing: 3px;
       font-weight: normal;
-      letter-spacing: 0.2em;
+      text-transform: uppercase;
       text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
-      margin: 0 0 1.2rem 0;
     }
+
     .divider {
-      width: 60px;
+      width: 200px;
       height: 1px;
-      background-color: #c9a96e;
-      margin: 0 auto 1.4rem auto;
+      background: rgba(255,255,255,0.7);
+      margin: 20px 0;
     }
-    .social-links {
+
+    .icons {
       display: flex;
+      gap: 25px;
       justify-content: center;
-      gap: 1.8rem;
+      align-items: center;
     }
-    .social-links a {
-      color: #c9a96e;
-      font-size: 1.6rem;
-      text-decoration: none;
-      transition: color 0.25s ease;
+
+    .icons a img {
+      width: 28px;
+      height: 28px;
+      filter: brightness(0) invert(1); /* makes icons white */
+      transition: transform 0.2s ease;
     }
-    .social-links a:hover {
-      color: #f0d899;
+
+    .icons a img:hover {
+      transform: scale(1.15);
     }
   </style>
 </head>
+
 <body>
-  <div class="hero">
+  <div class="content">
     <h1>BRYCE LARSON</h1>
+
     <div class="divider"></div>
-    <div class="social-links">
-      <a href="https://instagram.com/YOUR_USERNAME" target="_blank" aria-label="Instagram">
-        <i class="fa-brands fa-instagram"></i>
+
+    <div class="icons">
+      <a href="https://instagram.com" target="_blank">
+        <img src="website-images/instagram.png" alt="Instagram">
       </a>
-      <a href="https://linkedin.com/in/YOUR_USERNAME" target="_blank" aria-label="LinkedIn">
-        <i class="fa-brands fa-linkedin"></i>
+
+      <a href="https://linkedin.com" target="_blank">
+        <img src="website-images/linkedin.png" alt="LinkedIn">
       </a>
-      <a href="https://github.com/YOUR_USERNAME" target="_blank" aria-label="GitHub">
-        <i class="fa-brands fa-github"></i>
+
+      <a href="https://github.com" target="_blank">
+        <img src="website-images/github.png" alt="GitHub">
       </a>
     </div>
   </div>
