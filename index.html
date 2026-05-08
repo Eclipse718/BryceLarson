@@ -7,7 +7,7 @@
 
   <title>Bryce Larson</title>
 
-  <link rel="stylesheet" href="css/style.css?v=10">
+  <link rel="stylesheet" href="css/style.css?v=12">
 
   <link
     rel="stylesheet"
@@ -157,9 +157,9 @@
           <div class="project-window">
             <div class="project-track" id="projectTrack">
 
-              <a class="project-slide" href="./gans.html">
+              <a class="project-slide active" href="gans.html">
                 <img
-                  src="./Gans/GANS Faces.png"
+                  src="Gans/GANS Faces.png"
                   alt="GANs Image Generation preview"
                   class="project-preview"
                 >
@@ -172,9 +172,9 @@
                 </div>
               </a>
 
-              <a class="project-slide" href="./buttonbattle.html">
+              <a class="project-slide" href="buttonbattle.html">
                 <img
-                  src="./buttonbattle/buttonbattle1.png"
+                  src="buttonbattle/buttonbattle1.png"
                   alt="Button Battle Game preview"
                   class="project-preview"
                 >
@@ -187,9 +187,9 @@
                 </div>
               </a>
 
-              <a class="project-slide" href="./colony.html">
+              <a class="project-slide" href="colony.html">
                 <img
-                  src="./colony/Broodmother.png"
+                  src="colony/colony1.png"
                   alt="Colony project preview"
                   class="project-preview"
                 >
@@ -202,7 +202,7 @@
                 </div>
               </a>
 
-              <a class="project-slide" href="./digital-antfarm.html">
+              <a class="project-slide" href="digital-antfarm.html">
                 <div class="project-preview project-preview-title-card">
                   <span>Digital Antfarm</span>
                 </div>
@@ -215,9 +215,9 @@
                 </div>
               </a>
 
-              <a class="project-slide" href="./miscellaneous.html">
+              <a class="project-slide" href="miscellaneous.html">
                 <img
-                  src="./miscellaneous/minesweeper.png"
+                  src="miscellaneous/minesweeper.png"
                   alt="Miscellaneous projects preview"
                   class="project-preview"
                 >
@@ -627,6 +627,19 @@
     });
 
     pages.forEach((page) => observer.observe(page));
+
+    window.addEventListener('load', () => {
+      if (window.location.hash) {
+        const target = document.querySelector(window.location.hash);
+
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'auto',
+            block: 'start'
+          });
+        }
+      }
+    });
   </script>
 
 </body>
