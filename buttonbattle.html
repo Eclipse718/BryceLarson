@@ -7,7 +7,7 @@
 
   <title>Button Battle Game | Bryce Larson</title>
 
-  <link rel="stylesheet" href="css/style.css?v=8">
+  <link rel="stylesheet" href="css/style.css?v=12">
 </head>
 
 <body class="project-body">
@@ -75,7 +75,7 @@
       </article>
 
       <article class="project-media-card">
-        <video controls preload="metadata">
+        <video controls preload="metadata" playsinline>
           <source src="buttonbattle/buttonbattle.mp4" type="video/mp4">
           Your browser does not support the video tag.
         </video>
@@ -84,6 +84,8 @@
 
         <p>
           Embedded gameplay recording.
+          If the embedded player does not load, open the video directly:
+          <a href="buttonbattle/buttonbattle.mp4" target="_blank" rel="noopener noreferrer">buttonbattle.mp4</a>.
         </p>
       </article>
 
@@ -105,7 +107,7 @@
         <ul>
           <li>Gameplay screenshots</li>
           <li>Godot development screenshot</li>
-          <li>Embedded gameplay video</li>
+          <li>Embedded gameplay video with a direct fallback link</li>
         </ul>
       </article>
     </section>
