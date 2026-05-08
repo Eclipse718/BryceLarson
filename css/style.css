@@ -403,7 +403,6 @@ a {
   width: 100%;
   height: 340px;
   display: block;
-  object-fit: contain;
   object-position: center center;
   border: 3px solid #c9a96e;
   border-radius: 14px;
@@ -414,17 +413,17 @@ a {
     inset 0 0 0 1px rgba(255, 255, 255, 0.08);
 }
 
-.project-preview-title-card {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #f5f0e8;
-  font-size: clamp(1.6rem, 4vw, 3rem);
-  letter-spacing: 0.12em;
-  line-height: 1.2;
-  text-transform: uppercase;
-  text-align: center;
-  padding: 1.5rem;
+.project-preview-contain {
+  object-fit: contain;
+}
+
+.project-preview-cover {
+  object-fit: cover;
+  object-position: center center;
+}
+
+.project-slide video.project-preview {
+  object-fit: contain;
 }
 
 .project-slide-text {
