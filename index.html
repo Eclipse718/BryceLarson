@@ -7,7 +7,7 @@
 
   <title>Bryce Larson</title>
 
-  <link rel="stylesheet" href="css/style.css?v=12">
+  <link rel="stylesheet" href="css/style.css?v=13">
 
   <link
     rel="stylesheet"
@@ -161,7 +161,7 @@
                 <img
                   src="Gans/GANS Faces.png"
                   alt="GANs Image Generation preview"
-                  class="project-preview"
+                  class="project-preview project-preview-contain"
                 >
 
                 <div class="project-slide-text">
@@ -176,7 +176,7 @@
                 <img
                   src="buttonbattle/buttonbattle1.png"
                   alt="Button Battle Game preview"
-                  class="project-preview"
+                  class="project-preview project-preview-contain"
                 >
 
                 <div class="project-slide-text">
@@ -191,7 +191,7 @@
                 <img
                   src="colony/colony1.png"
                   alt="Colony project preview"
-                  class="project-preview"
+                  class="project-preview project-preview-contain"
                 >
 
                 <div class="project-slide-text">
@@ -203,9 +203,15 @@
               </a>
 
               <a class="project-slide" href="digital-antfarm.html">
-                <div class="project-preview project-preview-title-card">
-                  <span>Digital Antfarm</span>
-                </div>
+                <video
+                  class="project-preview project-preview-contain"
+                  muted
+                  loop
+                  playsinline
+                  preload="metadata"
+                >
+                  <source src="digital%20antfarm/asciiland1.mp4" type="video/mp4">
+                </video>
 
                 <div class="project-slide-text">
                   <h3>Digital Antfarm</h3>
@@ -219,7 +225,7 @@
                 <img
                   src="miscellaneous/minesweeper.png"
                   alt="Miscellaneous projects preview"
-                  class="project-preview"
+                  class="project-preview project-preview-cover"
                 >
 
                 <div class="project-slide-text">
@@ -352,6 +358,7 @@
     const prevProjectBtn = document.querySelector('.project-arrow-left');
     const nextProjectBtn = document.querySelector('.project-arrow-right');
     const projectDots = document.querySelector('#projectDots');
+    const projectVideos = document.querySelectorAll('.project-slide video');
 
     const prevBookBtn = document.querySelector('.book-control.prev');
     const nextBookBtn = document.querySelector('.book-control.next');
@@ -384,6 +391,16 @@
       dots.forEach((dot, index) => {
         dot.classList.toggle('active', index === currentProject);
       });
+
+      projectVideos.forEach((video) => {
+        video.pause();
+      });
+
+      const activeVideo = projectSlides[currentProject].querySelector('video');
+
+      if (activeVideo) {
+        activeVideo.play().catch(() => {});
+      }
     }
 
     function goToProject(index) {
