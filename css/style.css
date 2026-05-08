@@ -12,13 +12,17 @@ html,
 body {
   margin: 0;
   width: 100%;
-  height: 100%;
+  min-height: 100%;
   font-family: "Times New Roman", Times, serif;
   background: #0f1420;
 }
 
 body {
   overflow: hidden;
+}
+
+a {
+  color: inherit;
 }
 
 /* ======================
@@ -99,7 +103,7 @@ body {
 .topbar-link {
   border: none;
   outline: none;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 0.35rem;
   padding: 0.34rem 0.78rem;
@@ -140,7 +144,7 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  overflow-y: scroll;
+  overflow-y: auto;
   scroll-snap-type: y mandatory;
   scroll-behavior: smooth;
   scrollbar-width: auto;
@@ -170,7 +174,7 @@ body {
   justify-content: center;
   align-items: center;
   position: relative;
-  padding: 0 1.5rem;
+  padding: 2rem 1.5rem;
 }
 
 #home {
@@ -203,7 +207,7 @@ body {
 .section-content {
   position: relative;
   z-index: 2;
-  max-width: 900px;
+  width: min(900px, 94vw);
   text-align: center;
   color: white;
 }
@@ -356,13 +360,14 @@ body {
 
 .project-track {
   display: flex;
+  width: 100%;
   transition: transform 0.45s ease;
 }
 
 .project-slide {
   min-width: 100%;
   display: grid;
-  grid-template-columns: 1.08fr 0.92fr;
+  grid-template-columns: minmax(0, 1.08fr) minmax(260px, 0.92fr);
   align-items: center;
   gap: 1.4rem;
   padding: 1.35rem;
@@ -414,8 +419,9 @@ body {
   align-items: center;
   justify-content: center;
   color: #f5f0e8;
-  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-size: clamp(1.6rem, 4vw, 3rem);
   letter-spacing: 0.12em;
+  line-height: 1.2;
   text-transform: uppercase;
   text-align: center;
   padding: 1.5rem;
@@ -1204,6 +1210,10 @@ body {
     radial-gradient(circle at center, rgba(27, 44, 82, 0.55), #050812 72%);
 }
 
+.project-media-card video {
+  min-height: 280px;
+}
+
 .project-media-card h2 {
   margin: 1rem 0 0.35rem;
   color: #f5f0e8;
@@ -1304,6 +1314,7 @@ body {
 
   .page-section {
     min-height: calc(100vh - 50px);
+    padding: 2rem 1rem;
   }
 
   .hero h1 {
