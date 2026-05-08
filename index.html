@@ -7,7 +7,7 @@
 
   <title>Bryce Larson</title>
 
-  <link rel="stylesheet" href="css/style.css?v=9">
+  <link rel="stylesheet" href="css/style.css?v=10">
 
   <link
     rel="stylesheet"
@@ -189,7 +189,7 @@
 
               <a class="project-slide" href="./colony.html">
                 <img
-                  src="./colony/colony_early_gif.gif"
+                  src="./colony/Broodmother.png"
                   alt="Colony project preview"
                   class="project-preview"
                 >
@@ -203,15 +203,9 @@
               </a>
 
               <a class="project-slide" href="./digital-antfarm.html">
-                <video
-                  class="project-preview"
-                  muted
-                  loop
-                  playsinline
-                  preload="auto"
-                >
-                  <source src="./digital%20antfarm/asciiland1.mp4" type="video/mp4">
-                </video>
+                <div class="project-preview project-preview-title-card">
+                  <span>Digital Antfarm</span>
+                </div>
 
                 <div class="project-slide-text">
                   <h3>Digital Antfarm</h3>
@@ -358,7 +352,6 @@
     const prevProjectBtn = document.querySelector('.project-arrow-left');
     const nextProjectBtn = document.querySelector('.project-arrow-right');
     const projectDots = document.querySelector('#projectDots');
-    const projectVideos = document.querySelectorAll('.project-slide video');
 
     const prevBookBtn = document.querySelector('.book-control.prev');
     const nextBookBtn = document.querySelector('.book-control.next');
@@ -391,16 +384,6 @@
       dots.forEach((dot, index) => {
         dot.classList.toggle('active', index === currentProject);
       });
-
-      projectVideos.forEach((video) => {
-        video.pause();
-      });
-
-      const activeVideo = projectSlides[currentProject].querySelector('video');
-
-      if (activeVideo) {
-        activeVideo.play().catch(() => {});
-      }
     }
 
     function goToProject(index) {
