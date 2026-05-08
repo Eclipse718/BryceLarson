@@ -305,7 +305,9 @@ body {
 .experience-card-emoji {
   margin-bottom: 0.8rem;
   font-size: 2.8rem;
-  filter: grayscale(1);
+  line-height: 1;
+  color: #f5f0e8;
+  font-family: "Times New Roman", Georgia, serif;
 }
 
 .experience-card h3 {
@@ -946,10 +948,6 @@ body {
   .topbar-link {
     padding: 0.28rem 0.42rem;
     font-size: 0.78rem;
-  }
-
-  .topbar-btn span {
-    display: none;
   }
 
   .scroll-container {
