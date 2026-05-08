@@ -7,7 +7,7 @@
 
   <title>Bryce Larson</title>
 
-  <link rel="stylesheet" href="css/style.css?v=7">
+  <link rel="stylesheet" href="css/style.css?v=8">
 
   <link
     rel="stylesheet"
@@ -140,9 +140,118 @@
     </section>
 
     <section class="page-section" id="projects">
-      <div class="section-content">
+      <div class="section-content projects-content">
         <h2>PROJECTS</h2>
-        <p>Coming soon.</p>
+
+        <p class="projects-subtitle">
+          Scroll through selected projects. Click a card to view images, videos, and details.
+        </p>
+
+        <div class="project-carousel" aria-label="Project carousel">
+          <button
+            class="project-arrow project-arrow-left"
+            type="button"
+            aria-label="Previous project"
+          ></button>
+
+          <div class="project-window">
+            <div class="project-track" id="projectTrack">
+
+              <a class="project-slide" href="gans.html">
+                <img
+                  src="Gans/GANS Faces.png"
+                  alt="GANs Image Generation preview"
+                  class="project-preview"
+                >
+
+                <div class="project-slide-text">
+                  <h3>GANs Image Generation</h3>
+                  <p>
+                    Generative adversarial networks, conditional training, and generated face imagery.
+                  </p>
+                </div>
+              </a>
+
+              <a class="project-slide" href="buttonbattle.html">
+                <img
+                  src="buttonbattle/buttonbattle1.png"
+                  alt="Button Battle Game preview"
+                  class="project-preview"
+                >
+
+                <div class="project-slide-text">
+                  <h3>Button Battle Game</h3>
+                  <p>
+                    A playable game project with interactive mechanics and recorded gameplay.
+                  </p>
+                </div>
+              </a>
+
+              <a class="project-slide" href="colony.html">
+                <video
+                  class="project-preview"
+                  muted
+                  loop
+                  playsinline
+                  preload="metadata"
+                  poster="documents/buttonbattle1.png"
+                >
+                  <source src="colony/card_buy.mp4" type="video/mp4">
+                </video>
+
+                <div class="project-slide-text">
+                  <h3>Colony</h3>
+                  <p>
+                    A game systems project featuring colony mechanics, card buying, and boss encounters.
+                  </p>
+                </div>
+              </a>
+
+              <a class="project-slide" href="digital-antfarm.html">
+                <video
+                  class="project-preview"
+                  muted
+                  loop
+                  playsinline
+                  preload="metadata"
+                >
+                  <source src="digital%20antfarm/asciiland1.mp4" type="video/mp4">
+                </video>
+
+                <div class="project-slide-text">
+                  <h3>Digital Antfarm</h3>
+                  <p>
+                    ASCII-inspired digital environments, simulation visuals, and experimental interaction.
+                  </p>
+                </div>
+              </a>
+
+              <a class="project-slide" href="miscellaneous.html">
+                <img
+                  src="miscellaneous/minesweeper.png"
+                  alt="Miscellaneous projects preview"
+                  class="project-preview"
+                >
+
+                <div class="project-slide-text">
+                  <h3>Miscellaneous</h3>
+                  <p>
+                    Smaller experiments, prototypes, and standalone builds.
+                  </p>
+                </div>
+              </a>
+
+            </div>
+          </div>
+
+          <button
+            class="project-arrow project-arrow-right"
+            type="button"
+            aria-label="Next project"
+          ></button>
+
+          <div class="project-dots" id="projectDots" aria-label="Project carousel indicators"></div>
+        </div>
       </div>
     </section>
 
@@ -249,6 +358,12 @@
     const contactModal = document.querySelector('#contactModal');
     const contactCloseBtn = document.querySelector('.contact-close');
 
+    const projectTrack = document.querySelector('#projectTrack');
+    const projectSlides = document.querySelectorAll('.project-slide');
+    const prevProjectBtn = document.querySelector('.project-arrow-left');
+    const nextProjectBtn = document.querySelector('.project-arrow-right');
+    const projectDots = document.querySelector('#projectDots');
+
     const prevBookBtn = document.querySelector('.book-control.prev');
     const nextBookBtn = document.querySelector('.book-control.next');
     const turningPage = document.querySelector('#turningPage');
@@ -260,6 +375,88 @@
     const rightPageList = document.querySelector('#rightPageList');
     const leftPageNumber = document.querySelector('#leftPageNumber');
     const rightPageNumber = document.querySelector('#rightPageNumber');
+
+    const projectVideos = document.querySelectorAll('.project-slide video');
+    let currentProject = 0;
+
+    function renderProjectCarousel() {
+      if (!projectTrack || projectSlides.length === 0) {
+        return;
+      }
+
+      projectTrack.style.transform = `translateX(-${currentProject * 100}%)`;
+
+      projectSlides.forEach((slide, index) => {
+        slide.classList.toggle('active', index === currentProject);
+        slide.setAttribute('tabindex', index === currentProject ? '0' : '-1');
+      });
+
+      const dots = projectDots.querySelectorAll('.project-dot');
+
+      dots.forEach((dot, index) => {
+        dot.classList.toggle('active', index === currentProject);
+      });
+
+      projectVideos.forEach((video) => {
+        video.pause();
+      });
+
+      const activeVideo = projectSlides[currentProject].querySelector('video');
+
+      if (activeVideo) {
+        activeVideo.play().catch(() => {});
+      }
+    }
+
+    function goToProject(index) {
+      if (projectSlides.length === 0) {
+        return;
+      }
+
+      currentProject = (index + projectSlides.length) % projectSlides.length;
+      renderProjectCarousel();
+    }
+
+    projectSlides.forEach((_, index) => {
+      const dot = document.createElement('button');
+      dot.className = 'project-dot';
+      dot.type = 'button';
+      dot.setAttribute('aria-label', `Go to project ${index + 1}`);
+
+      dot.addEventListener('click', () => {
+        goToProject(index);
+      });
+
+      projectDots.appendChild(dot);
+    });
+
+    prevProjectBtn.addEventListener('click', () => {
+      goToProject(currentProject - 1);
+    });
+
+    nextProjectBtn.addEventListener('click', () => {
+      goToProject(currentProject + 1);
+    });
+
+    document.addEventListener('keydown', (event) => {
+      const projectsSection = document.querySelector('#projects');
+      const rect = projectsSection.getBoundingClientRect();
+      const projectsVisible = rect.top < window.innerHeight && rect.bottom > 0;
+
+      if (!projectsVisible) {
+        return;
+      }
+
+      if (event.key === 'ArrowLeft') {
+        goToProject(currentProject - 1);
+      }
+
+      if (event.key === 'ArrowRight') {
+        goToProject(currentProject + 1);
+      }
+    });
+
+    renderProjectCarousel();
 
     const spreads = [
       {
