@@ -7,7 +7,7 @@
 
   <title>Bryce Larson</title>
 
-  <link rel="stylesheet" href="css/style.css?v=8">
+  <link rel="stylesheet" href="css/style.css?v=9">
 
   <link
     rel="stylesheet"
@@ -157,9 +157,9 @@
           <div class="project-window">
             <div class="project-track" id="projectTrack">
 
-              <a class="project-slide" href="gans.html">
+              <a class="project-slide" href="./gans.html">
                 <img
-                  src="Gans/GANS Faces.png"
+                  src="./Gans/GANS Faces.png"
                   alt="GANs Image Generation preview"
                   class="project-preview"
                 >
@@ -172,9 +172,9 @@
                 </div>
               </a>
 
-              <a class="project-slide" href="buttonbattle.html">
+              <a class="project-slide" href="./buttonbattle.html">
                 <img
-                  src="buttonbattle/buttonbattle1.png"
+                  src="./buttonbattle/buttonbattle1.png"
                   alt="Button Battle Game preview"
                   class="project-preview"
                 >
@@ -187,17 +187,12 @@
                 </div>
               </a>
 
-              <a class="project-slide" href="colony.html">
-                <video
+              <a class="project-slide" href="./colony.html">
+                <img
+                  src="./colony/colony_early_gif.gif"
+                  alt="Colony project preview"
                   class="project-preview"
-                  muted
-                  loop
-                  playsinline
-                  preload="metadata"
-                  poster="documents/buttonbattle1.png"
                 >
-                  <source src="colony/card_buy.mp4" type="video/mp4">
-                </video>
 
                 <div class="project-slide-text">
                   <h3>Colony</h3>
@@ -207,15 +202,15 @@
                 </div>
               </a>
 
-              <a class="project-slide" href="digital-antfarm.html">
+              <a class="project-slide" href="./digital-antfarm.html">
                 <video
                   class="project-preview"
                   muted
                   loop
                   playsinline
-                  preload="metadata"
+                  preload="auto"
                 >
-                  <source src="digital%20antfarm/asciiland1.mp4" type="video/mp4">
+                  <source src="./digital%20antfarm/asciiland1.mp4" type="video/mp4">
                 </video>
 
                 <div class="project-slide-text">
@@ -226,9 +221,9 @@
                 </div>
               </a>
 
-              <a class="project-slide" href="miscellaneous.html">
+              <a class="project-slide" href="./miscellaneous.html">
                 <img
-                  src="miscellaneous/minesweeper.png"
+                  src="./miscellaneous/minesweeper.png"
                   alt="Miscellaneous projects preview"
                   class="project-preview"
                 >
@@ -363,6 +358,7 @@
     const prevProjectBtn = document.querySelector('.project-arrow-left');
     const nextProjectBtn = document.querySelector('.project-arrow-right');
     const projectDots = document.querySelector('#projectDots');
+    const projectVideos = document.querySelectorAll('.project-slide video');
 
     const prevBookBtn = document.querySelector('.book-control.prev');
     const nextBookBtn = document.querySelector('.book-control.next');
@@ -376,7 +372,6 @@
     const leftPageNumber = document.querySelector('#leftPageNumber');
     const rightPageNumber = document.querySelector('#rightPageNumber');
 
-    const projectVideos = document.querySelectorAll('.project-slide video');
     let currentProject = 0;
 
     function renderProjectCarousel() {
@@ -430,31 +425,15 @@
       projectDots.appendChild(dot);
     });
 
-    prevProjectBtn.addEventListener('click', () => {
-      goToProject(currentProject - 1);
-    });
-
-    nextProjectBtn.addEventListener('click', () => {
-      goToProject(currentProject + 1);
-    });
-
-    document.addEventListener('keydown', (event) => {
-      const projectsSection = document.querySelector('#projects');
-      const rect = projectsSection.getBoundingClientRect();
-      const projectsVisible = rect.top < window.innerHeight && rect.bottom > 0;
-
-      if (!projectsVisible) {
-        return;
-      }
-
-      if (event.key === 'ArrowLeft') {
+    if (prevProjectBtn && nextProjectBtn) {
+      prevProjectBtn.addEventListener('click', () => {
         goToProject(currentProject - 1);
-      }
+      });
 
-      if (event.key === 'ArrowRight') {
+      nextProjectBtn.addEventListener('click', () => {
         goToProject(currentProject + 1);
-      }
-    });
+      });
+    }
 
     renderProjectCarousel();
 
