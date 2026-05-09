@@ -7,7 +7,7 @@
 
   <title>Bryce Larson</title>
 
-  <link rel="stylesheet" href="css/style.css?v=18">
+  <link rel="stylesheet" href="css/style.css?v=19">
 
   <link
     rel="stylesheet"
@@ -282,42 +282,117 @@
     </section>
 
     <section class="page-section" id="writing">
-      <div class="section-content writing-stage">
+      <div class="section-content writing-content">
         <h2>WRITING</h2>
 
         <p class="writing-subtitle">
-          Browse the archive.
+          Scroll through stories. Click a title to open the story page.
         </p>
 
-        <div class="book-carousel" aria-label="Writing archive book carousel">
-          <button class="book-control prev" type="button" aria-label="Previous page">
-            <i class="fa-solid fa-chevron-left"></i>
-          </button>
+        <div class="writing-carousel" aria-label="Writing carousel">
+          <button
+            class="writing-arrow writing-arrow-left"
+            type="button"
+            aria-label="Previous writing"
+          ></button>
 
-          <div class="book-shell">
-            <div class="book-base">
-              <div class="book-page left">
-                <h3 id="leftPageTitle">Essays</h3>
-                <ul id="leftPageList"></ul>
-                <span class="page-number" id="leftPageNumber">1</span>
-              </div>
+          <div class="writing-window">
+            <div class="writing-track" id="writingTrack">
 
-              <div class="book-page right">
-                <h3 id="rightPageTitle">Notes</h3>
-                <ul id="rightPageList"></ul>
-                <span class="page-number" id="rightPageNumber">2</span>
-              </div>
+              <article class="writing-slide active">
+                <div class="writing-card">
+                  <a class="writing-title-link" href="window-shopping.html">
+                    <h3>Window Shopping</h3>
+                  </a>
+
+                  <p>
+                    A story presented as a formatted document page, with the original DOCX available to download.
+                  </p>
+                </div>
+              </article>
+
+              <article class="writing-slide">
+                <div class="writing-card">
+                  <a class="writing-title-link" href="a-cold-day.html">
+                    <h3>a Cold Day</h3>
+                  </a>
+
+                  <p>
+                    A quiet, atmospheric piece centered on stillness, weather, and memory.
+                  </p>
+                </div>
+              </article>
+
+              <article class="writing-slide">
+                <div class="writing-card">
+                  <a class="writing-title-link" href="if-youre-happy-and-you-know-it.html">
+                    <h3>If You're Happy and You Know It...</h3>
+                  </a>
+
+                  <p>
+                    A story built around performance, pressure, and the uneasy shape of forced joy.
+                  </p>
+                </div>
+              </article>
+
+              <article class="writing-slide">
+                <div class="writing-card">
+                  <a class="writing-title-link" href="circus-freaks.html">
+                    <h3>Circus Freaks.</h3>
+                  </a>
+
+                  <p>
+                    A sharp, theatrical story about spectacle, otherness, and the cost of being watched.
+                  </p>
+                </div>
+              </article>
+
+              <article class="writing-slide">
+                <div class="writing-card">
+                  <a class="writing-title-link" href="poppets.html">
+                    <h3>Poppets</h3>
+                  </a>
+
+                  <p>
+                    A strange and intimate piece about small figures, control, and hidden emotional machinery.
+                  </p>
+                </div>
+              </article>
+
+              <article class="writing-slide">
+                <div class="writing-card">
+                  <a class="writing-title-link" href="infina.html">
+                    <h3>INFINA</h3>
+                  </a>
+
+                  <p>
+                    A speculative story with a broader scale, centered on systems, infinity, and consequence.
+                  </p>
+                </div>
+              </article>
+
+              <article class="writing-slide">
+                <div class="writing-card">
+                  <a class="writing-title-link" href="life-in-reverse.html">
+                    <h3>Life in Reverse</h3>
+                  </a>
+
+                  <p>
+                    A reflective story exploring time, regret, and what changes when a life is viewed backwards.
+                  </p>
+                </div>
+              </article>
+
             </div>
-
-            <div class="turning-page" id="turningPage"></div>
-            <div class="book-shadow"></div>
           </div>
 
-          <button class="book-control next" type="button" aria-label="Next page">
-            <i class="fa-solid fa-chevron-right"></i>
-          </button>
+          <button
+            class="writing-arrow writing-arrow-right"
+            type="button"
+            aria-label="Next writing"
+          ></button>
 
-          <div class="book-dots" id="bookDots" aria-label="Book page indicators"></div>
+          <div class="writing-dots" id="writingDots" aria-label="Writing carousel indicators"></div>
         </div>
       </div>
     </section>
@@ -391,19 +466,14 @@
     const projectDots = document.querySelector('#projectDots');
     const projectVideos = document.querySelectorAll('.project-slide video');
 
-    const prevBookBtn = document.querySelector('.book-control.prev');
-    const nextBookBtn = document.querySelector('.book-control.next');
-    const turningPage = document.querySelector('#turningPage');
-    const bookDots = document.querySelector('#bookDots');
-
-    const leftPageTitle = document.querySelector('#leftPageTitle');
-    const rightPageTitle = document.querySelector('#rightPageTitle');
-    const leftPageList = document.querySelector('#leftPageList');
-    const rightPageList = document.querySelector('#rightPageList');
-    const leftPageNumber = document.querySelector('#leftPageNumber');
-    const rightPageNumber = document.querySelector('#rightPageNumber');
+    const writingTrack = document.querySelector('#writingTrack');
+    const writingSlides = document.querySelectorAll('.writing-slide');
+    const prevWritingBtn = document.querySelector('.writing-arrow-left');
+    const nextWritingBtn = document.querySelector('.writing-arrow-right');
+    const writingDots = document.querySelector('#writingDots');
 
     let currentProject = 0;
+    let currentWriting = 0;
 
     function renderProjectCarousel() {
       if (!projectTrack || projectSlides.length === 0) {
@@ -468,150 +538,57 @@
 
     renderProjectCarousel();
 
-    const spreads = [
-      {
-        leftTitle: 'Essays',
-        leftItems: [
-          ['The Library as Memory', '#'],
-          ['Notes on Research and Attention', '#'],
-          ['Curating the Digital Shelf', '#'],
-          ['Public Knowledge and Place', '#']
-        ],
-        rightTitle: 'Notes',
-        rightItems: [
-          ['Reading in the Stacks', '#'],
-          ['A Field Guide to Quiet Spaces', '#'],
-          ['Cataloging What Remains', '#'],
-          ['Archives, Margins, and Metadata', '#']
-        ]
-      },
-      {
-        leftTitle: 'Research',
-        leftItems: [
-          ['Classification and Care', '#'],
-          ['Indexes, Archives, and Access', '#'],
-          ['The Social Life of Metadata', '#'],
-          ['Preservation as Practice', '#']
-        ],
-        rightTitle: 'Reviews',
-        rightItems: [
-          ['On Quiet Rooms', '#'],
-          ['The Book as Interface', '#'],
-          ['Libraries After Midnight', '#'],
-          ['Margins and Footnotes', '#']
-        ]
-      },
-      {
-        leftTitle: 'Projects',
-        leftItems: [
-          ['Digital Collections Study', '#'],
-          ['Seattle Reading Map', '#'],
-          ['Personal Archive Notes', '#'],
-          ['Open Bibliography Draft', '#']
-        ],
-        rightTitle: 'Fragments',
-        rightItems: [
-          ['A Note on Place', '#'],
-          ['Small Catalogs', '#'],
-          ['The Shape of a Shelf', '#'],
-          ['Future Reading List', '#']
-        ]
-      }
-    ];
-
-    let currentSpread = 0;
-    let isTurning = false;
-
-    function renderList(container, items) {
-      container.innerHTML = '';
-
-      items.forEach(([title, href]) => {
-        const li = document.createElement('li');
-        const a = document.createElement('a');
-
-        a.textContent = title;
-        a.href = href;
-
-        li.appendChild(a);
-        container.appendChild(li);
-      });
-    }
-
-    function renderBook() {
-      const spread = spreads[currentSpread];
-
-      leftPageTitle.textContent = spread.leftTitle;
-      rightPageTitle.textContent = spread.rightTitle;
-
-      renderList(leftPageList, spread.leftItems);
-      renderList(rightPageList, spread.rightItems);
-
-      leftPageNumber.textContent = String(currentSpread * 2 + 1);
-      rightPageNumber.textContent = String(currentSpread * 2 + 2);
-
-      prevBookBtn.disabled = currentSpread === 0;
-      nextBookBtn.disabled = currentSpread === spreads.length - 1;
-
-      const dots = bookDots.querySelectorAll('.book-dot');
-
-      dots.forEach((dot, index) => {
-        dot.classList.toggle('active', index === currentSpread);
-      });
-    }
-
-    function turnBook(direction, targetSpread) {
-      if (
-        isTurning ||
-        targetSpread < 0 ||
-        targetSpread >= spreads.length ||
-        targetSpread === currentSpread
-      ) {
+    function renderWritingCarousel() {
+      if (!writingTrack || writingSlides.length === 0) {
         return;
       }
 
-      isTurning = true;
+      writingTrack.style.transform = `translateX(-${currentWriting * 100}%)`;
 
-      turningPage.classList.remove('forward', 'backward');
-      void turningPage.offsetWidth;
-      turningPage.classList.add(direction);
-
-      window.setTimeout(() => {
-        currentSpread = targetSpread;
-        renderBook();
-      }, 330);
-
-      window.setTimeout(() => {
-        turningPage.classList.remove('forward', 'backward');
-        isTurning = false;
-      }, 720);
-    }
-
-    spreads.forEach((_, index) => {
-      const dot = document.createElement('button');
-      dot.className = 'book-dot';
-      dot.type = 'button';
-      dot.setAttribute('aria-label', `Go to writing spread ${index + 1}`);
-
-      dot.addEventListener('click', () => {
-        if (index > currentSpread) {
-          turnBook('forward', index);
-        } else if (index < currentSpread) {
-          turnBook('backward', index);
-        }
+      writingSlides.forEach((slide, index) => {
+        slide.classList.toggle('active', index === currentWriting);
       });
 
-      bookDots.appendChild(dot);
+      const dots = writingDots.querySelectorAll('.writing-dot');
+
+      dots.forEach((dot, index) => {
+        dot.classList.toggle('active', index === currentWriting);
+      });
+    }
+
+    function goToWriting(index) {
+      if (writingSlides.length === 0) {
+        return;
+      }
+
+      currentWriting = (index + writingSlides.length) % writingSlides.length;
+      renderWritingCarousel();
+    }
+
+    writingSlides.forEach((_, index) => {
+      const dot = document.createElement('button');
+      dot.className = 'writing-dot';
+      dot.type = 'button';
+      dot.setAttribute('aria-label', `Go to writing ${index + 1}`);
+
+      dot.addEventListener('click', () => {
+        goToWriting(index);
+      });
+
+      writingDots.appendChild(dot);
     });
 
-    prevBookBtn.addEventListener('click', () => {
-      turnBook('backward', currentSpread - 1);
-    });
+    if (prevWritingBtn && nextWritingBtn) {
+      prevWritingBtn.addEventListener('click', () => {
+        goToWriting(currentWriting - 1);
+      });
 
-    nextBookBtn.addEventListener('click', () => {
-      turnBook('forward', currentSpread + 1);
-    });
+      nextWritingBtn.addEventListener('click', () => {
+        goToWriting(currentWriting + 1);
+      });
+    }
 
-    renderBook();
+    renderWritingCarousel();
 
     allPageNavBtns.forEach((btn) => {
       btn.addEventListener('click', () => {
