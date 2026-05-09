@@ -1293,60 +1293,25 @@ a {
 ====================== */
 
 .document-stage {
-  width: min(1050px, 94vw);
+  width: min(900px, 94vw);
   margin: 0 auto;
-  padding: 2rem;
-  border-radius: 24px;
-  background:
-    radial-gradient(circle at top, rgba(53, 90, 158, 0.55), transparent 42%),
-    #14294d;
-  box-shadow: 0 30px 75px rgba(0, 0, 0, 0.35);
-  border: 1px solid rgba(201, 169, 110, 0.28);
 }
 
-.document-toolbar {
+.document-stage .back-to-writing {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.75rem;
-  margin-bottom: 1.5rem;
-}
-
-.document-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.65rem 1rem;
-  border: 1px solid rgba(201, 169, 110, 0.45);
-  border-radius: 999px;
-  color: #f5f0e8;
-  background: rgba(15, 20, 32, 0.55);
-  text-decoration: none;
-  letter-spacing: 0.05em;
-  transition:
-    color 0.25s ease,
-    background 0.25s ease,
-    border-color 0.25s ease,
-    transform 0.25s ease;
-}
-
-.document-button:hover {
-  color: #f0d899;
-  background: rgba(255, 255, 255, 0.08);
-  border-color: #c9a96e;
-  transform: translateY(-2px);
+  width: fit-content;
+  margin: 0 0 1rem 0;
 }
 
 .document-paper {
-  width: min(820px, 100%);
+  width: 100%;
   min-height: 920px;
   margin: 0 auto;
-  padding: 1rem;
-  background: #fffdf8;
+  background: transparent;
   color: #1c1c1c;
   box-shadow:
     0 20px 60px rgba(0, 0, 0, 0.35),
-    0 0 0 1px rgba(0, 0, 0, 0.08);
+    0 0 0 1px rgba(255, 255, 255, 0.08);
   font-family: Georgia, "Times New Roman", serif;
   text-align: left;
 }
@@ -1354,6 +1319,7 @@ a {
 .document-embed {
   width: 100%;
   min-height: 920px;
+  display: block;
   border: none;
   background: white;
 }
@@ -1549,14 +1515,10 @@ a {
   }
 
   .document-stage {
-    padding: 1rem;
+    width: min(900px, 94vw);
   }
 
-  .document-paper {
-    min-height: 760px;
-    padding: 0.5rem;
-  }
-
+  .document-paper,
   .document-embed {
     min-height: 760px;
   }
