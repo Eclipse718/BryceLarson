@@ -7,7 +7,7 @@
 
   <title>Bryce Larson</title>
 
-  <link rel="stylesheet" href="css/style.css?v=22">
+  <link rel="stylesheet" href="css/style.css?v=23">
 
   <link
     rel="stylesheet"
@@ -708,8 +708,127 @@
         x: window.innerWidth / 2,
         y: window.innerHeight / 2,
         previousX: window.innerWidth / 2,
-        previousY: window.innerHeight / 2
+        previousY: window.innerHeight / 2,
+        width: 44,
+        height: 44,
+        radius: 999,
+        targetElement: null,
+        syntheticClick: false
       };
+
+      const clickableSelector = [
+        'a[href]',
+        'button:not(:disabled)',
+        '[role="button"]',
+        '[tabindex]:not([tabindex="-1"])'
+      ].join(',');
+
+      function getClickableFromElement(element) {
+        if (!element || element === document.documentElement || element === document.body) {
+          return null;
+        }
+
+        return element.closest(clickableSelector);
+      }
+
+      function elementFromCircleCenter() {
+        oceanCursor.style.visibility = 'hidden';
+        const element = document.elementFromPoint(cursorState.x, cursorState.y);
+        oceanCursor.style.visibility = 'visible';
+
+        return getClickableFromElement(element);
+      }
+
+      function getCircleRect() {
+        return {
+          left: cursorState.x - cursorState.width / 2,
+          right: cursorState.x + cursorState.width / 2,
+          top: cursorState.y - cursorState.height / 2,
+          bottom: cursorState.y + cursorState.height / 2
+        };
+      }
+
+      function rectsOverlap(a, b) {
+        return a.right > b.left &&
+          a.left < b.right &&
+          a.bottom > b.top &&
+          a.top < b.bottom;
+      }
+
+      function getClickableTouchedByCircle() {
+        const circleRect = getCircleRect();
+        const clickables = Array.from(document.querySelectorAll(clickableSelector));
+        let best = null;
+        let bestArea = 0;
+
+        clickables.forEach((element) => {
+          if (element.offsetParent === null && !element.classList.contains('contact-close')) {
+            return;
+          }
+
+          const rect = element.getBoundingClientRect();
+
+          if (!rectsOverlap(circleRect, rect)) {
+            return;
+          }
+
+          const overlapWidth = Math.min(circleRect.right, rect.right) - Math.max(circleRect.left, rect.left);
+          const overlapHeight = Math.min(circleRect.bottom, rect.bottom) - Math.max(circleRect.top, rect.top);
+          const area = overlapWidth * overlapHeight;
+
+          if (area > bestArea) {
+            best = element;
+            bestArea = area;
+          }
+        });
+
+        return best || elementFromCircleCenter();
+      }
+
+      function setCursorToFreeCircle(speed, angle) {
+        const stretch = 1 + speed / 26;
+        const squeeze = Math.max(0.78, 1 - speed / 110);
+
+        cursorState.width = 44;
+        cursorState.height = 44;
+        cursorState.radius = 999;
+
+        oceanCursor.classList.remove('locked');
+        oceanCursor.style.width = '44px';
+        oceanCursor.style.height = '44px';
+        oceanCursor.style.borderRadius = '999px';
+        oceanCursor.style.transform = `
+          translate3d(${cursorState.x - 22}px, ${cursorState.y - 22}px, 0)
+          rotate(${angle}deg)
+          scale(${stretch}, ${squeeze})
+        `;
+      }
+
+      function setCursorToElement(element) {
+        const rect = element.getBoundingClientRect();
+        const padding = 5;
+
+        cursorState.width = rect.width + padding * 2;
+        cursorState.height = rect.height + padding * 2;
+
+        let radius = 14;
+
+        if (
+          element.classList.contains('sidebar-btn') ||
+          element.classList.contains('project-arrow') ||
+          element.classList.contains('book-control') ||
+          element.classList.contains('contact-close') ||
+          rect.width === rect.height
+        ) {
+          radius = 999;
+        }
+
+        oceanCursor.classList.add('locked');
+        oceanCursor.style.width = `${cursorState.width}px`;
+        oceanCursor.style.height = `${cursorState.height}px`;
+        oceanCursor.style.borderRadius = radius === 999 ? '999px' : `${radius}px`;
+        oceanCursor.style.transform = `translate3d(${rect.left - padding}px, ${rect.top - padding}px, 0)`;
+      }
 
       window.addEventListener('pointermove', (event) => {
         cursorState.targetX = event.clientX;
@@ -721,6 +840,31 @@
         oceanCursor.style.opacity = '0';
       });
 
+      document.addEventListener('click', (event) => {
+        if (cursorState.syntheticClick) {
+          return;
+        }
+
+        const target = cursorState.targetElement || getClickableTouchedByCircle();
+
+        if (!target) {
+          return;
+        }
+
+        const naturalTarget = getClickableFromElement(event.target);
+
+        if (naturalTarget === target) {
+          return;
+        }
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        cursorState.syntheticClick = true;
+        target.click();
+        cursorState.syntheticClick = false;
+      }, true);
+
       function animateOceanCursor() {
         cursorState.x += (cursorState.targetX - cursorState.x) * 0.16;
         cursorState.y += (cursorState.targetY - cursorState.y) * 0.16;
@@ -729,14 +873,15 @@
         const dy = cursorState.y - cursorState.previousY;
         const speed = Math.min(Math.hypot(dx, dy), 34);
         const angle = Math.atan2(dy, dx) * 180 / Math.PI;
-        const stretch = 1 + speed / 24;
-        const squeeze = Math.max(0.74, 1 - speed / 100);
+        const touchedElement = getClickableTouchedByCircle();
 
-        oceanCursor.style.transform = `
-          translate3d(${cursorState.x - 27}px, ${cursorState.y - 27}px, 0)
-          rotate(${angle}deg)
-          scale(${stretch}, ${squeeze})
-        `;
+        cursorState.targetElement = touchedElement;
+
+        if (touchedElement) {
+          setCursorToElement(touchedElement);
+        } else {
+          setCursorToFreeCircle(speed, angle);
+        }
 
         cursorState.previousX = cursorState.x;
         cursorState.previousY = cursorState.y;
@@ -755,11 +900,9 @@
       }
 
       function getRuneBounds() {
-        const topbarHeight = window.innerWidth <= 760 ? 50 : 54;
-
         return {
           left: 0,
-          top: topbarHeight,
+          top: 0,
           right: window.innerWidth,
           bottom: window.innerHeight
         };
@@ -804,18 +947,18 @@
 
           const size = randomBetween(16, 28);
           element.style.fontSize = `${size}px`;
-          element.style.opacity = String(randomBetween(0.36, 0.7));
+          element.style.opacity = String(randomBetween(0.34, 0.64));
 
           runeField.appendChild(element);
 
           runes.push({
             element,
             x: randomBetween(bounds.left + 24, bounds.right - 48),
-            y: randomBetween(bounds.top + 24, bounds.bottom - 48),
-            vx: randomBetween(-0.25, 0.25) || 0.16,
-            vy: randomBetween(-0.19, 0.19) || 0.12,
+            y: randomBetween(bounds.top + 64, bounds.bottom - 48),
+            vx: randomBetween(-0.22, 0.22) || 0.15,
+            vy: randomBetween(-0.16, 0.16) || 0.11,
             size,
-            spin: randomBetween(-0.18, 0.18),
+            spin: randomBetween(-0.15, 0.15),
             rotation: randomBetween(0, 360)
           });
         }
@@ -862,16 +1005,16 @@
               const pushY = runeCenterY - rectCenterY;
 
               if (Math.abs(pushX) > Math.abs(pushY)) {
-                rune.vx = Math.abs(rune.vx || 0.16) * Math.sign(pushX || 1);
+                rune.vx = Math.abs(rune.vx || 0.15) * Math.sign(pushX || 1);
                 rune.x += rune.vx * 6;
               } else {
-                rune.vy = Math.abs(rune.vy || 0.12) * Math.sign(pushY || 1);
+                rune.vy = Math.abs(rune.vy || 0.11) * Math.sign(pushY || 1);
                 rune.y += rune.vy * 6;
               }
             }
           });
 
-          rune.element.style.transform = `translate3d(${rune.x}px, ${rune.y - bounds.top}px, 0) rotate(${rune.rotation}deg)`;
+          rune.element.style.transform = `translate3d(${rune.x}px, ${rune.y}px, 0) rotate(${rune.rotation}deg)`;
         });
 
         requestAnimationFrame(animateRunes);
