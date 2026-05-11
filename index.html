@@ -33,7 +33,7 @@
       <div class="topbar-avatar" aria-hidden="true">
         <img
           class="topbar-photo"
-          src="website-images/profile.jpg"
+          src="website-images/circlecroppedme.png"
           alt=""
           onerror="this.style.display='none'; this.parentElement.classList.add('avatar-failed');"
         >
@@ -332,19 +332,19 @@
 
   <aside class="sidebar" aria-label="Section navigation">
     <button class="sidebar-btn active" data-index="0" type="button" aria-label="Home">
-      <span class="sidebar-icon">☼</span>
+      <span class="sidebar-icon">🏠</span>
     </button>
 
     <button class="sidebar-btn" data-index="1" type="button" aria-label="Experience">
-      <span class="sidebar-icon">◈</span>
+      <span class="sidebar-icon">💼</span>
     </button>
 
     <button class="sidebar-btn" data-index="2" type="button" aria-label="Projects">
-      <span class="sidebar-icon">✦</span>
+      <span class="sidebar-icon">🚀</span>
     </button>
 
     <button class="sidebar-btn" data-index="3" type="button" aria-label="Writing">
-      <span class="sidebar-icon">✎</span>
+      <span class="sidebar-icon">📖</span>
     </button>
   </aside>
 
@@ -439,8 +439,6 @@
       ".sidebar-btn",
       ".project-arrow",
       ".book-control:not(:disabled)",
-      ".social-links a",
-      ".contact-socials a",
       ".contact-row a"
     ].join(", ");
 
@@ -736,42 +734,52 @@
     updateBookCarousel();
 
     function buildElasticRingPath(width, height, velocityX, velocityY, locked) {
-      if (locked) {
-        const rx = width / 2;
-        const ry = height / 2;
-        const curve = Math.min(rx, ry) * 0.32;
+      const baseRx = Math.max(18, width / 2 - 4);
+      const baseRy = Math.max(18, height / 2 - 4);
+      const k = 0.5522847498;
 
+      if (locked) {
         return [
-          "M " + (-rx + curve) + " " + -ry,
-          "L " + (rx - curve) + " " + -ry,
-          "C " + rx + " " + -ry + ", " + rx + " " + -ry + ", " + rx + " " + (-ry + curve),
-          "L " + rx + " " + (ry - curve),
-          "C " + rx + " " + ry + ", " + rx + " " + ry + ", " + (rx - curve) + " " + ry,
-          "L " + (-rx + curve) + " " + ry,
-          "C " + -rx + " " + ry + ", " + -rx + " " + ry + ", " + -rx + " " + (ry - curve),
-          "L " + -rx + " " + (-ry + curve),
-          "C " + -rx + " " + -ry + ", " + -rx + " " + -ry + ", " + (-rx + curve) + " " + -ry,
+          "M 0 " + -baseRy,
+          "C " + baseRx * k + " " + -baseRy + ", " + baseRx + " " + -baseRy * k + ", " + baseRx + " 0",
+          "C " + baseRx + " " + baseRy * k + ", " + baseRx * k + " " + baseRy + ", 0 " + baseRy,
+          "C " + -baseRx * k + " " + baseRy + ", " + -baseRx + " " + baseRy * k + ", " + -baseRx + " 0",
+          "C " + -baseRx + " " + -baseRy * k + ", " + -baseRx * k + " " + -baseRy + ", 0 " + -baseRy,
           "Z"
         ].join(" ");
       }
 
       const speed = Math.min(34, Math.hypot(velocityX, velocityY));
+
+      if (speed < 0.8) {
+        return [
+          "M 0 " + -baseRy,
+          "C " + baseRx * k + " " + -baseRy + ", " + baseRx + " " + -baseRy * k + ", " + baseRx + " 0",
+          "C " + baseRx + " " + baseRy * k + ", " + baseRx * k + " " + baseRy + ", 0 " + baseRy,
+          "C " + -baseRx * k + " " + baseRy + ", " + -baseRx + " " + baseRy * k + ", " + -baseRx + " 0",
+          "C " + -baseRx + " " + -baseRy * k + ", " + -baseRx * k + " " + -baseRy + ", 0 " + -baseRy,
+          "Z"
+        ].join(" ");
+      }
+
       const angle = Math.atan2(velocityY, velocityX || 0.001);
-      const stretch = Math.min(20, speed * 0.34);
-      const squeeze = Math.min(8, speed * 0.12);
+      const stretch = Math.min(16, speed * 0.26);
+      const squeeze = Math.min(6, speed * 0.09);
 
-      const rx = width / 2 + stretch;
-      const ry = Math.max(28, height / 2 - squeeze);
+      const rx = baseRx + stretch;
+      const ry = Math.max(28, baseRy - squeeze);
 
-      const leadX = Math.cos(angle) * stretch * 0.34;
-      const leadY = Math.sin(angle) * stretch * 0.34;
-      const tailX = -Math.cos(angle) * stretch * 0.28;
-      const tailY = -Math.sin(angle) * stretch * 0.28;
+      const leadX = Math.cos(angle) * stretch * 0.28;
+      const leadY = Math.sin(angle) * stretch * 0.28;
+      const tailX = -Math.cos(angle) * stretch * 0.22;
+      const tailY = -Math.sin(angle) * stretch * 0.22;
 
       return [
-        "M " + (-rx + tailX) + " 0",
-        "C " + (-rx + tailX) + " " + -ry + ", " + (rx * 0.62 + leadX) + " " + (-ry + leadY) + ", " + (rx + leadX) + " 0",
-        "C " + (rx * 0.62 + leadX) + " " + (ry + leadY) + ", " + (-rx + tailX) + " " + ry + ", " + (-rx + tailX) + " 0",
+        "M " + leadX + " " + -ry,
+        "C " + (rx * 0.55 + leadX) + " " + -ry + ", " + (rx + leadX) + " " + (-ry * 0.55 + leadY) + ", " + (rx + leadX) + " 0",
+        "C " + (rx + leadX) + " " + (ry * 0.55 + leadY) + ", " + (rx * 0.55 + tailX) + " " + ry + ", " + tailX + " " + ry,
+        "C " + (-rx * 0.55 + tailX) + " " + ry + ", " + (-rx + tailX) + " " + (ry * 0.55 + tailY) + ", " + (-rx + tailX) + " 0",
+        "C " + (-rx + tailX) + " " + (-ry * 0.55 + tailY) + ", " + (-rx * 0.55 + leadX) + " " + -ry + ", " + leadX + " " + -ry,
         "Z"
       ].join(" ");
     }
@@ -966,7 +974,7 @@
         rune.tabIndex = -1;
         rune.textContent = runeCharacters[i % runeCharacters.length];
 
-        const duration = 20 + Math.random() * 26;
+        const duration = 42 + Math.random() * 38;
         const delay = Math.random() * -duration;
 
         rune.style.left = Math.random() * 100 + "%";
