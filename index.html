@@ -875,6 +875,8 @@
         rune.style.setProperty("--rune-scale", baseSize.toFixed(2));
         rune.style.setProperty("--rune-rotation", randomBetween(-10, 10).toFixed(2) + "deg");
         rune.style.opacity = String(0.72 + Math.min(0.18, baseBrightness * 0.08));
+        rune.style.left = "-9999px";
+        rune.style.top = "-9999px";
 
         const item = {
           element: rune,
@@ -1041,8 +1043,9 @@
 
         updateRuneGlow(item, now, bounds, displayX, displayY);
 
+        item.element.style.left = displayX.toFixed(2) + "px";
+        item.element.style.top = displayY.toFixed(2) + "px";
         item.element.style.transform =
-          "translate3d(" + displayX.toFixed(2) + "px, " + displayY.toFixed(2) + "px, 0) " +
           "translate(-50%, -50%) " +
           "rotate(var(--rune-rotation)) " +
           "scale(var(--rune-scale, 1))";
