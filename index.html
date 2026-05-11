@@ -23,7 +23,7 @@
           class="topbar-photo"
           src="website-images/circlecroppedme.png"
           alt=""
-          onerror="this.style.display='none';"
+          onerror="this.style.display='none'; this.parentElement.classList.add('avatar-failed');"
         >
       </div>
 
@@ -457,6 +457,9 @@
 
     let activeProjectIndex = 0;
     let activeBookSpread = 0;
+    let runeItems = [];
+    let lastRuneTime = performance.now();
+    let runeAnimationFrame = null;
 
     const mouse = {
       x: window.innerWidth / 2,
@@ -691,107 +694,359 @@
 
     updateBookCarousel();
 
+    function createGoldSpark(x, y) {
+      const spark = document.createElement("span");
+      spark.className = "gold-spark";
+
+      const angle = Math.random() * Math.PI * 2;
+      const distance = 26 + Math.random() * 46;
+      const size = 3 + Math.random() * 3.5;
+
+      spark.style.left = x + "px";
+      spark.style.top = y + "px";
+      spark.style.width = size + "px";
+      spark.style.height = size + "px";
+      spark.style.setProperty("--spark-x", Math.cos(angle) * distance + "px");
+      spark.style.setProperty("--spark-y", Math.sin(angle) * distance + "px");
+      spark.style.setProperty("--spark-delay", Math.random() * 0.08 + "s");
+
+      document.body.appendChild(spark);
+
+      spark.addEventListener("animationend", function() {
+        spark.remove();
+      });
+    }
+
+    function burstRune(item) {
+      const rect = item.element.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+
+      item.clickedLit = !item.clickedLit;
+      item.burstUntil = performance.now() + 850;
+
+      item.element.classList.remove("rune-burst");
+      void item.element.offsetWidth;
+      item.element.classList.add("rune-burst");
+
+      for (let i = 0; i < 20; i += 1) {
+        createGoldSpark(
+          centerX + (Math.random() - 0.5) * 16,
+          centerY + (Math.random() - 0.5) * 16
+        );
+      }
+    }
+
+    function randomBetween(min, max) {
+      return min + Math.random() * (max - min);
+    }
+
+    function clamp(value, min, max) {
+      return Math.min(max, Math.max(min, value));
+    }
+
+    function getRuneBounds() {
+      const rect = runeField.getBoundingClientRect();
+
+      return {
+        width: Math.max(320, rect.width || window.innerWidth),
+        height: Math.max(320, rect.height || (window.innerHeight - 54)),
+        top: rect.top || 54,
+        left: rect.left || 0
+      };
+    }
+
+    function getRuneObstacles(bounds) {
+      const selectors = [
+        ".topbar",
+        ".section-content",
+        ".project-carousel",
+        ".project-preview-shell",
+        ".project-arrow",
+        ".project-dots",
+        ".book-carousel",
+        ".book-shell",
+        ".book-control",
+        ".sidebar",
+        ".contact-card"
+      ];
+
+      return Array.from(document.querySelectorAll(selectors.join(", ")))
+        .filter(function(element) {
+          const rect = element.getBoundingClientRect();
+          return rect.width > 0 && rect.height > 0;
+        })
+        .map(function(element) {
+          const rect = element.getBoundingClientRect();
+          const padding = 28;
+
+          return {
+            left: rect.left - bounds.left - padding,
+            right: rect.right - bounds.left + padding,
+            top: rect.top - bounds.top - padding,
+            bottom: rect.bottom - bounds.top + padding,
+            centerX: rect.left - bounds.left + rect.width / 2,
+            centerY: rect.top - bounds.top + rect.height / 2,
+            width: rect.width + padding * 2,
+            height: rect.height + padding * 2
+          };
+        });
+    }
+
+    function positionIsInObstacle(x, y, radius, obstacles) {
+      return obstacles.some(function(rect) {
+        return (
+          x > rect.left - radius &&
+          x < rect.right + radius &&
+          y > rect.top - radius &&
+          y < rect.bottom + radius
+        );
+      });
+    }
+
+    function distributedRunePosition(index, total, bounds, obstacles, radius) {
+      const margin = 42;
+      const golden = 0.61803398875;
+      const usableWidth = Math.max(80, bounds.width - margin * 2);
+      const usableHeight = Math.max(80, bounds.height - margin * 2);
+
+      for (let attempt = 0; attempt < 70; attempt += 1) {
+        const seed = index + attempt * total;
+        const x = margin + (((seed * golden) % 1) * usableWidth);
+        const y = margin + ((((seed * 0.754877666) + attempt * 0.173) % 1) * usableHeight);
+        const jitterX = randomBetween(-26, 26);
+        const jitterY = randomBetween(-26, 26);
+        const candidateX = clamp(x + jitterX, margin, bounds.width - margin);
+        const candidateY = clamp(y + jitterY, margin, bounds.height - margin);
+
+        if (!positionIsInObstacle(candidateX, candidateY, radius, obstacles)) {
+          return { x: candidateX, y: candidateY };
+        }
+      }
+
+      // Last-resort positions are spread around the perimeter, never dumped in the center.
+      const side = index % 4;
+      const t = ((index * golden) % 1);
+
+      if (side === 0) {
+        return { x: margin + t * usableWidth, y: margin };
+      }
+
+      if (side === 1) {
+        return { x: bounds.width - margin, y: margin + t * usableHeight };
+      }
+
+      if (side === 2) {
+        return { x: margin + t * usableWidth, y: bounds.height - margin };
+      }
+
+      return { x: margin, y: margin + t * usableHeight };
+    }
+
     function buildRuneField() {
       const runeCharacters = ["ᚠ", "ᚢ", "ᚦ", "ᚨ", "ᚱ", "ᚲ", "ᚷ", "ᚹ", "ᛇ", "ᛈ", "ᛉ", "ᛟ", "✦", "✧", "✶", "☉"];
-      const runeCount = Math.max(34, Math.floor(window.innerWidth / 35));
+      const bounds = getRuneBounds();
+      const obstacles = getRuneObstacles(bounds);
+      const runeCount = Math.max(36, Math.floor(window.innerWidth / 34));
+      const orbitCount = Math.min(12, Math.max(8, Math.floor(runeCount * 0.2)));
+
+      if (runeAnimationFrame) {
+        cancelAnimationFrame(runeAnimationFrame);
+      }
 
       runeField.innerHTML = "";
+      runeItems = [];
 
       for (let i = 0; i < runeCount; i += 1) {
-        const rune = document.createElement("span");
-        const followsLine = i % 3 === 0;
+        const rune = document.createElement("button");
+        const isOrbiter = i < orbitCount;
+        const baseSize = randomBetween(0.62, 0.94);
+        const baseBrightness = randomBetween(0.72, 1.36);
+        const radius = 13 * baseSize;
+        const position = distributedRunePosition(i, runeCount, bounds, obstacles, radius);
+        const speed = randomBetween(9, 22);
+        const angle = Math.random() * Math.PI * 2;
 
-        rune.className = followsLine ? "golden-rune rune-orbit" : "golden-rune rune-drift";
+        rune.className = isOrbiter ? "golden-rune rune-orbiter" : "golden-rune";
+        rune.type = "button";
+        rune.tabIndex = -1;
         rune.textContent = runeCharacters[i % runeCharacters.length];
+        rune.style.setProperty("--rune-scale", baseSize.toFixed(2));
+        rune.style.setProperty("--rune-base-bright", baseBrightness.toFixed(2));
+        rune.style.setProperty("--rune-glow-power", "0");
+        rune.style.setProperty("--rune-rotation", randomBetween(-10, 10).toFixed(2) + "deg");
 
-        const duration = followsLine ? 82 + Math.random() * 64 : 58 + Math.random() * 52;
-        const delay = Math.random() * -duration;
-        const scale = 1.08 + Math.random() * 0.72;
+        const orbitLayer = i % orbitCount;
+        const orbitPadding = 84 + orbitLayer * 22;
 
-        if (followsLine) {
-          const radius = Math.min(window.innerWidth, window.innerHeight) * (0.18 + Math.random() * 0.54);
-          const angle = Math.random() * 360;
-          const orbitAmount = (Math.random() > 0.5 ? 1 : -1) * (28 + Math.random() * 34);
+        const item = {
+          element: rune,
+          x: isOrbiter ? bounds.width / 2 : position.x,
+          y: isOrbiter ? bounds.height * 0.48 : position.y,
+          radius: radius,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          driftPhase: Math.random() * Math.PI * 2,
+          driftSpeed: randomBetween(0.45, 0.95),
+          driftAmountX: randomBetween(22, 72),
+          driftAmountY: randomBetween(18, 58),
+          baseBrightness: baseBrightness,
+          clickedLit: false,
+          burstUntil: 0,
+          isOrbiter: isOrbiter,
+          orbitAngle: (Math.PI * 2 * i) / Math.max(1, orbitCount) + randomBetween(-0.2, 0.2),
+          orbitSpeed: (Math.random() < 0.5 ? -1 : 1) * randomBetween(0.018, 0.038),
+          orbitRadiusX: Math.max(bounds.width * 0.34, bounds.width / 2 + orbitPadding),
+          orbitRadiusY: Math.max(bounds.height * 0.24, bounds.height * 0.38 + orbitLayer * 16),
+          orbitOffset: randomBetween(-48, 48)
+        };
 
-          rune.style.left = "50%";
-          rune.style.top = "50%";
-          rune.style.setProperty("--orbit-radius", radius.toFixed(1) + "px");
-          rune.style.setProperty("--orbit-angle", angle.toFixed(1) + "deg");
-          rune.style.setProperty("--orbit-amount", orbitAmount.toFixed(1) + "deg");
-        } else {
-          rune.style.left = Math.random() * 100 + "%";
-          rune.style.top = Math.random() * 100 + "%";
-          rune.style.setProperty("--drift-x-a", (-95 + Math.random() * 190).toFixed(1) + "px");
-          rune.style.setProperty("--drift-y-a", (-74 + Math.random() * 148).toFixed(1) + "px");
-          rune.style.setProperty("--drift-x-mid", (-95 + Math.random() * 190).toFixed(1) + "px");
-          rune.style.setProperty("--drift-y-mid", (-74 + Math.random() * 148).toFixed(1) + "px");
-          rune.style.setProperty("--drift-x-c", (-95 + Math.random() * 190).toFixed(1) + "px");
-          rune.style.setProperty("--drift-y-c", (-74 + Math.random() * 148).toFixed(1) + "px");
-          rune.style.setProperty("--drift-x-b", (-95 + Math.random() * 190).toFixed(1) + "px");
-          rune.style.setProperty("--drift-y-b", (-74 + Math.random() * 148).toFixed(1) + "px");
-        }
-
-        rune.style.setProperty("--rune-scale", scale.toFixed(2));
-        rune.style.setProperty("--rune-duration", duration.toFixed(2) + "s");
-        rune.style.setProperty("--rune-delay", delay.toFixed(2) + "s");
-        rune.style.setProperty("--rune-glow-strength", "0");
+        rune.addEventListener("click", function(event) {
+          event.stopPropagation();
+          burstRune(item);
+        });
 
         runeField.appendChild(rune);
+        runeItems.push(item);
       }
+
+      lastRuneTime = performance.now();
+      runeAnimationFrame = requestAnimationFrame(animateRunes);
     }
 
-    function updateRuneGlow() {
-      const runes = Array.from(document.querySelectorAll(".golden-rune"));
-      const glowRadius = 240;
+    function repelRuneFromObstacles(item, dt, obstacles) {
+      obstacles.forEach(function(rect) {
+        const nearestX = clamp(item.x, rect.left, rect.right);
+        const nearestY = clamp(item.y, rect.top, rect.bottom);
+        let dx = item.x - nearestX;
+        let dy = item.y - nearestY;
+        let distance = Math.hypot(dx, dy);
+        const safeDistance = item.radius + 20;
 
-      runes.forEach(function(rune) {
-        const rect = rune.getBoundingClientRect();
-        const centerX = rect.left + rect.width / 2;
-        const centerY = rect.top + rect.height / 2;
-        const distance = mouse.active ? Math.hypot(mouse.x - centerX, mouse.y - centerY) : glowRadius + 1;
-        const strength = Math.max(0, 1 - distance / glowRadius);
-        const easedStrength = Math.pow(strength, 1.65);
-
-        rune.style.setProperty("--rune-glow-strength", easedStrength.toFixed(3));
-      });
-
-      requestAnimationFrame(updateRuneGlow);
-    }
-
-
-    function lightNearestRune(event) {
-      const runes = Array.from(document.querySelectorAll(".golden-rune"));
-      let nearestRune = null;
-      let nearestDistance = Infinity;
-
-      runes.forEach(function(rune) {
-        const rect = rune.getBoundingClientRect();
-        const centerX = rect.left + rect.width / 2;
-        const centerY = rect.top + rect.height / 2;
-        const distance = Math.hypot(event.clientX - centerX, event.clientY - centerY);
-
-        if (distance < nearestDistance) {
-          nearestDistance = distance;
-          nearestRune = rune;
+        if (distance >= safeDistance) {
+          return;
         }
+
+        if (distance < 0.001) {
+          dx = item.x < rect.centerX ? -1 : 1;
+          dy = item.y < rect.centerY ? -1 : 1;
+          distance = Math.hypot(dx, dy);
+        }
+
+        const push = (safeDistance - distance) / safeDistance;
+        const nx = dx / distance;
+        const ny = dy / distance;
+
+        item.x += nx * push * 85 * dt;
+        item.y += ny * push * 85 * dt;
+        item.vx += nx * push * 35;
+        item.vy += ny * push * 35;
       });
-
-      if (!nearestRune || nearestDistance > 95) {
-        return;
-      }
-
-      nearestRune.classList.add("rune-lit", "rune-click-flash");
-      window.setTimeout(function() {
-        nearestRune.classList.remove("rune-click-flash");
-      }, 520);
     }
 
-    window.addEventListener("click", lightNearestRune, { passive: true });
+    function updateDriftingRune(item, dt, bounds, obstacles) {
+      item.driftPhase += item.driftSpeed * dt;
+      item.x += item.vx * dt;
+      item.y += item.vy * dt;
+
+      repelRuneFromObstacles(item, dt, obstacles);
+
+      if (item.x < 18) {
+        item.x = 18;
+        item.vx = Math.abs(item.vx);
+      } else if (item.x > bounds.width - 18) {
+        item.x = bounds.width - 18;
+        item.vx = -Math.abs(item.vx);
+      }
+
+      if (item.y < 18) {
+        item.y = 18;
+        item.vy = Math.abs(item.vy);
+      } else if (item.y > bounds.height - 18) {
+        item.y = bounds.height - 18;
+        item.vy = -Math.abs(item.vy);
+      }
+
+      const speed = Math.hypot(item.vx, item.vy);
+      const maxSpeed = 28;
+
+      if (speed > maxSpeed) {
+        item.vx = (item.vx / speed) * maxSpeed;
+        item.vy = (item.vy / speed) * maxSpeed;
+      }
+    }
+
+    function updateOrbiterRune(item, dt, bounds) {
+      const centerX = bounds.width / 2;
+      const centerY = bounds.height * 0.5;
+
+      item.orbitAngle += item.orbitSpeed * dt;
+      item.x = centerX + Math.cos(item.orbitAngle) * item.orbitRadiusX;
+      item.y = centerY + Math.sin(item.orbitAngle) * item.orbitRadiusY + item.orbitOffset;
+    }
+
+    function updateRuneGlow(item, now, bounds, displayX, displayY) {
+      const viewportX = bounds.left + displayX;
+      const viewportY = bounds.top + displayY;
+      const distance = Math.hypot(mouse.x - viewportX, mouse.y - viewportY);
+      const glowRadius = 260;
+      const proximity = mouse.active ? Math.max(0, 1 - distance / glowRadius) : 0;
+      const burst = now < item.burstUntil;
+      const glowPower = Math.max(
+        proximity * proximity * 2.8,
+        item.clickedLit ? 2.15 : 0,
+        burst ? 2.65 : 0
+      );
+
+      item.element.classList.toggle("rune-lit", item.clickedLit || burst);
+      item.element.style.setProperty("--rune-glow-power", glowPower.toFixed(3));
+    }
+
+    function animateRunes(now) {
+      const rawDt = (now - lastRuneTime) / 1000;
+      const dt = Math.min(0.05, Math.max(0.001, rawDt));
+      const bounds = getRuneBounds();
+      const obstacles = getRuneObstacles(bounds);
+
+      lastRuneTime = now;
+
+      runeItems.forEach(function(item) {
+        if (item.isOrbiter) {
+          updateOrbiterRune(item, dt, bounds);
+        } else {
+          updateDriftingRune(item, dt, bounds, obstacles);
+        }
+
+        const bobX = item.isOrbiter ? 0 : Math.cos(item.driftPhase) * item.driftAmountX;
+        const bobY = item.isOrbiter ? 0 : Math.sin(item.driftPhase * 0.77) * item.driftAmountY;
+        const displayX = item.x + bobX;
+        const displayY = item.y + bobY;
+
+        updateRuneGlow(item, now, bounds, displayX, displayY);
+
+        item.element.style.transform =
+          "translate3d(" + displayX.toFixed(2) + "px, " + displayY.toFixed(2) + "px, 0) " +
+          "translate(-50%, -50%) " +
+          "rotate(var(--rune-rotation)) " +
+          "scale(var(--rune-scale, 1))";
+      });
+
+      runeAnimationFrame = requestAnimationFrame(animateRunes);
+    }
+
+    window.addEventListener("pointermove", function(event) {
+      mouse.x = event.clientX;
+      mouse.y = event.clientY;
+      mouse.active = true;
+    });
+
+    window.addEventListener("pointerleave", function() {
+      mouse.active = false;
+    });
 
     window.addEventListener("resize", buildRuneField);
 
     buildRuneField();
-    updateRuneGlow();
   </script>
 </body>
 </html>
