@@ -86,6 +86,7 @@ a {
   visibility: visible;
   overflow: visible;
   transform: translate3d(calc(50vw - 22px), calc(50vh - 22px), 0);
+  transform-origin: center center;
   will-change: transform, width, height;
 }
 
@@ -108,8 +109,10 @@ a {
 }
 
 .ocean-cursor.dark .ocean-cursor-path {
-  stroke: rgba(19, 20, 22, 0.96);
-  filter: drop-shadow(0 0 6px rgba(19, 20, 22, 0.34));
+  stroke: rgba(171, 115, 45, 0.98);
+  filter:
+    drop-shadow(0 0 7px rgba(171, 115, 45, 0.44))
+    drop-shadow(0 0 13px rgba(214, 168, 89, 0.22));
 }
 
 .ocean-cursor.hidden {
@@ -164,6 +167,43 @@ a {
 
 .golden-rune.rune-burst {
   animation: runeBurst 0.5s ease-out;
+}
+
+.rune-spark {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #ffe89f;
+  box-shadow:
+    0 0 8px rgba(255, 232, 159, 0.95),
+    0 0 18px rgba(240, 216, 153, 0.58),
+    0 0 30px rgba(201, 169, 110, 0.42);
+  pointer-events: none;
+  opacity: 0;
+  animation: runeSpark 0.72s ease-out forwards;
+}
+
+@keyframes runeSpark {
+  0% {
+    opacity: 1;
+    transform: translate3d(var(--spark-x), var(--spark-y), 0) scale(0.45);
+  }
+
+  55% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate3d(
+      calc(var(--spark-x) + var(--spark-dx)),
+      calc(var(--spark-y) + var(--spark-dy)),
+      0
+    ) scale(0.08);
+  }
 }
 
 @keyframes runeBurst {
@@ -318,18 +358,8 @@ a {
   background:
     repeating-radial-gradient(
       ellipse at 50% 10%,
-      rgba(180, 230, 236, 0.065) 0 2px,
-      transparent 3px 34px
-    ),
-    repeating-radial-gradient(
-      ellipse at 18% 72%,
-      rgba(180, 230, 236, 0.04) 0 2px,
-      transparent 3px 52px
-    ),
-    repeating-radial-gradient(
-      ellipse at 84% 52%,
-      rgba(180, 230, 236, 0.04) 0 2px,
-      transparent 3px 56px
+      rgba(180, 230, 236, 0.06) 0 2px,
+      transparent 3px 38px
     );
   animation: solarDrift 36s ease-in-out infinite alternate;
 }
@@ -961,7 +991,10 @@ a {
 }
 
 .book-story-title {
-  display: block;
+  display: inline-block;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto;
   color: #5b321f;
   text-decoration: none;
   transition:
