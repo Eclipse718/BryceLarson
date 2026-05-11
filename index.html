@@ -39,23 +39,23 @@
     </div>
 
     <div class="topbar-links">
-      <button class="topbar-btn active" data-index="0" title="Home" type="button">
+      <button class="topbar-btn active" data-index="0" type="button">
         <span>Home</span>
       </button>
 
-      <button class="topbar-btn" data-index="1" title="Experience" type="button">
+      <button class="topbar-btn" data-index="1" type="button">
         <span>Experience</span>
       </button>
 
-      <button class="topbar-btn" data-index="2" title="Projects" type="button">
+      <button class="topbar-btn" data-index="2" type="button">
         <span>Projects</span>
       </button>
 
-      <button class="topbar-btn" data-index="3" title="Writing" type="button">
+      <button class="topbar-btn" data-index="3" type="button">
         <span>Writing</span>
       </button>
 
-      <button class="topbar-btn contact-open-btn" title="Contact" type="button">
+      <button class="topbar-btn contact-open-btn" type="button">
         <span>Contact</span>
       </button>
     </div>
@@ -123,10 +123,7 @@
             </p>
           </a>
 
-          <a
-            class="experience-card"
-            href="timeline.html"
-          >
+          <a class="experience-card" href="timeline.html">
             <div class="experience-card-emoji">🕒︎</div>
 
             <h3>See Timeline</h3>
@@ -167,9 +164,7 @@
 
                 <div class="project-slide-text">
                   <h3>GANs Image Generation</h3>
-                  <p>
-                    A Generative Adversarial Network for Image Generation
-                  </p>
+                  <p>A Generative Adversarial Network for Image Generation.</p>
                 </div>
               </a>
 
@@ -184,9 +179,7 @@
 
                 <div class="project-slide-text">
                   <h3>Button Battle Game</h3>
-                  <p>
-                    A game where you select two "buttons" to fight one another.
-                  </p>
+                  <p>A game where you select two "buttons" to fight one another.</p>
                 </div>
               </a>
 
@@ -223,7 +216,7 @@
                 <div class="project-slide-text">
                   <h3>Digital Antfarm</h3>
                   <p>
-                    An ASCII/ Dwarf fortress inspired "Digital Ant Farm" simulating a 2D Fantasy environment.
+                    An ASCII / Dwarf Fortress inspired "Digital Ant Farm" simulating a 2D Fantasy environment.
                   </p>
                 </div>
               </a>
@@ -316,7 +309,6 @@
             </div>
 
             <div class="turning-page" id="turningPage"></div>
-            <div class="book-shadow"></div>
           </div>
 
           <button class="book-control next" type="button" aria-label="Next page">
@@ -390,6 +382,7 @@
     const topbarButtons = Array.from(document.querySelectorAll(".topbar-btn[data-index]"));
     const sidebarButtons = Array.from(document.querySelectorAll(".sidebar-btn[data-index]"));
     const sections = Array.from(document.querySelectorAll(".page-section"));
+
     const contactModal = document.getElementById("contactModal");
     const contactOpenButton = document.querySelector(".contact-open-btn");
     const contactCloseButton = document.getElementById("contactClose");
@@ -399,6 +392,23 @@
     const projectDots = document.getElementById("projectDots");
     const projectPrev = document.querySelector(".project-arrow-left");
     const projectNext = document.querySelector(".project-arrow-right");
+
+    const leftStoryLink = document.getElementById("leftStoryLink");
+    const rightStoryLink = document.getElementById("rightStoryLink");
+    const leftPageTitle = document.getElementById("leftPageTitle");
+    const rightPageTitle = document.getElementById("rightPageTitle");
+    const leftPageDescription = document.getElementById("leftPageDescription");
+    const rightPageDescription = document.getElementById("rightPageDescription");
+    const leftPageNumber = document.getElementById("leftPageNumber");
+    const rightPageNumber = document.getElementById("rightPageNumber");
+    const bookPrev = document.querySelector(".book-control.prev");
+    const bookNext = document.querySelector(".book-control.next");
+    const bookDots = document.getElementById("bookDots");
+    const turningPage = document.getElementById("turningPage");
+
+    const oceanCursor = document.getElementById("oceanCursor");
+    const oceanCursorPath = document.getElementById("oceanCursorPath");
+    const runeField = document.getElementById("runeField");
 
     const bookStories = [
       {
@@ -438,28 +448,10 @@
       }
     ];
 
-    const leftStoryLink = document.getElementById("leftStoryLink");
-    const rightStoryLink = document.getElementById("rightStoryLink");
-    const leftPageTitle = document.getElementById("leftPageTitle");
-    const rightPageTitle = document.getElementById("rightPageTitle");
-    const leftPageDescription = document.getElementById("leftPageDescription");
-    const rightPageDescription = document.getElementById("rightPageDescription");
-    const leftPageNumber = document.getElementById("leftPageNumber");
-    const rightPageNumber = document.getElementById("rightPageNumber");
-    const bookPrev = document.querySelector(".book-control.prev");
-    const bookNext = document.querySelector(".book-control.next");
-    const bookDots = document.getElementById("bookDots");
-    const turningPage = document.getElementById("turningPage");
-
-    const oceanCursor = document.getElementById("oceanCursor");
-    const oceanCursorPath = document.getElementById("oceanCursorPath");
-    const runeField = document.getElementById("runeField");
-
-    let activeSectionIndex = 0;
     let activeProjectIndex = 0;
     let activeBookSpread = 0;
 
-    let mouse = {
+    const mouse = {
       x: window.innerWidth / 2,
       y: window.innerHeight / 2,
       lastX: window.innerWidth / 2,
@@ -467,23 +459,21 @@
       active: false
     };
 
-    let cursorState = {
+    const cursorState = {
       x: window.innerWidth / 2,
       y: window.innerHeight / 2,
       width: 48,
       height: 48,
-      targetWidth: 48,
-      targetHeight: 48,
       targetX: window.innerWidth / 2,
       targetY: window.innerHeight / 2,
+      targetWidth: 48,
+      targetHeight: 48,
       velocityX: 0,
       velocityY: 0,
       locked: false
     };
 
     function setActiveSection(index) {
-      activeSectionIndex = index;
-
       topbarButtons.forEach((button) => {
         button.classList.toggle("active", Number(button.dataset.index) === index);
       });
@@ -494,13 +484,11 @@
     }
 
     function scrollToSection(index) {
-      const section = sections[index];
-
-      if (!section) {
+      if (!sections[index]) {
         return;
       }
 
-      section.scrollIntoView({
+      sections[index].scrollIntoView({
         behavior: "smooth",
         block: "start"
       });
@@ -536,7 +524,7 @@
       },
       {
         root: scrollContainer,
-        threshold: [0.42, 0.58, 0.74]
+        threshold: [0.45, 0.6, 0.75]
       }
     );
 
@@ -617,7 +605,6 @@
     function updateBookCarousel(direction = "none") {
       const leftIndex = activeBookSpread * 2;
       const rightIndex = leftIndex + 1;
-
       const leftStory = bookStories[leftIndex];
       const rightStory = bookStories[rightIndex];
 
@@ -648,18 +635,6 @@
 
       bookPrev.disabled = activeBookSpread === 0;
       bookNext.disabled = activeBookSpread >= pageCount() - 1;
-
-      if (bookPrev.disabled) {
-        bookPrev.setAttribute("aria-disabled", "true");
-      } else {
-        bookPrev.removeAttribute("aria-disabled");
-      }
-
-      if (bookNext.disabled) {
-        bookNext.setAttribute("aria-disabled", "true");
-      } else {
-        bookNext.removeAttribute("aria-disabled");
-      }
 
       Array.from(bookDots.children).forEach((dot, index) => {
         dot.classList.toggle("active", index === activeBookSpread);
@@ -722,19 +697,19 @@
       const speed = Math.min(36, Math.hypot(velocityX, velocityY));
       const angle = Math.atan2(velocityY, velocityX || 0.001);
       const stretch = Math.min(18, speed * 0.42);
-      const squeeze = Math.min(8, speed * 0.16);
+      const squeeze = Math.min(7, speed * 0.14);
 
       const rx = width / 2 + stretch;
-      const ry = Math.max(18, height / 2 - squeeze);
-      const pullX = Math.cos(angle) * stretch * 0.55;
-      const pullY = Math.sin(angle) * stretch * 0.55;
-      const lagX = -Math.cos(angle) * stretch * 0.42;
-      const lagY = -Math.sin(angle) * stretch * 0.42;
+      const ry = Math.max(17, height / 2 - squeeze);
+      const leadX = Math.cos(angle) * stretch * 0.45;
+      const leadY = Math.sin(angle) * stretch * 0.45;
+      const tailX = -Math.cos(angle) * stretch * 0.35;
+      const tailY = -Math.sin(angle) * stretch * 0.35;
 
       return [
-        `M ${-rx + lagX} 0`,
-        `C ${-rx + lagX} ${-ry}, ${rx * 0.52 + pullX} ${-ry}, ${rx + pullX} 0`,
-        `C ${rx * 0.52 + pullX} ${ry}, ${-rx + lagX} ${ry}, ${-rx + lagX} 0`,
+        `M ${-rx + tailX} 0`,
+        `C ${-rx + tailX} ${-ry}, ${rx * 0.62 + leadX} ${-ry}, ${rx + leadX} 0`,
+        `C ${rx * 0.62 + leadX} ${ry}, ${-rx + tailX} ${ry}, ${-rx + tailX} 0`,
         "Z"
       ].join(" ");
     }
@@ -897,15 +872,12 @@
         rune.tabIndex = -1;
         rune.textContent = runeCharacters[i % runeCharacters.length];
 
-        const x = Math.random() * 100;
-        const y = Math.random() * 100;
-        const scale = 0.75 + Math.random() * 0.75;
         const duration = 16 + Math.random() * 24;
         const delay = Math.random() * -duration;
 
-        rune.style.left = `${x}%`;
-        rune.style.top = `${y}%`;
-        rune.style.setProperty("--rune-scale", scale.toFixed(2));
+        rune.style.left = `${Math.random() * 100}%`;
+        rune.style.top = `${Math.random() * 100}%`;
+        rune.style.setProperty("--rune-scale", (0.75 + Math.random() * 0.75).toFixed(2));
         rune.style.setProperty("--rune-duration", `${duration.toFixed(2)}s`);
         rune.style.setProperty("--rune-delay", `${delay.toFixed(2)}s`);
 
@@ -933,9 +905,7 @@
       requestAnimationFrame(updateRuneGlow);
     }
 
-    window.addEventListener("resize", () => {
-      buildRuneField();
-    });
+    window.addEventListener("resize", buildRuneField);
 
     buildRuneField();
     animateOceanCursor();
