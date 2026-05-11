@@ -23,11 +23,11 @@ body {
   min-height: 100%;
   font-family: "Times New Roman", Times, serif;
   background: var(--dark-ocean);
+  color: #f5f0e8;
 }
 
 body {
   overflow: hidden;
-  color: #f5f0e8;
 }
 
 a {
@@ -38,6 +38,7 @@ button {
   font-family: inherit;
 }
 
+/* keep the normal cursor visible */
 @media (pointer: fine) {
   html,
   body,
@@ -76,11 +77,11 @@ button {
   position: fixed;
   left: 0;
   top: 0;
+  z-index: 10000;
   width: 48px;
   height: 48px;
-  z-index: 10000;
-  pointer-events: none;
   overflow: visible;
+  pointer-events: none;
   opacity: 1;
   transform: translate3d(calc(50vw - 24px), calc(50vh - 24px), 0);
   will-change: transform, width, height;
@@ -122,15 +123,15 @@ button {
   position: fixed;
   inset: 54px 0 0 0;
   z-index: 45;
-  pointer-events: none;
   overflow: hidden;
+  pointer-events: none;
 }
 
 .golden-rune {
   position: absolute;
   left: 0;
   top: 0;
-  border: 0;
+  border: none;
   padding: 0;
   background: transparent;
   color: rgba(240, 216, 153, 0.62);
@@ -296,8 +297,8 @@ button {
 
 .topbar-btn,
 .topbar-link {
-  border: 0;
-  outline: 0;
+  border: none;
+  outline: none;
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
@@ -305,7 +306,6 @@ button {
   border-radius: 999px;
   background: transparent;
   color: var(--gold);
-  font-family: inherit;
   font-size: 0.9rem;
   letter-spacing: 0.04em;
   text-decoration: none;
@@ -326,6 +326,7 @@ button {
   background: rgba(255, 255, 255, 0.08);
   color: var(--gold-bright);
   transform: translateY(-1px);
+  text-decoration: none;
 }
 
 /* ======================Scroll Container====================== */
@@ -361,7 +362,7 @@ button {
 
 .scroll-container::before {
   z-index: 0;
-  opacity: 0.44;
+  opacity: 0.46;
   background:
     repeating-radial-gradient(
       ellipse at 50% 14%,
@@ -422,16 +423,16 @@ button {
 /* ======================Sections====================== */
 
 .page-section {
+  position: relative;
   width: 100%;
   min-height: calc(100vh - 54px);
-  scroll-snap-align: start;
   display: flex;
   justify-content: center;
   align-items: center;
-  position: relative;
   padding: 2rem 1.5rem;
-  background: transparent;
   overflow: hidden;
+  scroll-snap-align: start;
+  background: transparent;
 }
 
 .page-section::before {
@@ -588,6 +589,7 @@ button {
   transform: translateY(-5px);
   border-color: rgba(201, 169, 110, 0.72);
   background: rgba(255, 255, 255, 0.08);
+  text-decoration: none;
 }
 
 .experience-card-emoji {
@@ -689,6 +691,7 @@ button {
       rgba(255, 255, 255, 0.105),
       rgba(255, 255, 255, 0.04)
     );
+  text-decoration: none;
 }
 
 .project-preview-shell {
@@ -775,6 +778,7 @@ button {
 .project-arrow:hover {
   background: rgba(255, 255, 255, 0.08);
   border-color: rgba(201, 169, 110, 0.82);
+  transform: scale(1.07);
 }
 
 .project-arrow-left {
@@ -785,6 +789,14 @@ button {
 .project-arrow-right {
   grid-area: right;
   transform: translateX(6px);
+}
+
+.project-arrow-left:hover {
+  transform: translateX(-6px) scale(1.07);
+}
+
+.project-arrow-right:hover {
+  transform: translateX(6px) scale(1.07);
 }
 
 .project-arrow::before {
@@ -834,6 +846,11 @@ button {
 .project-dot.active,
 .book-dot.active {
   background: var(--gold);
+}
+
+.project-dot:hover,
+.book-dot:hover {
+  transform: translateY(-1px);
 }
 
 /* ======================Sidebar====================== */
@@ -1194,6 +1211,7 @@ button {
   color: var(--gold);
   font-size: 1.4rem;
   cursor: pointer;
+  transition: color 0.25s ease;
 }
 
 .contact-close:hover {
@@ -1229,6 +1247,7 @@ button {
 .contact-row a {
   color: #f5f0e8;
   text-decoration: none;
+  transition: color 0.25s ease;
 }
 
 .contact-row a:hover {
@@ -1308,6 +1327,9 @@ button {
   text-decoration: none;
   font-size: 0.95rem;
   letter-spacing: 0.06em;
+  transition:
+    color 0.25s ease,
+    transform 0.25s ease;
 }
 
 .back-to-projects:hover,
@@ -1476,6 +1498,9 @@ button {
   color: var(--gold);
   text-decoration: none;
   border-bottom: 1px solid rgba(201, 169, 110, 0.45);
+  transition:
+    color 0.25s ease,
+    border-color 0.25s ease;
 }
 
 .project-media-card a:hover {
@@ -1548,7 +1573,7 @@ button {
   width: 100%;
   min-height: 920px;
   display: block;
-  border: 0;
+  border: none;
   background: #fff;
 }
 
@@ -1674,6 +1699,14 @@ button {
     transform: translateX(3px);
   }
 
+  .project-arrow-left:hover {
+    transform: translateX(-3px) scale(1.07);
+  }
+
+  .project-arrow-right:hover {
+    transform: translateX(3px) scale(1.07);
+  }
+
   .project-arrow-left::before {
     border-top-width: 9px;
     border-bottom-width: 9px;
@@ -1776,6 +1809,10 @@ button {
 
   .project-detail-grid {
     grid-template-columns: 1fr;
+  }
+
+  .document-stage {
+    width: min(900px, 94vw);
   }
 
   .document-paper,
