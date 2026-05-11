@@ -1,6 +1,8 @@
 /* ======================Global====================== */
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
@@ -8,8 +10,6 @@
   --dark-ocean: #071019;
   --deep-ocean: #091923;
   --mid-ocean: #0b2836;
-  --soft-water: rgba(75, 151, 174, 0.18);
-  --water-line: rgba(175, 225, 232, 0.075);
   --gold: #c9a96e;
   --gold-bright: #f0d899;
   --tawny-gold: #a36a2c;
@@ -27,13 +27,17 @@ body {
 
 body {
   overflow: hidden;
+  color: #f5f0e8;
 }
 
 a {
   color: inherit;
 }
 
-/* keep the normal cursor visible */
+button {
+  font-family: inherit;
+}
+
 @media (pointer: fine) {
   html,
   body,
@@ -49,10 +53,10 @@ a {
 .fade-overlay {
   position: fixed;
   inset: 0;
-  background: black;
   z-index: 300;
-  animation: fadeOut 2.2s ease forwards;
   pointer-events: none;
+  background: #000;
+  animation: fadeOut 2.2s ease forwards;
 }
 
 @keyframes fadeOut {
@@ -66,7 +70,7 @@ a {
   }
 }
 
-/* ======================Solar-System Background Effects====================== */
+/* ======================Cursor and Runes====================== */
 
 .ocean-cursor {
   position: fixed;
@@ -76,9 +80,8 @@ a {
   height: 48px;
   z-index: 10000;
   pointer-events: none;
-  opacity: 1;
-  visibility: visible;
   overflow: visible;
+  opacity: 1;
   transform: translate3d(calc(50vw - 24px), calc(50vh - 24px), 0);
   will-change: transform, width, height;
 }
@@ -87,8 +90,8 @@ a {
   fill: rgba(240, 216, 153, 0.035);
   stroke: rgba(240, 216, 153, 0.98);
   stroke-width: 7;
-  stroke-linejoin: round;
   stroke-linecap: round;
+  stroke-linejoin: round;
   filter: drop-shadow(0 0 7px rgba(240, 216, 153, 0.46));
   transition:
     stroke 0.16s ease,
@@ -127,7 +130,7 @@ a {
   position: absolute;
   left: 0;
   top: 0;
-  border: none;
+  border: 0;
   padding: 0;
   background: transparent;
   color: rgba(240, 216, 153, 0.62);
@@ -176,9 +179,9 @@ a {
 
 .gold-spark {
   position: fixed;
+  z-index: 10001;
   width: 5px;
   height: 5px;
-  z-index: 10001;
   border-radius: 50%;
   background: #ffe89b;
   box-shadow:
@@ -203,9 +206,6 @@ a {
   0% {
     color: rgba(255, 231, 158, 0.95);
     filter: brightness(1.3);
-    text-shadow:
-      0 0 10px rgba(255, 236, 175, 0.75),
-      0 0 22px rgba(240, 216, 153, 0.48);
   }
 
   36% {
@@ -221,10 +221,6 @@ a {
   100% {
     color: rgba(255, 231, 158, 0.98);
     filter: brightness(1.62);
-    text-shadow:
-      0 0 12px rgba(255, 236, 175, 0.88),
-      0 0 30px rgba(240, 216, 153, 0.58),
-      0 0 58px rgba(201, 169, 110, 0.4);
   }
 }
 
@@ -283,8 +279,8 @@ a {
   border-radius: 50%;
   object-fit: cover;
   object-position: center top;
-  border: 1.5px solid #c9a96e;
-  background: white;
+  border: 1.5px solid var(--gold);
+  background: #fff;
 }
 
 .topbar-name {
@@ -300,15 +296,15 @@ a {
 
 .topbar-btn,
 .topbar-link {
-  border: none;
-  outline: none;
+  border: 0;
+  outline: 0;
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
   padding: 0.34rem 0.78rem;
   border-radius: 999px;
   background: transparent;
-  color: #c9a96e;
+  color: var(--gold);
   font-family: inherit;
   font-size: 0.9rem;
   letter-spacing: 0.04em;
@@ -328,9 +324,8 @@ a {
 .topbar-btn:hover:not(.active),
 .topbar-link:hover {
   background: rgba(255, 255, 255, 0.08);
-  color: #f0d899;
+  color: var(--gold-bright);
   transform: translateY(-1px);
-  text-decoration: none;
 }
 
 /* ======================Scroll Container====================== */
@@ -341,11 +336,12 @@ a {
   left: 0;
   right: 0;
   bottom: 0;
+  z-index: 1;
   overflow-y: auto;
   scroll-snap-type: y mandatory;
   scroll-behavior: smooth;
   scrollbar-width: auto;
-  scrollbar-color: #c9a96e #071019;
+  scrollbar-color: var(--gold) var(--dark-ocean);
   background:
     radial-gradient(ellipse at 50% 8%, rgba(41, 100, 119, 0.28), transparent 42%),
     radial-gradient(ellipse at 20% 80%, rgba(18, 75, 97, 0.2), transparent 48%),
@@ -414,14 +410,16 @@ a {
 }
 
 .scroll-container::-webkit-scrollbar-track {
-  background: #071019;
+  background: var(--dark-ocean);
 }
 
 .scroll-container::-webkit-scrollbar-thumb {
-  background-color: #c9a96e;
+  background-color: var(--gold);
   border-radius: 999px;
-  border: 2px solid #071019;
+  border: 2px solid var(--dark-ocean);
 }
+
+/* ======================Sections====================== */
 
 .page-section {
   width: 100%;
@@ -448,26 +446,16 @@ a {
 }
 
 #home {
-  background-image: url("website-images/Suzzallo_Library.jpg");
+  background:
+    linear-gradient(rgba(6, 16, 24, 0.6), rgba(6, 18, 28, 0.82)),
+    url("website-images/Suzzallo_Library.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
 }
 
 #home::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(
-      rgba(6, 16, 24, 0.6),
-      rgba(6, 18, 28, 0.82)
-    );
-  z-index: 1;
-}
-
-#home .section-content {
-  z-index: 2;
+  display: none;
 }
 
 #experience,
@@ -481,7 +469,7 @@ a {
   z-index: 2;
   width: min(900px, 94vw);
   text-align: center;
-  color: white;
+  color: #fff;
 }
 
 #experience .section-content,
@@ -500,7 +488,7 @@ a {
 
 .hero h1 {
   margin: 0 0 1.2rem 0;
-  color: white;
+  color: #fff;
   font-size: clamp(2.4rem, 6vw, 4.8rem);
   font-weight: normal;
   letter-spacing: 0.2em;
@@ -510,8 +498,8 @@ a {
 .divider {
   width: 150px;
   height: 1px;
-  background-color: #c9a96e;
   margin: 0 auto 1.4rem auto;
+  background-color: var(--gold);
 }
 
 .social-links {
@@ -522,7 +510,7 @@ a {
 
 .social-links a,
 .contact-socials a {
-  color: #c9a96e;
+  color: var(--gold);
   text-decoration: none;
   transition:
     color 0.25s ease,
@@ -562,7 +550,7 @@ a {
   letter-spacing: 0.05em;
 }
 
-/* ======================Experience Cards====================== */
+/* ======================Experience====================== */
 
 .experience-content {
   width: min(860px, 94vw);
@@ -600,7 +588,6 @@ a {
   transform: translateY(-5px);
   border-color: rgba(201, 169, 110, 0.72);
   background: rgba(255, 255, 255, 0.08);
-  text-decoration: none;
 }
 
 .experience-card-emoji {
@@ -608,7 +595,6 @@ a {
   font-size: 2.55rem;
   line-height: 1;
   color: #f5f0e8;
-  font-family: "Times New Roman", Georgia, serif;
 }
 
 .experience-card h3 {
@@ -703,14 +689,13 @@ a {
       rgba(255, 255, 255, 0.105),
       rgba(255, 255, 255, 0.04)
     );
-  text-decoration: none;
 }
 
 .project-preview-shell {
   width: 100%;
   height: 300px;
   overflow: hidden;
-  border: 3px solid #c9a96e;
+  border: 3px solid var(--gold);
   border-radius: 14px;
   background:
     radial-gradient(circle at center, rgba(26, 86, 108, 0.48), #030c12 72%);
@@ -724,7 +709,7 @@ a {
   height: 100%;
   display: block;
   object-position: center center;
-  border: none;
+  border: 0;
   border-radius: 0;
   background: transparent;
 }
@@ -790,7 +775,6 @@ a {
 .project-arrow:hover {
   background: rgba(255, 255, 255, 0.08);
   border-color: rgba(201, 169, 110, 0.82);
-  transform: scale(1.07);
 }
 
 .project-arrow-left {
@@ -801,14 +785,6 @@ a {
 .project-arrow-right {
   grid-area: right;
   transform: translateX(6px);
-}
-
-.project-arrow-left:hover {
-  transform: translateX(-6px) scale(1.07);
-}
-
-.project-arrow-right:hover {
-  transform: translateX(6px) scale(1.07);
 }
 
 .project-arrow::before {
@@ -824,14 +800,14 @@ a {
   transform: translate(-56%, -50%);
   border-top: 12px solid transparent;
   border-bottom: 12px solid transparent;
-  border-right: 18px solid #c9a96e;
+  border-right: 18px solid var(--gold);
 }
 
 .project-arrow-right::before {
   transform: translate(-44%, -50%);
   border-top: 12px solid transparent;
   border-bottom: 12px solid transparent;
-  border-left: 18px solid #c9a96e;
+  border-left: 18px solid var(--gold);
 }
 
 .project-dots {
@@ -842,7 +818,8 @@ a {
   margin-top: 0.75rem;
 }
 
-.project-dot {
+.project-dot,
+.book-dot {
   width: 34px;
   height: 7px;
   border: 1px solid rgba(201, 169, 110, 0.48);
@@ -854,12 +831,9 @@ a {
     transform 0.25s ease;
 }
 
-.project-dot.active {
-  background: #c9a96e;
-}
-
-.project-dot:hover {
-  transform: translateY(-1px);
+.project-dot.active,
+.book-dot.active {
+  background: var(--gold);
 }
 
 /* ======================Sidebar====================== */
@@ -916,7 +890,7 @@ a {
 
 .writing-subtitle {
   margin: 0;
-  color: #c9a96e;
+  color: var(--gold);
   font-size: 0.95rem;
   letter-spacing: 0.08em;
 }
@@ -1143,7 +1117,7 @@ a {
   border: 1px solid rgba(201, 169, 110, 0.36);
   border-radius: 50%;
   background: rgba(6, 17, 25, 0.72);
-  color: #c9a96e;
+  color: var(--gold);
   font-size: 1.25rem;
   cursor: pointer;
   transition:
@@ -1154,7 +1128,7 @@ a {
 }
 
 .book-control:hover:not(:disabled) {
-  color: #f0d899;
+  color: var(--gold-bright);
   background: rgba(255, 255, 255, 0.08);
   transform: scale(1.06);
 }
@@ -1178,26 +1152,6 @@ a {
   justify-content: center;
   gap: 0.45rem;
   margin-top: 0.65rem;
-}
-
-.book-dot {
-  width: 34px;
-  height: 7px;
-  border: 1px solid rgba(201, 169, 110, 0.45);
-  background: transparent;
-  cursor: pointer;
-  padding: 0;
-  transition:
-    background 0.25s ease,
-    transform 0.25s ease;
-}
-
-.book-dot.active {
-  background: #c9a96e;
-}
-
-.book-dot:hover {
-  transform: translateY(-1px);
 }
 
 /* ======================Contact Modal====================== */
@@ -1228,23 +1182,22 @@ a {
   background: rgba(6, 17, 25, 0.92);
   box-shadow: 0 18px 45px rgba(0, 0, 0, 0.45);
   text-align: left;
-  color: white;
+  color: #fff;
 }
 
 .contact-close {
   position: absolute;
   top: 0.85rem;
   right: 0.9rem;
-  border: none;
+  border: 0;
   background: transparent;
-  color: #c9a96e;
+  color: var(--gold);
   font-size: 1.4rem;
   cursor: pointer;
-  transition: color 0.25s ease;
 }
 
 .contact-close:hover {
-  color: #f0d899;
+  color: var(--gold-bright);
 }
 
 .contact-card h2 {
@@ -1268,7 +1221,7 @@ a {
 
 .contact-row i {
   width: 28px;
-  color: #c9a96e;
+  color: var(--gold);
   font-size: 1.25rem;
   text-align: center;
 }
@@ -1276,11 +1229,10 @@ a {
 .contact-row a {
   color: #f5f0e8;
   text-decoration: none;
-  transition: color 0.25s ease;
 }
 
 .contact-row a:hover {
-  color: #f0d899;
+  color: var(--gold-bright);
 }
 
 .contact-socials {
@@ -1352,18 +1304,15 @@ a {
   align-items: center;
   gap: 0.45rem;
   margin-bottom: 1.5rem;
-  color: #c9a96e;
+  color: var(--gold);
   text-decoration: none;
   font-size: 0.95rem;
   letter-spacing: 0.06em;
-  transition:
-    color 0.25s ease,
-    transform 0.25s ease;
 }
 
 .back-to-projects:hover,
 .back-to-writing:hover {
-  color: #f0d899;
+  color: var(--gold-bright);
   transform: translateX(-3px);
 }
 
@@ -1388,8 +1337,8 @@ a {
     linear-gradient(
       to bottom,
       transparent,
-      #c9a96e 8%,
-      #c9a96e 92%,
+      var(--gold) 8%,
+      var(--gold) 92%,
       transparent
     );
 }
@@ -1407,7 +1356,7 @@ a {
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  background: #c9a96e;
+  background: var(--gold);
   box-shadow: 0 0 18px rgba(201, 169, 110, 0.8);
 }
 
@@ -1451,9 +1400,9 @@ a {
   height: 86px;
   border-radius: 50%;
   object-fit: contain;
-  background: white;
+  background: #fff;
   padding: 0.45rem;
-  border: 2px solid #c9a96e;
+  border: 2px solid var(--gold);
 }
 
 .timeline-text h2 {
@@ -1493,7 +1442,7 @@ a {
   max-height: 640px;
   display: block;
   object-fit: contain;
-  border: 3px solid #c9a96e;
+  border: 3px solid var(--gold);
   border-radius: 14px;
   background:
     radial-gradient(circle at center, rgba(26, 86, 108, 0.48), #030c12 72%);
@@ -1524,17 +1473,14 @@ a {
 }
 
 .project-media-card a {
-  color: #c9a96e;
+  color: var(--gold);
   text-decoration: none;
   border-bottom: 1px solid rgba(201, 169, 110, 0.45);
-  transition:
-    color 0.25s ease,
-    border-color 0.25s ease;
 }
 
 .project-media-card a:hover {
-  color: #f0d899;
-  border-color: #f0d899;
+  color: var(--gold-bright);
+  border-color: var(--gold-bright);
 }
 
 .project-detail-grid {
@@ -1602,8 +1548,8 @@ a {
   width: 100%;
   min-height: 920px;
   display: block;
-  border: none;
-  background: white;
+  border: 0;
+  background: #fff;
 }
 
 /* ======================Reduced Motion====================== */
@@ -1728,14 +1674,6 @@ a {
     transform: translateX(3px);
   }
 
-  .project-arrow-left:hover {
-    transform: translateX(-3px) scale(1.07);
-  }
-
-  .project-arrow-right:hover {
-    transform: translateX(3px) scale(1.07);
-  }
-
   .project-arrow-left::before {
     border-top-width: 9px;
     border-bottom-width: 9px;
@@ -1838,10 +1776,6 @@ a {
 
   .project-detail-grid {
     grid-template-columns: 1fr;
-  }
-
-  .document-stage {
-    width: min(900px, 94vw);
   }
 
   .document-paper,
