@@ -7,7 +7,7 @@
 
   <title>Bryce Larson</title>
 
-  <link rel="stylesheet" href="css/style.css?v=26">
+  <link rel="stylesheet" href="css/style.css?v=27">
 
   <link
     rel="stylesheet"
@@ -18,7 +18,17 @@
 <body>
 
   <div class="fade-overlay"></div>
-  <div class="ocean-cursor" id="oceanCursor" aria-hidden="true"></div>
+
+  <svg
+    class="ocean-cursor"
+    id="oceanCursor"
+    aria-hidden="true"
+    viewBox="-120 -80 240 160"
+    preserveAspectRatio="none"
+  >
+    <path class="ocean-cursor-path" id="oceanCursorPath"></path>
+  </svg>
+
   <div class="rune-field" id="runeField" aria-hidden="true"></div>
 
   <nav class="topbar" aria-label="Top navigation">
@@ -700,6 +710,7 @@
 
     if (!motionQuery.matches) {
       const oceanCursor = document.querySelector('#oceanCursor');
+      const oceanCursorPath = document.querySelector('#oceanCursorPath');
       const runeField = document.querySelector('#runeField');
 
       const cursorState = {
@@ -713,7 +724,6 @@
         visualY: window.innerHeight / 2 - 22,
         visualW: 44,
         visualH: 44,
-        visualRadius: 22,
         targetElement: null,
         syntheticClick: false
       };
@@ -724,6 +734,8 @@
         '[role="button"]',
         '[tabindex]:not([tabindex="-1"])'
       ].join(',');
+
+      const socialSelector = '.social-links a, .contact-socials a';
 
       function getClickableFromElement(element) {
         if (!element || element === document.documentElement || element === document.body) {
@@ -845,76 +857,140 @@
         });
       }
 
+      function roundedRectPath(radiusRatio) {
+        const w = 104;
+        const h = 58;
+        const r = Math.min(w, h) * radiusRatio;
+
+        return `
+          M ${-w + r} ${-h}
+          L ${w - r} ${-h}
+          Q ${w} ${-h} ${w} ${-h + r}
+          L ${w} ${h - r}
+          Q ${w} ${h} ${w - r} ${h}
+          L ${-w + r} ${h}
+          Q ${-w} ${h} ${-w} ${h - r}
+          L ${-w} ${-h + r}
+          Q ${-w} ${-h} ${-w + r} ${-h}
+          Z
+        `;
+      }
+
+      function elasticLoopPath(pull) {
+        const p = Math.max(0, Math.min(1, pull));
+        const back = -92;
+        const front = 92 + p * 18;
+        const topBack = -54 + p * 18;
+        const bottomBack = 54 - p * 18;
+        const waist = 42 - p * 35;
+        const noseInset = 10 + p * 24;
+
+        if (p < 0.08) {
+          return `
+            M 0 -58
+            C 58 -58 102 -30 102 0
+            C 102 30 58 58 0 58
+            C -58 58 -102 30 -102 0
+            C -102 -30 -58 -58 0 -58
+            Z
+          `;
+        }
+
+        return `
+          M ${back} 0
+          C ${back} ${topBack * 0.7} ${-52 - p * 10} ${topBack} ${-8} ${topBack}
+          C ${42} ${topBack} ${front - noseInset} ${-waist} ${front} 0
+          C ${front - noseInset} ${waist} ${42} ${bottomBack} ${-8} ${bottomBack}
+          C ${-52 - p * 10} ${bottomBack} ${back} ${bottomBack * 0.7} ${back} 0
+          Z
+        `;
+      }
+
+      function updateSocialGlow(activeSocial) {
+        document.querySelectorAll(socialSelector).forEach((link) => {
+          link.classList.toggle('social-orbit-glow', link === activeSocial);
+        });
+      }
+
       function getTargetCursorBox(touchedElement, speed, angle) {
+        const socialTarget = touchedElement && touchedElement.closest(socialSelector);
+
+        if (socialTarget) {
+          updateSocialGlow(socialTarget);
+
+          return {
+            x: cursorState.logicX - 22,
+            y: cursorState.logicY - 22,
+            w: 44,
+            h: 44,
+            locked: false,
+            hidden: true,
+            angle,
+            path: elasticLoopPath(0)
+          };
+        }
+
+        updateSocialGlow(null);
+
         if (touchedElement) {
           const rect = touchedElement.getBoundingClientRect();
           const padding = 5;
-          let radius = 14;
-
-          if (
+          const isRound =
             touchedElement.classList.contains('sidebar-btn') ||
             touchedElement.classList.contains('project-arrow') ||
             touchedElement.classList.contains('book-control') ||
             touchedElement.classList.contains('contact-close') ||
-            Math.abs(rect.width - rect.height) < 3
-          ) {
-            radius = 999;
-          }
+            Math.abs(rect.width - rect.height) < 3;
 
           return {
             x: rect.left - padding,
             y: rect.top - padding,
             w: rect.width + padding * 2,
             h: rect.height + padding * 2,
-            radius,
             locked: true,
-            angle: 0
+            hidden: false,
+            angle: 0,
+            path: roundedRectPath(isRound ? 0.48 : 0.18)
           };
         }
 
         const pullDistance = Math.min(
           Math.hypot(cursorState.targetX - cursorState.logicX, cursorState.targetY - cursorState.logicY),
-          150
+          170
         );
 
-        const elastic = Math.min(speed * 1.4 + pullDistance * 0.42, 92);
+        const elastic = Math.min(speed * 1.55 + pullDistance * 0.48, 112);
         const pulledWidth = 44 + elastic;
-        const pulledHeight = Math.max(7, 44 - elastic * 0.34);
+        const pulledHeight = Math.max(8, 44 - elastic * 0.32);
+        const pull = elastic / 112;
 
         return {
           x: cursorState.logicX - pulledWidth / 2,
           y: cursorState.logicY - pulledHeight / 2,
           w: pulledWidth,
           h: pulledHeight,
-          radius: pulledHeight / 2,
           locked: false,
-          angle
+          hidden: false,
+          angle,
+          path: elasticLoopPath(pull)
         };
       }
 
       function renderCursor(targetBox) {
-        const morphSpeed = targetBox.locked ? 0.22 : 0.36;
+        const morphSpeed = targetBox.locked ? 0.22 : 0.34;
 
         cursorState.visualX = lerp(cursorState.visualX, targetBox.x, morphSpeed);
         cursorState.visualY = lerp(cursorState.visualY, targetBox.y, morphSpeed);
         cursorState.visualW = lerp(cursorState.visualW, targetBox.w, morphSpeed);
         cursorState.visualH = lerp(cursorState.visualH, targetBox.h, morphSpeed);
 
-        const targetRadius = targetBox.radius === 999
-          ? Math.min(cursorState.visualW, cursorState.visualH) / 2
-          : targetBox.radius;
-
-        cursorState.visualRadius = lerp(cursorState.visualRadius, targetRadius, morphSpeed);
-
         oceanCursor.classList.toggle('locked', targetBox.locked);
         oceanCursor.classList.toggle('dark', overlapsBookPage());
+        oceanCursor.classList.toggle('hidden', targetBox.hidden);
         oceanCursor.style.width = `${cursorState.visualW}px`;
         oceanCursor.style.height = `${cursorState.visualH}px`;
-        oceanCursor.style.borderRadius = targetBox.locked && targetBox.radius === 999
-          ? '999px'
-          : `${cursorState.visualRadius}px`;
-        oceanCursor.style.opacity = '1';
         oceanCursor.style.visibility = 'visible';
+        oceanCursorPath.setAttribute('d', targetBox.path);
 
         oceanCursor.style.transform = `
           translate3d(${cursorState.visualX}px, ${cursorState.visualY}px, 0)
@@ -925,12 +1001,10 @@
       window.addEventListener('pointermove', (event) => {
         cursorState.targetX = event.clientX;
         cursorState.targetY = event.clientY;
-        oceanCursor.style.opacity = '1';
         oceanCursor.style.visibility = 'visible';
       });
 
       document.addEventListener('pointerleave', () => {
-        oceanCursor.style.opacity = '1';
         oceanCursor.style.visibility = 'visible';
       });
 
@@ -938,14 +1012,14 @@
         const clickedRune = getRuneTouchedByCircle();
 
         if (clickedRune) {
-          clickedRune.element.classList.add('rune-lit');
           clickedRune.element.classList.remove('rune-burst');
           void clickedRune.element.offsetWidth;
           clickedRune.element.classList.add('rune-burst');
+          clickedRune.element.classList.toggle('rune-lit');
 
           window.setTimeout(() => {
             clickedRune.element.classList.remove('rune-burst');
-          }, 460);
+          }, 520);
         }
 
         if (cursorState.syntheticClick) {
@@ -973,12 +1047,12 @@
       }, true);
 
       function animateOceanCursor() {
-        cursorState.logicX += (cursorState.targetX - cursorState.logicX) * 0.13;
-        cursorState.logicY += (cursorState.targetY - cursorState.logicY) * 0.13;
+        cursorState.logicX += (cursorState.targetX - cursorState.logicX) * 0.125;
+        cursorState.logicY += (cursorState.targetY - cursorState.logicY) * 0.125;
 
         const dx = cursorState.logicX - cursorState.previousX;
         const dy = cursorState.logicY - cursorState.previousY;
-        const speed = Math.min(Math.hypot(dx, dy), 48);
+        const speed = Math.min(Math.hypot(dx, dy), 52);
         const angle = Math.atan2(dy, dx) * 180 / Math.PI;
         const touchedElement = getClickableTouchedByCircle();
         const targetBox = getTargetCursorBox(touchedElement, speed, angle);
@@ -1004,9 +1078,11 @@
       }
 
       function getRuneBounds() {
+        const topbarHeight = window.innerWidth <= 760 ? 50 : 54;
+
         return {
           left: 0,
-          top: 0,
+          top: topbarHeight,
           right: window.innerWidth,
           bottom: window.innerHeight
         };
@@ -1051,18 +1127,18 @@
 
           const size = randomBetween(16, 28);
           element.style.fontSize = `${size}px`;
-          element.style.opacity = String(randomBetween(0.34, 0.64));
+          element.style.opacity = String(randomBetween(0.36, 0.7));
 
           runeField.appendChild(element);
 
           runes.push({
             element,
             x: randomBetween(bounds.left + 24, bounds.right - 48),
-            y: randomBetween(bounds.top + 64, bounds.bottom - 48),
-            vx: randomBetween(-0.22, 0.22) || 0.15,
-            vy: randomBetween(-0.16, 0.16) || 0.11,
+            y: randomBetween(bounds.top + 24, bounds.bottom - 48),
+            vx: randomBetween(-0.25, 0.25) || 0.16,
+            vy: randomBetween(-0.19, 0.19) || 0.12,
             size,
-            spin: randomBetween(-0.15, 0.15),
+            spin: randomBetween(-0.18, 0.18),
             rotation: randomBetween(0, 360)
           });
         }
@@ -1081,6 +1157,7 @@
       }
 
       function getRuneTouchedByCircle() {
+        const bounds = getRuneBounds();
         const cursorRect = {
           left: cursorState.visualX,
           right: cursorState.visualX + cursorState.visualW,
@@ -1135,10 +1212,10 @@
               const pushY = runeCenterY - rectCenterY;
 
               if (Math.abs(pushX) > Math.abs(pushY)) {
-                rune.vx = Math.abs(rune.vx || 0.15) * Math.sign(pushX || 1);
+                rune.vx = Math.abs(rune.vx || 0.16) * Math.sign(pushX || 1);
                 rune.x += rune.vx * 6;
               } else {
-                rune.vy = Math.abs(rune.vy || 0.11) * Math.sign(pushY || 1);
+                rune.vy = Math.abs(rune.vy || 0.12) * Math.sign(pushY || 1);
                 rune.y += rune.vy * 6;
               }
             }
@@ -1152,7 +1229,7 @@
           };
 
           rune.element.classList.toggle('rune-glow', rectsOverlap(cursorRect, runeRect));
-          rune.element.style.transform = `translate3d(${rune.x}px, ${rune.y}px, 0) rotate(${rune.rotation}deg)`;
+          rune.element.style.transform = `translate3d(${rune.x}px, ${rune.y - bounds.top}px, 0) rotate(${rune.rotation}deg)`;
         });
 
         requestAnimationFrame(animateRunes);
