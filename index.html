@@ -17,7 +17,7 @@
   <div class="fade-overlay" aria-hidden="true"></div>
 
   <svg
-    class="ocean-cursor"
+    class="ocean-cursor hidden"
     id="oceanCursor"
     aria-hidden="true"
     viewBox="-120 -80 240 160"
@@ -39,23 +39,23 @@
     </div>
 
     <div class="topbar-links">
-      <button class="topbar-btn active" data-index="0" type="button">
+      <button class="topbar-btn active" data-index="0" title="Home" type="button">
         <span>Home</span>
       </button>
 
-      <button class="topbar-btn" data-index="1" type="button">
+      <button class="topbar-btn" data-index="1" title="Experience" type="button">
         <span>Experience</span>
       </button>
 
-      <button class="topbar-btn" data-index="2" type="button">
+      <button class="topbar-btn" data-index="2" title="Projects" type="button">
         <span>Projects</span>
       </button>
 
-      <button class="topbar-btn" data-index="3" type="button">
+      <button class="topbar-btn" data-index="3" title="Writing" type="button">
         <span>Writing</span>
       </button>
 
-      <button class="topbar-btn contact-open-btn" type="button">
+      <button class="topbar-btn contact-open-btn" title="Contact" type="button">
         <span>Contact</span>
       </button>
     </div>
@@ -123,7 +123,10 @@
             </p>
           </a>
 
-          <a class="experience-card" href="timeline.html">
+          <a
+            class="experience-card"
+            href="timeline.html"
+          >
             <div class="experience-card-emoji">🕒︎</div>
 
             <h3>See Timeline</h3>
@@ -164,7 +167,9 @@
 
                 <div class="project-slide-text">
                   <h3>GANs Image Generation</h3>
-                  <p>A Generative Adversarial Network for Image Generation.</p>
+                  <p>
+                    A Generative Adversarial Network for Image Generation.
+                  </p>
                 </div>
               </a>
 
@@ -179,7 +184,9 @@
 
                 <div class="project-slide-text">
                   <h3>Button Battle Game</h3>
-                  <p>A game where you select two "buttons" to fight one another.</p>
+                  <p>
+                    A game where you select two "buttons" to fight one another.
+                  </p>
                 </div>
               </a>
 
@@ -454,8 +461,8 @@
     const mouse = {
       x: window.innerWidth / 2,
       y: window.innerHeight / 2,
-      lastX: window.innerWidth / 2,
-      lastY: window.innerHeight / 2,
+      previousX: window.innerWidth / 2,
+      previousY: window.innerHeight / 2,
       active: false
     };
 
@@ -484,11 +491,13 @@
     }
 
     function scrollToSection(index) {
-      if (!sections[index]) {
+      const section = sections[index];
+
+      if (!section) {
         return;
       }
 
-      sections[index].scrollIntoView({
+      section.scrollIntoView({
         behavior: "smooth",
         block: "start"
       });
@@ -508,15 +517,15 @@
 
     const sectionObserver = new IntersectionObserver(
       (entries) => {
-        const visible = entries
+        const visibleEntry = entries
           .filter((entry) => entry.isIntersecting)
           .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
 
-        if (!visible) {
+        if (!visibleEntry) {
           return;
         }
 
-        const index = sections.indexOf(visible.target);
+        const index = sections.indexOf(visibleEntry.target);
 
         if (index >= 0) {
           setActiveSection(index);
@@ -696,20 +705,21 @@
 
       const speed = Math.min(36, Math.hypot(velocityX, velocityY));
       const angle = Math.atan2(velocityY, velocityX || 0.001);
-      const stretch = Math.min(18, speed * 0.42);
-      const squeeze = Math.min(7, speed * 0.14);
+      const stretch = Math.min(17, speed * 0.38);
+      const squeeze = Math.min(6, speed * 0.12);
 
       const rx = width / 2 + stretch;
-      const ry = Math.max(17, height / 2 - squeeze);
-      const leadX = Math.cos(angle) * stretch * 0.45;
-      const leadY = Math.sin(angle) * stretch * 0.45;
-      const tailX = -Math.cos(angle) * stretch * 0.35;
-      const tailY = -Math.sin(angle) * stretch * 0.35;
+      const ry = Math.max(18, height / 2 - squeeze);
+
+      const leadX = Math.cos(angle) * stretch * 0.38;
+      const leadY = Math.sin(angle) * stretch * 0.38;
+      const tailX = -Math.cos(angle) * stretch * 0.32;
+      const tailY = -Math.sin(angle) * stretch * 0.32;
 
       return [
         `M ${-rx + tailX} 0`,
-        `C ${-rx + tailX} ${-ry}, ${rx * 0.62 + leadX} ${-ry}, ${rx + leadX} 0`,
-        `C ${rx * 0.62 + leadX} ${ry}, ${-rx + tailX} ${ry}, ${-rx + tailX} 0`,
+        `C ${-rx + tailX} ${-ry}, ${rx * 0.62 + leadX} ${-ry + leadY}, ${rx + leadX} 0`,
+        `C ${rx * 0.62 + leadX} ${ry + leadY}, ${-rx + tailX} ${ry}, ${-rx + tailX} 0`,
         "Z"
       ].join(" ");
     }
@@ -761,8 +771,8 @@
     function animateOceanCursor() {
       const target = getCursorTarget();
 
-      cursorState.velocityX = mouse.x - mouse.lastX;
-      cursorState.velocityY = mouse.y - mouse.lastY;
+      cursorState.velocityX = mouse.x - mouse.previousX;
+      cursorState.velocityY = mouse.y - mouse.previousY;
 
       if (target) {
         cursorState.locked = true;
@@ -781,8 +791,8 @@
         oceanCursor.classList.remove("locked", "tawny");
       }
 
-      const follow = cursorState.locked ? 0.32 : 0.22;
-      const resize = cursorState.locked ? 0.28 : 0.16;
+      const follow = cursorState.locked ? 0.32 : 0.2;
+      const resize = cursorState.locked ? 0.3 : 0.16;
 
       cursorState.x += (cursorState.targetX - cursorState.x) * follow;
       cursorState.y += (cursorState.targetY - cursorState.y) * follow;
@@ -804,8 +814,8 @@
         )
       );
 
-      mouse.lastX += (mouse.x - mouse.lastX) * 0.35;
-      mouse.lastY += (mouse.y - mouse.lastY) * 0.35;
+      mouse.previousX += (mouse.x - mouse.previousX) * 0.35;
+      mouse.previousY += (mouse.y - mouse.previousY) * 0.35;
 
       requestAnimationFrame(animateOceanCursor);
     }
