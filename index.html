@@ -842,9 +842,11 @@
       const bounds = getRuneBounds();
       const obstacles = getRuneObstacles(bounds);
       const runeCount = Math.max(40, Math.floor(window.innerWidth / 32));
-      const orbitCount = Math.min(12, Math.max(8, Math.floor(runeCount * 0.22)));
-      const centerX = bounds.width / 2;
-      const centerY = bounds.height * 0.5;
+      const orbitCount = Math.min(14, Math.max(9, Math.floor(runeCount * 0.24)));
+      const ringCenterX = bounds.width / 2;
+      const ringCenterY = bounds.height * 0.14;
+      const ringSpacing = 38;
+      const firstUsefulRing = Math.max(3, Math.floor(Math.min(bounds.width, bounds.height) / 170));
 
       if (runeAnimationFrame) {
         cancelAnimationFrame(runeAnimationFrame);
@@ -856,23 +858,24 @@
       for (let i = 0; i < runeCount; i += 1) {
         const rune = document.createElement("button");
         const isOrbiter = i < orbitCount;
-        const baseSize = randomBetween(0.52, 0.78);
+        const fontSize = randomBetween(10, 17);
         const baseBrightness = randomBetween(0.68, 1.42);
-        const radius = 12 * baseSize;
+        const radius = Math.max(10, fontSize * 0.85);
         const position = distributedRunePosition(i, runeCount, bounds, obstacles, radius);
-        const speed = randomBetween(13, 28);
+        const speed = randomBetween(3.25, 7);
         const angle = Math.random() * Math.PI * 2;
-        const orbitLayer = i % orbitCount;
-        const orbitPadding = 72 + orbitLayer * 24;
-        const orbitRadiusX = Math.max(bounds.width * 0.42, bounds.width / 2 + orbitPadding);
-        const orbitRadiusY = Math.max(bounds.height * 0.30, bounds.height * 0.42 + orbitLayer * 18);
-        const orbitAngle = (Math.PI * 2 * i) / Math.max(1, orbitCount) + randomBetween(-0.16, 0.16);
+        const orbitLayer = firstUsefulRing + (i % 7);
+        const orbitRadius = orbitLayer * ringSpacing;
+        const orbitRadiusX = orbitRadius;
+        const orbitRadiusY = orbitRadius;
+        const orbitAngle = (Math.PI * 2 * i) / Math.max(1, orbitCount) + randomBetween(-0.12, 0.12);
 
         rune.className = isOrbiter ? "golden-rune rune-orbiter" : "golden-rune";
         rune.type = "button";
         rune.tabIndex = -1;
         rune.textContent = runeCharacters[i % runeCharacters.length];
-        rune.style.setProperty("--rune-scale", baseSize.toFixed(2));
+        rune.style.fontSize = fontSize.toFixed(2) + "px";
+        rune.style.setProperty("--rune-scale", "1");
         rune.style.setProperty("--rune-rotation", randomBetween(-10, 10).toFixed(2) + "deg");
         rune.style.opacity = String(0.72 + Math.min(0.18, baseBrightness * 0.08));
         rune.style.left = "-9999px";
@@ -880,24 +883,31 @@
 
         const item = {
           element: rune,
-          x: isOrbiter ? centerX + Math.cos(orbitAngle) * orbitRadiusX : position.x,
-          y: isOrbiter ? centerY + Math.sin(orbitAngle) * orbitRadiusY + randomBetween(-42, 42) : position.y,
+          x: isOrbiter ? ringCenterX + Math.cos(orbitAngle) * orbitRadiusX : position.x,
+          y: isOrbiter ? ringCenterY + Math.sin(orbitAngle) * orbitRadiusY : position.y,
           radius: radius,
           vx: Math.cos(angle) * speed,
           vy: Math.sin(angle) * speed,
           driftPhase: Math.random() * Math.PI * 2,
-          driftSpeed: randomBetween(0.7, 1.35),
-          driftAmountX: randomBetween(34, 98),
-          driftAmountY: randomBetween(28, 82),
+          driftSpeed: randomBetween(0.16, 0.34),
+          driftAmountX: randomBetween(10, 28),
+          driftAmountY: randomBetween(8, 24),
+          wanderPhase: Math.random() * Math.PI * 2,
+          wanderSpeed: randomBetween(0.18, 0.42),
+          wanderStrength: randomBetween(1.8, 4.2),
           baseBrightness: baseBrightness,
           clickedLit: false,
           burstUntil: 0,
           isOrbiter: isOrbiter,
+          orbitCenterX: ringCenterX,
+          orbitCenterY: ringCenterY,
           orbitAngle: orbitAngle,
-          orbitSpeed: (Math.random() < 0.5 ? -1 : 1) * randomBetween(0.024, 0.052),
+          orbitSpeed: (Math.random() < 0.5 ? -1 : 1) * randomBetween(0.006, 0.013),
           orbitRadiusX: orbitRadiusX,
           orbitRadiusY: orbitRadiusY,
-          orbitOffset: randomBetween(-56, 56)
+          orbitWobblePhase: Math.random() * Math.PI * 2,
+          orbitWobbleSpeed: randomBetween(0.1, 0.22),
+          orbitWobbleAmount: randomBetween(0.6, 1.8)
         };
 
         rune.addEventListener("click", function(event) {
@@ -946,6 +956,13 @@
 
     function updateDriftingRune(item, dt, bounds, obstacles) {
       item.driftPhase += item.driftSpeed * dt;
+      item.wanderPhase += item.wanderSpeed * dt;
+
+      const wanderX = Math.cos(item.wanderPhase * 0.83) * item.wanderStrength;
+      const wanderY = Math.sin(item.wanderPhase * 1.17) * item.wanderStrength;
+
+      item.vx += wanderX * dt;
+      item.vy += wanderY * dt;
       item.x += item.vx * dt;
       item.y += item.vy * dt;
 
@@ -953,36 +970,46 @@
 
       if (item.x < 20) {
         item.x = 20;
-        item.vx = Math.abs(item.vx);
+        item.vx = Math.abs(item.vx) * 0.78;
       } else if (item.x > bounds.width - 20) {
         item.x = bounds.width - 20;
-        item.vx = -Math.abs(item.vx);
+        item.vx = -Math.abs(item.vx) * 0.78;
       }
 
       if (item.y < 20) {
         item.y = 20;
-        item.vy = Math.abs(item.vy);
+        item.vy = Math.abs(item.vy) * 0.78;
       } else if (item.y > bounds.height - 20) {
         item.y = bounds.height - 20;
-        item.vy = -Math.abs(item.vy);
+        item.vy = -Math.abs(item.vy) * 0.78;
       }
 
       const speed = Math.hypot(item.vx, item.vy);
-      const maxSpeed = 36;
+      const maxSpeed = 9;
+      const minSpeed = 2.2;
 
       if (speed > maxSpeed) {
         item.vx = (item.vx / speed) * maxSpeed;
         item.vy = (item.vy / speed) * maxSpeed;
+      } else if (speed < minSpeed) {
+        const angle = item.wanderPhase + Math.PI * 0.25;
+        item.vx += Math.cos(angle) * minSpeed * 0.22;
+        item.vy += Math.sin(angle) * minSpeed * 0.22;
       }
     }
 
     function updateOrbiterRune(item, dt, bounds) {
-      const centerX = bounds.width / 2;
-      const centerY = bounds.height * 0.5;
-
       item.orbitAngle += item.orbitSpeed * dt;
-      item.x = centerX + Math.cos(item.orbitAngle) * item.orbitRadiusX;
-      item.y = centerY + Math.sin(item.orbitAngle) * item.orbitRadiusY + item.orbitOffset;
+      item.orbitWobblePhase += item.orbitWobbleSpeed * dt;
+
+      const wobble = Math.sin(item.orbitWobblePhase) * item.orbitWobbleAmount;
+      const centerX = bounds.width / 2;
+      const centerY = bounds.height * 0.14;
+
+      item.orbitCenterX += (centerX - item.orbitCenterX) * Math.min(1, dt * 3);
+      item.orbitCenterY += (centerY - item.orbitCenterY) * Math.min(1, dt * 3);
+      item.x = item.orbitCenterX + Math.cos(item.orbitAngle) * (item.orbitRadiusX + wobble);
+      item.y = item.orbitCenterY + Math.sin(item.orbitAngle) * (item.orbitRadiusY + wobble);
     }
 
     function updateRuneGlow(item, now, bounds, displayX, displayY) {
