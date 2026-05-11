@@ -7,7 +7,7 @@
 
   <title>Bryce Larson</title>
 
-  <link rel="stylesheet" href="css/style.css?v=20">
+  <link rel="stylesheet" href="css/style.css?v=21">
 
   <link
     rel="stylesheet"
@@ -18,6 +18,8 @@
 <body>
 
   <div class="fade-overlay"></div>
+  <div class="ocean-cursor" id="oceanCursor" aria-hidden="true"></div>
+  <div class="rune-field" id="runeField" aria-hidden="true"></div>
 
   <nav class="topbar" aria-label="Top navigation">
     <div class="topbar-brand">
@@ -511,7 +513,7 @@
       },
       {
         title: 'Life in Reverse',
-        href: 'life-in-reverse.html',
+        href: 'lifeinreverse.html',
         description: 'A 3000 word short story following a man who suddenly finds his experience of time has been reversed and begins documenting his life and efforts to break his condition.'
       }
     ];
@@ -693,6 +695,198 @@
         }
       }
     });
+
+    const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    if (!motionQuery.matches) {
+      const oceanCursor = document.querySelector('#oceanCursor');
+      const runeField = document.querySelector('#runeField');
+
+      const cursorState = {
+        targetX: window.innerWidth / 2,
+        targetY: window.innerHeight / 2,
+        x: window.innerWidth / 2,
+        y: window.innerHeight / 2,
+        previousX: window.innerWidth / 2,
+        previousY: window.innerHeight / 2,
+        visible: false
+      };
+
+      window.addEventListener('pointermove', (event) => {
+        cursorState.targetX = event.clientX;
+        cursorState.targetY = event.clientY;
+        cursorState.visible = true;
+        oceanCursor.style.opacity = '1';
+      });
+
+      window.addEventListener('pointerleave', () => {
+        cursorState.visible = false;
+        oceanCursor.style.opacity = '0';
+      });
+
+      function animateOceanCursor() {
+        cursorState.x += (cursorState.targetX - cursorState.x) * 0.18;
+        cursorState.y += (cursorState.targetY - cursorState.y) * 0.18;
+
+        const dx = cursorState.x - cursorState.previousX;
+        const dy = cursorState.y - cursorState.previousY;
+        const speed = Math.min(Math.hypot(dx, dy), 34);
+        const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+        const stretch = 1 + speed / 22;
+        const squeeze = Math.max(0.72, 1 - speed / 95);
+
+        oceanCursor.style.transform = `
+          translate3d(${cursorState.x - 23}px, ${cursorState.y - 23}px, 0)
+          rotate(${angle}deg)
+          scale(${stretch}, ${squeeze})
+        `;
+
+        cursorState.previousX = cursorState.x;
+        cursorState.previousY = cursorState.y;
+
+        requestAnimationFrame(animateOceanCursor);
+      }
+
+      animateOceanCursor();
+
+      const runeGlyphs = ['ᚠ', 'ᚢ', 'ᚦ', 'ᚨ', 'ᚱ', 'ᚲ', 'ᚷ', 'ᚹ', 'ᚺ', 'ᚾ', 'ᛁ', 'ᛃ', 'ᛇ', 'ᛈ', 'ᛉ', 'ᛊ', 'ᛏ', 'ᛒ', 'ᛖ', 'ᛗ', 'ᛚ', 'ᛞ', 'ᛟ'];
+      const runeCount = window.innerWidth < 700 ? 16 : 28;
+      const runes = [];
+
+      function randomBetween(min, max) {
+        return min + Math.random() * (max - min);
+      }
+
+      function getRuneBounds() {
+        const topbarHeight = window.innerWidth <= 760 ? 50 : 54;
+
+        return {
+          left: 0,
+          top: topbarHeight,
+          right: window.innerWidth,
+          bottom: window.innerHeight
+        };
+      }
+
+      function getMenuRects() {
+        const selectors = [
+          '.topbar-btn',
+          '.topbar-link',
+          '.sidebar-btn',
+          '.project-arrow',
+          '.book-control',
+          '.experience-card'
+        ];
+
+        return Array.from(document.querySelectorAll(selectors.join(','))).map((element) => {
+          const rect = element.getBoundingClientRect();
+
+          return {
+            left: rect.left - 10,
+            right: rect.right + 10,
+            top: rect.top - 10,
+            bottom: rect.bottom + 10
+          };
+        });
+      }
+
+      function createRunes() {
+        if (!runeField) {
+          return;
+        }
+
+        runeField.innerHTML = '';
+        runes.length = 0;
+
+        const bounds = getRuneBounds();
+
+        for (let i = 0; i < runeCount; i += 1) {
+          const element = document.createElement('span');
+          element.className = 'golden-rune';
+          element.textContent = runeGlyphs[Math.floor(Math.random() * runeGlyphs.length)];
+
+          const size = randomBetween(17, 31);
+          element.style.fontSize = `${size}px`;
+          element.style.opacity = String(randomBetween(0.42, 0.82));
+
+          runeField.appendChild(element);
+
+          runes.push({
+            element,
+            x: randomBetween(bounds.left + 20, bounds.right - 40),
+            y: randomBetween(bounds.top + 20, bounds.bottom - 40),
+            vx: randomBetween(-0.34, 0.34) || 0.2,
+            vy: randomBetween(-0.24, 0.24) || 0.14,
+            size,
+            spin: randomBetween(-0.35, 0.35),
+            rotation: randomBetween(0, 360)
+          });
+        }
+      }
+
+      function runeHitsRect(rune, rect) {
+        const left = rune.x;
+        const right = rune.x + rune.size;
+        const top = rune.y;
+        const bottom = rune.y + rune.size;
+
+        return right > rect.left &&
+          left < rect.right &&
+          bottom > rect.top &&
+          top < rect.bottom;
+      }
+
+      function animateRunes() {
+        const bounds = getRuneBounds();
+        const menuRects = getMenuRects();
+
+        runes.forEach((rune) => {
+          rune.x += rune.vx;
+          rune.y += rune.vy;
+          rune.rotation += rune.spin;
+
+          if (rune.x <= bounds.left || rune.x + rune.size >= bounds.right) {
+            rune.vx *= -1;
+            rune.x = Math.max(bounds.left, Math.min(rune.x, bounds.right - rune.size));
+          }
+
+          if (rune.y <= bounds.top || rune.y + rune.size >= bounds.bottom) {
+            rune.vy *= -1;
+            rune.y = Math.max(bounds.top, Math.min(rune.y, bounds.bottom - rune.size));
+          }
+
+          menuRects.forEach((rect) => {
+            if (runeHitsRect(rune, rect)) {
+              const runeCenterX = rune.x + rune.size / 2;
+              const runeCenterY = rune.y + rune.size / 2;
+              const rectCenterX = (rect.left + rect.right) / 2;
+              const rectCenterY = (rect.top + rect.bottom) / 2;
+              const pushX = runeCenterX - rectCenterX;
+              const pushY = runeCenterY - rectCenterY;
+
+              if (Math.abs(pushX) > Math.abs(pushY)) {
+                rune.vx = Math.abs(rune.vx || 0.2) * Math.sign(pushX || 1);
+                rune.x += rune.vx * 5;
+              } else {
+                rune.vy = Math.abs(rune.vy || 0.2) * Math.sign(pushY || 1);
+                rune.y += rune.vy * 5;
+              }
+            }
+          });
+
+          rune.element.style.transform = `translate3d(${rune.x}px, ${rune.y - bounds.top}px, 0) rotate(${rune.rotation}deg)`;
+        });
+
+        requestAnimationFrame(animateRunes);
+      }
+
+      createRunes();
+      animateRunes();
+
+      window.addEventListener('resize', () => {
+        createRunes();
+      });
+    }
   </script>
 
 </body>
