@@ -433,6 +433,7 @@ a {
   position: relative;
   padding: 2rem 1.5rem;
   background: transparent;
+  overflow: hidden;
 }
 
 .page-section::before {
@@ -447,7 +448,7 @@ a {
 }
 
 #home {
-  background-image: url("../website-images/Suzzallo_Library.jpg");
+  background-image: url("website-images/Suzzallo_Library.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -463,6 +464,10 @@ a {
       rgba(6, 18, 28, 0.82)
     );
   z-index: 1;
+}
+
+#home .section-content {
+  z-index: 2;
 }
 
 #experience,
