@@ -7,7 +7,7 @@
 
   <title>Bryce Larson</title>
 
-  <link rel="stylesheet" href="css/style.css?v=23">
+  <link rel="stylesheet" href="css/style.css?v=24">
 
   <link
     rel="stylesheet"
@@ -705,13 +705,15 @@
       const cursorState = {
         targetX: window.innerWidth / 2,
         targetY: window.innerHeight / 2,
-        x: window.innerWidth / 2,
-        y: window.innerHeight / 2,
+        logicX: window.innerWidth / 2,
+        logicY: window.innerHeight / 2,
         previousX: window.innerWidth / 2,
         previousY: window.innerHeight / 2,
-        width: 44,
-        height: 44,
-        radius: 999,
+        visualX: window.innerWidth / 2 - 22,
+        visualY: window.innerHeight / 2 - 22,
+        visualW: 44,
+        visualH: 44,
+        visualRadius: 999,
         targetElement: null,
         syntheticClick: false
       };
@@ -728,23 +730,58 @@
           return null;
         }
 
-        return element.closest(clickableSelector);
+        const clickable = element.closest(clickableSelector);
+
+        if (!clickable || !isEligibleClickable(clickable)) {
+          return null;
+        }
+
+        return clickable;
       }
 
-      function elementFromCircleCenter() {
-        oceanCursor.style.visibility = 'hidden';
-        const element = document.elementFromPoint(cursorState.x, cursorState.y);
-        oceanCursor.style.visibility = 'visible';
+      function isEligibleClickable(element) {
+        if (!element) {
+          return false;
+        }
 
-        return getClickableFromElement(element);
+        const inactiveSlide = element.closest('.project-slide:not(.active)');
+
+        if (inactiveSlide) {
+          return false;
+        }
+
+        if (element.classList.contains('project-slide') && !element.classList.contains('active')) {
+          return false;
+        }
+
+        const rect = element.getBoundingClientRect();
+
+        if (
+          rect.width <= 0 ||
+          rect.height <= 0 ||
+          rect.right <= 0 ||
+          rect.bottom <= 0 ||
+          rect.left >= window.innerWidth ||
+          rect.top >= window.innerHeight
+        ) {
+          return false;
+        }
+
+        const style = window.getComputedStyle(element);
+
+        if (style.visibility === 'hidden' || style.display === 'none' || style.pointerEvents === 'none') {
+          return false;
+        }
+
+        return true;
       }
 
       function getCircleRect() {
         return {
-          left: cursorState.x - cursorState.width / 2,
-          right: cursorState.x + cursorState.width / 2,
-          top: cursorState.y - cursorState.height / 2,
-          bottom: cursorState.y + cursorState.height / 2
+          left: cursorState.logicX - 22,
+          right: cursorState.logicX + 22,
+          top: cursorState.logicY - 22,
+          bottom: cursorState.logicY + 22
         };
       }
 
@@ -755,6 +792,12 @@
           a.top < b.bottom;
       }
 
+      function elementFromCircleCenter() {
+        oceanCursor.style.pointerEvents = 'none';
+        const element = document.elementFromPoint(cursorState.logicX, cursorState.logicY);
+        return getClickableFromElement(element);
+      }
+
       function getClickableTouchedByCircle() {
         const circleRect = getCircleRect();
         const clickables = Array.from(document.querySelectorAll(clickableSelector));
@@ -762,7 +805,7 @@
         let bestArea = 0;
 
         clickables.forEach((element) => {
-          if (element.offsetParent === null && !element.classList.contains('contact-close')) {
+          if (!isEligibleClickable(element)) {
             return;
           }
 
@@ -785,49 +828,75 @@
         return best || elementFromCircleCenter();
       }
 
-      function setCursorToFreeCircle(speed, angle) {
-        const stretch = 1 + speed / 26;
-        const squeeze = Math.max(0.78, 1 - speed / 110);
-
-        cursorState.width = 44;
-        cursorState.height = 44;
-        cursorState.radius = 999;
-
-        oceanCursor.classList.remove('locked');
-        oceanCursor.style.width = '44px';
-        oceanCursor.style.height = '44px';
-        oceanCursor.style.borderRadius = '999px';
-        oceanCursor.style.transform = `
-          translate3d(${cursorState.x - 22}px, ${cursorState.y - 22}px, 0)
-          rotate(${angle}deg)
-          scale(${stretch}, ${squeeze})
-        `;
+      function lerp(current, target, amount) {
+        return current + (target - current) * amount;
       }
 
-      function setCursorToElement(element) {
-        const rect = element.getBoundingClientRect();
-        const padding = 5;
+      function getTargetCursorBox(touchedElement, speed, angle) {
+        if (touchedElement) {
+          const rect = touchedElement.getBoundingClientRect();
+          const padding = 5;
+          let radius = 14;
 
-        cursorState.width = rect.width + padding * 2;
-        cursorState.height = rect.height + padding * 2;
+          if (
+            touchedElement.classList.contains('sidebar-btn') ||
+            touchedElement.classList.contains('project-arrow') ||
+            touchedElement.classList.contains('book-control') ||
+            touchedElement.classList.contains('contact-close') ||
+            Math.abs(rect.width - rect.height) < 3
+          ) {
+            radius = 999;
+          }
 
-        let radius = 14;
-
-        if (
-          element.classList.contains('sidebar-btn') ||
-          element.classList.contains('project-arrow') ||
-          element.classList.contains('book-control') ||
-          element.classList.contains('contact-close') ||
-          rect.width === rect.height
-        ) {
-          radius = 999;
+          return {
+            x: rect.left - padding,
+            y: rect.top - padding,
+            w: rect.width + padding * 2,
+            h: rect.height + padding * 2,
+            radius,
+            locked: true
+          };
         }
 
-        oceanCursor.classList.add('locked');
-        oceanCursor.style.width = `${cursorState.width}px`;
-        oceanCursor.style.height = `${cursorState.height}px`;
-        oceanCursor.style.borderRadius = radius === 999 ? '999px' : `${radius}px`;
-        oceanCursor.style.transform = `translate3d(${rect.left - padding}px, ${rect.top - padding}px, 0)`;
+        const stretch = 1 + speed / 28;
+        const squeeze = Math.max(0.78, 1 - speed / 115);
+        const width = 44 * stretch;
+        const height = 44 * squeeze;
+
+        return {
+          x: cursorState.logicX - width / 2,
+          y: cursorState.logicY - height / 2,
+          w: width,
+          h: height,
+          radius: 999,
+          locked: false,
+          angle
+        };
+      }
+
+      function renderCursor(targetBox) {
+        const morphSpeed = targetBox.locked ? 0.34 : 0.46;
+
+        cursorState.visualX = lerp(cursorState.visualX, targetBox.x, morphSpeed);
+        cursorState.visualY = lerp(cursorState.visualY, targetBox.y, morphSpeed);
+        cursorState.visualW = lerp(cursorState.visualW, targetBox.w, morphSpeed);
+        cursorState.visualH = lerp(cursorState.visualH, targetBox.h, morphSpeed);
+        cursorState.visualRadius = targetBox.radius === 999
+          ? 999
+          : lerp(cursorState.visualRadius === 999 ? 22 : cursorState.visualRadius, targetBox.radius, morphSpeed);
+
+        oceanCursor.classList.toggle('locked', targetBox.locked);
+        oceanCursor.style.width = `${cursorState.visualW}px`;
+        oceanCursor.style.height = `${cursorState.visualH}px`;
+        oceanCursor.style.borderRadius = targetBox.radius === 999 ? '999px' : `${cursorState.visualRadius}px`;
+        oceanCursor.style.opacity = '1';
+
+        const rotation = targetBox.locked ? 0 : targetBox.angle;
+
+        oceanCursor.style.transform = `
+          translate3d(${cursorState.visualX}px, ${cursorState.visualY}px, 0)
+          rotate(${rotation}deg)
+        `;
       }
 
       window.addEventListener('pointermove', (event) => {
@@ -836,8 +905,8 @@
         oceanCursor.style.opacity = '1';
       });
 
-      window.addEventListener('pointerleave', () => {
-        oceanCursor.style.opacity = '0';
+      document.addEventListener('pointerleave', () => {
+        oceanCursor.style.opacity = '1';
       });
 
       document.addEventListener('click', (event) => {
@@ -866,25 +935,22 @@
       }, true);
 
       function animateOceanCursor() {
-        cursorState.x += (cursorState.targetX - cursorState.x) * 0.16;
-        cursorState.y += (cursorState.targetY - cursorState.y) * 0.16;
+        cursorState.logicX += (cursorState.targetX - cursorState.logicX) * 0.16;
+        cursorState.logicY += (cursorState.targetY - cursorState.logicY) * 0.16;
 
-        const dx = cursorState.x - cursorState.previousX;
-        const dy = cursorState.y - cursorState.previousY;
+        const dx = cursorState.logicX - cursorState.previousX;
+        const dy = cursorState.logicY - cursorState.previousY;
         const speed = Math.min(Math.hypot(dx, dy), 34);
         const angle = Math.atan2(dy, dx) * 180 / Math.PI;
         const touchedElement = getClickableTouchedByCircle();
+        const targetBox = getTargetCursorBox(touchedElement, speed, angle);
 
         cursorState.targetElement = touchedElement;
 
-        if (touchedElement) {
-          setCursorToElement(touchedElement);
-        } else {
-          setCursorToFreeCircle(speed, angle);
-        }
+        renderCursor(targetBox);
 
-        cursorState.previousX = cursorState.x;
-        cursorState.previousY = cursorState.y;
+        cursorState.previousX = cursorState.logicX;
+        cursorState.previousY = cursorState.logicY;
 
         requestAnimationFrame(animateOceanCursor);
       }
