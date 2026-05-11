@@ -2,22 +2,19 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>Bryce Larson</title>
 
-  <link rel="stylesheet" href="css/style.css?v=28">
+  <link rel="stylesheet" href="style.css">
 
   <link
     rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
   >
 </head>
 
 <body>
-
-  <div class="fade-overlay"></div>
+  <div class="fade-overlay" aria-hidden="true"></div>
 
   <svg
     class="ocean-cursor"
@@ -31,14 +28,13 @@
 
   <div class="rune-field" id="runeField" aria-hidden="true"></div>
 
-  <nav class="topbar" aria-label="Top navigation">
+  <nav class="topbar" aria-label="Primary navigation">
     <div class="topbar-brand">
       <img
-        src="website-images/circlecroppedme.png"
-        alt="Bryce Larson"
         class="topbar-photo"
+        src="website-images/profile.jpg"
+        alt="Bryce Larson"
       >
-
       <span class="topbar-name">Bryce Larson</span>
     </div>
 
@@ -65,15 +61,7 @@
     </div>
   </nav>
 
-  <nav class="sidebar" aria-label="Side page navigation">
-    <button class="sidebar-btn active" data-index="0" title="Home" type="button">🏠</button>
-    <button class="sidebar-btn" data-index="1" title="Experience" type="button">💼</button>
-    <button class="sidebar-btn" data-index="2" title="Projects" type="button">🚀</button>
-    <button class="sidebar-btn" data-index="3" title="Writing" type="button">📖</button>
-  </nav>
-
-  <main class="scroll-container" id="scroller">
-
+  <main class="scroll-container" id="scrollContainer">
     <section class="page-section" id="home">
       <div class="section-content hero">
         <h1>BRYCE LARSON</h1>
@@ -116,7 +104,7 @@
         <h2>EXPERIENCE</h2>
 
         <p class="experience-subtitle">
-           See my resume or view a timeline.
+          See my resume or view a timeline.
         </p>
 
         <div class="experience-options">
@@ -168,7 +156,6 @@
 
           <div class="project-window">
             <div class="project-track" id="projectTrack">
-
               <a class="project-slide active" href="gans.html">
                 <div class="project-preview-shell">
                   <img
@@ -181,7 +168,7 @@
                 <div class="project-slide-text">
                   <h3>GANs Image Generation</h3>
                   <p>
-                    A Generative Adversarial Network for Image Generation 
+                    A Generative Adversarial Network for Image Generation
                   </p>
                 </div>
               </a>
@@ -278,7 +265,6 @@
                   </p>
                 </div>
               </a>
-
             </div>
           </div>
 
@@ -341,13 +327,19 @@
         </div>
       </div>
     </section>
-
   </main>
 
-  <div class="contact-modal" id="contactModal" aria-hidden="true">
-    <div class="contact-card" role="dialog" aria-modal="true" aria-labelledby="contactTitle">
-      <button class="contact-close" type="button" aria-label="Close contact information">
-        ×
+  <aside class="sidebar" aria-label="Section navigation">
+    <button class="sidebar-btn active" data-index="0" type="button" aria-label="Home">☼</button>
+    <button class="sidebar-btn" data-index="1" type="button" aria-label="Experience">◈</button>
+    <button class="sidebar-btn" data-index="2" type="button" aria-label="Projects">✦</button>
+    <button class="sidebar-btn" data-index="3" type="button" aria-label="Writing">✎</button>
+  </aside>
+
+  <div class="contact-modal" id="contactModal" role="dialog" aria-modal="true" aria-labelledby="contactTitle">
+    <div class="contact-card">
+      <button class="contact-close" id="contactClose" type="button" aria-label="Close contact modal">
+        <i class="fa-solid fa-xmark"></i>
       </button>
 
       <h2 id="contactTitle">Contact Information</h2>
@@ -394,862 +386,560 @@
   </div>
 
   <script>
-    const scroller = document.querySelector('#scroller');
-    const pages = document.querySelectorAll('.page-section');
-    const topbarPageBtns = document.querySelectorAll('.topbar-btn[data-index]');
-    const sidebarBtns = document.querySelectorAll('.sidebar-btn');
-    const allPageNavBtns = document.querySelectorAll('.topbar-btn[data-index], .sidebar-btn');
+    const scrollContainer = document.getElementById("scrollContainer");
+    const topbarButtons = Array.from(document.querySelectorAll(".topbar-btn[data-index]"));
+    const sidebarButtons = Array.from(document.querySelectorAll(".sidebar-btn[data-index]"));
+    const sections = Array.from(document.querySelectorAll(".page-section"));
+    const contactModal = document.getElementById("contactModal");
+    const contactOpenButton = document.querySelector(".contact-open-btn");
+    const contactCloseButton = document.getElementById("contactClose");
 
-    const contactOpenBtn = document.querySelector('.contact-open-btn');
-    const contactModal = document.querySelector('#contactModal');
-    const contactCloseBtn = document.querySelector('.contact-close');
+    const projectTrack = document.getElementById("projectTrack");
+    const projectSlides = Array.from(document.querySelectorAll(".project-slide"));
+    const projectDots = document.getElementById("projectDots");
+    const projectPrev = document.querySelector(".project-arrow-left");
+    const projectNext = document.querySelector(".project-arrow-right");
 
-    const projectTrack = document.querySelector('#projectTrack');
-    const projectSlides = document.querySelectorAll('.project-slide');
-    const prevProjectBtn = document.querySelector('.project-arrow-left');
-    const nextProjectBtn = document.querySelector('.project-arrow-right');
-    const projectDots = document.querySelector('#projectDots');
-    const projectVideos = document.querySelectorAll('.project-slide video');
-
-    const prevBookBtn = document.querySelector('.book-control.prev');
-    const nextBookBtn = document.querySelector('.book-control.next');
-    const turningPage = document.querySelector('#turningPage');
-    const bookDots = document.querySelector('#bookDots');
-
-    const leftStoryLink = document.querySelector('#leftStoryLink');
-    const rightStoryLink = document.querySelector('#rightStoryLink');
-    const leftPageTitle = document.querySelector('#leftPageTitle');
-    const rightPageTitle = document.querySelector('#rightPageTitle');
-    const leftPageDescription = document.querySelector('#leftPageDescription');
-    const rightPageDescription = document.querySelector('#rightPageDescription');
-    const leftPageNumber = document.querySelector('#leftPageNumber');
-    const rightPageNumber = document.querySelector('#rightPageNumber');
-
-    let currentProject = 0;
-
-    function renderProjectCarousel() {
-      if (!projectTrack || projectSlides.length === 0) {
-        return;
-      }
-
-      projectTrack.style.transform = `translateX(-${currentProject * 100}%)`;
-
-      projectSlides.forEach((slide, index) => {
-        slide.classList.toggle('active', index === currentProject);
-        slide.setAttribute('tabindex', index === currentProject ? '0' : '-1');
-      });
-
-      const dots = projectDots.querySelectorAll('.project-dot');
-
-      dots.forEach((dot, index) => {
-        dot.classList.toggle('active', index === currentProject);
-      });
-
-      projectVideos.forEach((video) => {
-        video.pause();
-      });
-
-      const activeVideo = projectSlides[currentProject].querySelector('video');
-
-      if (activeVideo) {
-        activeVideo.play().catch(() => {});
-      }
-    }
-
-    function goToProject(index) {
-      if (projectSlides.length === 0) {
-        return;
-      }
-
-      currentProject = (index + projectSlides.length) % projectSlides.length;
-      renderProjectCarousel();
-    }
-
-    projectSlides.forEach((_, index) => {
-      const dot = document.createElement('button');
-      dot.className = 'project-dot';
-      dot.type = 'button';
-      dot.setAttribute('aria-label', `Go to project ${index + 1}`);
-
-      dot.addEventListener('click', () => {
-        goToProject(index);
-      });
-
-      projectDots.appendChild(dot);
-    });
-
-    if (prevProjectBtn && nextProjectBtn) {
-      prevProjectBtn.addEventListener('click', () => {
-        goToProject(currentProject - 1);
-      });
-
-      nextProjectBtn.addEventListener('click', () => {
-        goToProject(currentProject + 1);
-      });
-    }
-
-    renderProjectCarousel();
-
-    const writingPages = [
+    const bookStories = [
       {
-        title: 'Window Shopping',
-        href: 'window-shopping.html',
-        description: 'A 500 word sci-fi flash fiction story about a shop which paints humans to life. This short story was an attempt at utilizing a minimalistic style to convey a sense of hollowness to a story about human objectification.'
+        title: "Window Shopping",
+        description: "A surreal story about looking through glass and discovering the distance between want and possession.",
+        href: "window-shopping.html"
       },
       {
-        title: 'a Cold Day',
-        href: 'a-cold-day.html',
-        description: 'A 1000 word short story about a miner returning home on an unnaturally cold winter day. This is the first of three short stories written for a competition where my genre was "cryptid fiction".'
+        title: "a Cold Day",
+        description: "A quiet winter piece centered on memory, isolation, and a landscape that refuses to thaw.",
+        href: "a-cold-day.html"
       },
       {
-        title: "If You're Happy and You Know It...",
-        href: 'if-youre-happy-and-you-know-it.html',
-        description: 'Another 1000 word short story written for the "cryptid fiction" competition. This story features a private investigator paid to look into an impossible disappearance.'
+        title: "If You're Happy and You Know It",
+        description: "A strange little story about performance, repetition, and the rituals people use to hide what hurts.",
+        href: "if-youre-happy-and-you-know-it.html"
       },
       {
-        title: 'Circus Freaks.',
-        href: 'circus-freaks.html',
-        description: 'The third cryptid fiction 1000 word short story, this one being ultimately chosen for submission. This story follows two boys who learn that the Mothman has been captured and placed in the circus.'
+        title: "Life in Reverse",
+        description: "A backwards-moving meditation on consequence, memory, and how endings color beginnings.",
+        href: "lifeinreverse.html"
       },
       {
-        title: 'Poppets',
-        href: 'poppets.html',
-        description: 'A 5000 word fantasy short story inspired by African voudou following an Ewe chieftain\'s meeting with a British Colonial Officer.'
+        title: "Infina",
+        description: "A speculative piece about vastness, recursion, and searching for meaning in something too large to hold.",
+        href: "infina.html"
       },
       {
-        title: 'INFINA',
-        href: 'infina.html',
-        description: 'A 10,000 word novelette about a planet which experiences storms of extreme gravity as a weather phenomena. The story follows two characters and their perspectives on a quadrillionaire\'s attempt to monetize the planet\'s gravity by building perpetual motion machines across the planet\'s surface.'
+        title: "Poppets",
+        description: "A dark, playful story about little figures, strange control, and the uneasy magic of imitation.",
+        href: "poppets.html"
       },
       {
-        title: 'Life in Reverse',
-        href: 'lifeinreverse.html',
-        description: 'A 3000 word short story following a man who suddenly finds his experience of time has been reversed and begins documenting his life and efforts to break his condition.'
+        title: "Circus Freaks",
+        description: "A character-focused piece about spectacle, belonging, and the people placed beneath the brightest lights.",
+        href: "circus-freaks.html"
       }
     ];
 
-    const spreads = [];
+    const leftStoryLink = document.getElementById("leftStoryLink");
+    const rightStoryLink = document.getElementById("rightStoryLink");
+    const leftPageTitle = document.getElementById("leftPageTitle");
+    const rightPageTitle = document.getElementById("rightPageTitle");
+    const leftPageDescription = document.getElementById("leftPageDescription");
+    const rightPageDescription = document.getElementById("rightPageDescription");
+    const leftPageNumber = document.getElementById("leftPageNumber");
+    const rightPageNumber = document.getElementById("rightPageNumber");
+    const bookPrev = document.querySelector(".book-control.prev");
+    const bookNext = document.querySelector(".book-control.next");
+    const bookDots = document.getElementById("bookDots");
+    const turningPage = document.getElementById("turningPage");
 
-    for (let i = 0; i < writingPages.length; i += 2) {
-      spreads.push({
-        left: writingPages[i],
-        right: writingPages[i + 1] || null
+    const oceanCursor = document.getElementById("oceanCursor");
+    const oceanCursorPath = document.getElementById("oceanCursorPath");
+    const runeField = document.getElementById("runeField");
+
+    let activeSectionIndex = 0;
+    let activeProjectIndex = 0;
+    let activeBookSpread = 0;
+
+    let mouse = {
+      x: window.innerWidth / 2,
+      y: window.innerHeight / 2,
+      lastX: window.innerWidth / 2,
+      lastY: window.innerHeight / 2,
+      active: false
+    };
+
+    let cursorState = {
+      x: window.innerWidth / 2,
+      y: window.innerHeight / 2,
+      width: 48,
+      height: 48,
+      targetWidth: 48,
+      targetHeight: 48,
+      targetX: window.innerWidth / 2,
+      targetY: window.innerHeight / 2,
+      velocityX: 0,
+      velocityY: 0,
+      locked: false
+    };
+
+    function setActiveSection(index) {
+      activeSectionIndex = index;
+
+      topbarButtons.forEach((button) => {
+        button.classList.toggle("active", Number(button.dataset.index) === index);
+      });
+
+      sidebarButtons.forEach((button) => {
+        button.classList.toggle("active", Number(button.dataset.index) === index);
       });
     }
 
-    let currentSpread = 0;
-    let isTurning = false;
+    function scrollToSection(index) {
+      const section = sections[index];
 
-    function renderStoryPage(side, story, pageNumber) {
-      const link = side === 'left' ? leftStoryLink : rightStoryLink;
-      const title = side === 'left' ? leftPageTitle : rightPageTitle;
-      const description = side === 'left' ? leftPageDescription : rightPageDescription;
-      const number = side === 'left' ? leftPageNumber : rightPageNumber;
-
-      if (!story) {
-        link.style.visibility = 'hidden';
-        description.textContent = '';
-        number.textContent = '';
+      if (!section) {
         return;
       }
 
-      link.style.visibility = 'visible';
-      link.href = story.href;
-      title.textContent = story.title;
-      description.textContent = story.description;
-      number.textContent = String(pageNumber);
-    }
-
-    function renderBook() {
-      const spread = spreads[currentSpread];
-
-      renderStoryPage('left', spread.left, currentSpread * 2 + 1);
-      renderStoryPage('right', spread.right, currentSpread * 2 + 2);
-
-      prevBookBtn.disabled = currentSpread === 0;
-      nextBookBtn.disabled = currentSpread === spreads.length - 1;
-
-      const dots = bookDots.querySelectorAll('.book-dot');
-
-      dots.forEach((dot, index) => {
-        dot.classList.toggle('active', index === currentSpread);
+      section.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
       });
     }
 
-    function turnBook(direction, targetSpread) {
-      if (
-        isTurning ||
-        targetSpread < 0 ||
-        targetSpread >= spreads.length ||
-        targetSpread === currentSpread
-      ) {
-        return;
+    topbarButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        scrollToSection(Number(button.dataset.index));
+      });
+    });
+
+    sidebarButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        scrollToSection(Number(button.dataset.index));
+      });
+    });
+
+    const sectionObserver = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+
+        if (!visible) {
+          return;
+        }
+
+        const index = sections.indexOf(visible.target);
+
+        if (index >= 0) {
+          setActiveSection(index);
+        }
+      },
+      {
+        root: scrollContainer,
+        threshold: [0.42, 0.58, 0.74]
       }
+    );
 
-      isTurning = true;
+    sections.forEach((section) => {
+      sectionObserver.observe(section);
+    });
 
-      turningPage.classList.remove('forward', 'backward');
-      void turningPage.offsetWidth;
-      turningPage.classList.add(direction);
-
-      window.setTimeout(() => {
-        currentSpread = targetSpread;
-        renderBook();
-      }, 330);
-
-      window.setTimeout(() => {
-        turningPage.classList.remove('forward', 'backward');
-        isTurning = false;
-      }, 720);
+    function openContactModal() {
+      contactModal.classList.add("open");
     }
-
-    spreads.forEach((_, index) => {
-      const dot = document.createElement('button');
-      dot.className = 'book-dot';
-      dot.type = 'button';
-      dot.setAttribute('aria-label', `Go to writing spread ${index + 1}`);
-
-      dot.addEventListener('click', () => {
-        if (index > currentSpread) {
-          turnBook('forward', index);
-        } else if (index < currentSpread) {
-          turnBook('backward', index);
-        }
-      });
-
-      bookDots.appendChild(dot);
-    });
-
-    prevBookBtn.addEventListener('click', () => {
-      turnBook('backward', currentSpread - 1);
-    });
-
-    nextBookBtn.addEventListener('click', () => {
-      turnBook('forward', currentSpread + 1);
-    });
-
-    renderBook();
-
-    allPageNavBtns.forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const index = Number.parseInt(btn.dataset.index, 10);
-
-        if (pages[index]) {
-          pages[index].scrollIntoView({
-            behavior: 'smooth',
-            block: 'start'
-          });
-        }
-      });
-    });
-
-    contactOpenBtn.addEventListener('click', () => {
-      contactModal.classList.add('open');
-      contactModal.setAttribute('aria-hidden', 'false');
-      contactOpenBtn.classList.add('active');
-    });
 
     function closeContactModal() {
-      contactModal.classList.remove('open');
-      contactModal.setAttribute('aria-hidden', 'true');
-      contactOpenBtn.classList.remove('active');
+      contactModal.classList.remove("open");
     }
 
-    contactCloseBtn.addEventListener('click', closeContactModal);
+    contactOpenButton.addEventListener("click", openContactModal);
+    contactCloseButton.addEventListener("click", closeContactModal);
 
-    contactModal.addEventListener('click', (event) => {
+    contactModal.addEventListener("click", (event) => {
       if (event.target === contactModal) {
         closeContactModal();
       }
     });
 
-    document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape' && contactModal.classList.contains('open')) {
+    window.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
         closeContactModal();
       }
     });
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
-          const index = Array.from(pages).indexOf(entry.target);
+    function updateProjectCarousel() {
+      projectTrack.style.transform = `translateX(-${activeProjectIndex * 100}%)`;
 
-          topbarPageBtns.forEach((btn) => btn.classList.remove('active'));
-          sidebarBtns.forEach((btn) => btn.classList.remove('active'));
+      projectSlides.forEach((slide, index) => {
+        slide.classList.toggle("active", index === activeProjectIndex);
 
-          if (topbarPageBtns[index]) {
-            topbarPageBtns[index].classList.add('active');
-          }
+        const video = slide.querySelector("video");
 
-          if (sidebarBtns[index]) {
-            sidebarBtns[index].classList.add('active');
-          }
+        if (!video) {
+          return;
+        }
+
+        if (index === activeProjectIndex) {
+          video.play().catch(() => {});
+        } else {
+          video.pause();
+          video.currentTime = 0;
         }
       });
-    }, {
-      threshold: 0.5,
-      root: scroller
-    });
 
-    pages.forEach((page) => observer.observe(page));
-
-    window.addEventListener('load', () => {
-      if (window.location.hash) {
-        const target = document.querySelector(window.location.hash);
-
-        if (target) {
-          target.scrollIntoView({
-            behavior: 'auto',
-            block: 'start'
-          });
-        }
-      }
-    });
-
-    const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-
-    if (!motionQuery.matches) {
-      const oceanCursor = document.querySelector('#oceanCursor');
-      const oceanCursorPath = document.querySelector('#oceanCursorPath');
-      const runeField = document.querySelector('#runeField');
-
-      const cursorState = {
-        targetX: window.innerWidth / 2,
-        targetY: window.innerHeight / 2,
-        logicX: window.innerWidth / 2,
-        logicY: window.innerHeight / 2,
-        previousX: window.innerWidth / 2,
-        previousY: window.innerHeight / 2,
-        visualX: window.innerWidth / 2 - 22,
-        visualY: window.innerHeight / 2 - 22,
-        visualW: 44,
-        visualH: 44,
-        targetElement: null,
-        syntheticClick: false
-      };
-
-      const clickableSelector = [
-        'a[href]',
-        'button:not(:disabled)',
-        '[role="button"]',
-        '[tabindex]:not([tabindex="-1"])'
-      ].join(',');
-
-      const socialSelector = '.social-links a, .contact-socials a';
-
-      function getClickableFromElement(element) {
-        if (!element || element === document.documentElement || element === document.body) {
-          return null;
-        }
-
-        const clickable = element.closest(clickableSelector);
-
-        if (!clickable || !isEligibleClickable(clickable)) {
-          return null;
-        }
-
-        return clickable;
-      }
-
-      function isEligibleClickable(element) {
-        if (!element) {
-          return false;
-        }
-
-        const inactiveSlide = element.closest('.project-slide:not(.active)');
-
-        if (inactiveSlide) {
-          return false;
-        }
-
-        if (element.classList.contains('project-slide') && !element.classList.contains('active')) {
-          return false;
-        }
-
-        const rect = element.getBoundingClientRect();
-
-        if (
-          rect.width <= 0 ||
-          rect.height <= 0 ||
-          rect.right <= 0 ||
-          rect.bottom <= 0 ||
-          rect.left >= window.innerWidth ||
-          rect.top >= window.innerHeight
-        ) {
-          return false;
-        }
-
-        const style = window.getComputedStyle(element);
-
-        if (style.visibility === 'hidden' || style.display === 'none' || style.pointerEvents === 'none') {
-          return false;
-        }
-
-        return true;
-      }
-
-      function getCircleRect() {
-        return {
-          left: cursorState.visualX,
-          right: cursorState.visualX + cursorState.visualW,
-          top: cursorState.visualY,
-          bottom: cursorState.visualY + cursorState.visualH
-        };
-      }
-
-      function rectsOverlap(a, b) {
-        return a.right > b.left &&
-          a.left < b.right &&
-          a.bottom > b.top &&
-          a.top < b.bottom;
-      }
-
-      function elementFromPointer() {
-        const pointerX = Math.max(0, Math.min(window.innerWidth - 1, cursorState.targetX));
-        const pointerY = Math.max(0, Math.min(window.innerHeight - 1, cursorState.targetY));
-        const element = document.elementFromPoint(pointerX, pointerY);
-        return getClickableFromElement(element);
-      }
-
-      function getClickableTouchedByCircle() {
-        const pointerTarget = elementFromPointer();
-
-        if (!pointerTarget || !isEligibleClickable(pointerTarget)) {
-          return null;
-        }
-
-        const circleRect = getCircleRect();
-        const targetRect = pointerTarget.getBoundingClientRect();
-
-        if (!rectsOverlap(circleRect, targetRect)) {
-          return null;
-        }
-
-        return pointerTarget;
-      }
-
-      function lerp(current, target, amount) {
-        return current + (target - current) * amount;
-      }
-
-      function overlapsBookPage() {
-        const cursorRect = getCircleRect();
-
-        return Array.from(document.querySelectorAll('.book-page')).some((page) => {
-          const rect = page.getBoundingClientRect();
-          return rectsOverlap(cursorRect, rect);
-        });
-      }
-
-      function roundedRectPath(radiusRatio) {
-        const w = 104;
-        const h = 58;
-        const r = Math.min(w, h) * radiusRatio;
-
-        return `
-          M ${-w + r} ${-h}
-          L ${w - r} ${-h}
-          Q ${w} ${-h} ${w} ${-h + r}
-          L ${w} ${h - r}
-          Q ${w} ${h} ${w - r} ${h}
-          L ${-w + r} ${h}
-          Q ${-w} ${h} ${-w} ${h - r}
-          L ${-w} ${-h + r}
-          Q ${-w} ${-h} ${-w + r} ${-h}
-          Z
-        `;
-      }
-
-      function elasticLoopPath(pull) {
-        const p = Math.max(0, Math.min(1, pull));
-        const back = -86 - p * 18;
-        const front = 86 + p * 24;
-        const top = -50 - p * 8;
-        const bottom = 50 + p * 8;
-        const shoulder = 42 + p * 20;
-        const frontRound = 18 + p * 16;
-        const backRound = 24 + p * 6;
-
-        return `
-          M ${back} 0
-          C ${back} ${-backRound} ${back + 34} ${top} ${-18} ${top}
-          C ${shoulder} ${top} ${front - frontRound} ${-34 - p * 8} ${front} ${-10 - p * 2}
-          C ${front + 10} ${-4} ${front + 10} ${4} ${front} ${10 + p * 2}
-          C ${front - frontRound} ${34 + p * 8} ${shoulder} ${bottom} ${-18} ${bottom}
-          C ${back + 34} ${bottom} ${back} ${backRound} ${back} 0
-          Z
-        `;
-      }
-
-      function updateSocialGlow(activeSocial) {
-        document.querySelectorAll(socialSelector).forEach((link) => {
-          link.classList.toggle('social-orbit-glow', link === activeSocial);
-        });
-      }
-
-      function getTargetCursorBox(touchedElement, speed, angle) {
-        const socialTarget = touchedElement && touchedElement.closest(socialSelector);
-
-        if (socialTarget) {
-          updateSocialGlow(socialTarget);
-
-          return {
-            x: cursorState.logicX - 22,
-            y: cursorState.logicY - 22,
-            w: 44,
-            h: 44,
-            locked: false,
-            hidden: true,
-            angle,
-            path: elasticLoopPath(0)
-          };
-        }
-
-        updateSocialGlow(null);
-
-        if (touchedElement) {
-          const rect = touchedElement.getBoundingClientRect();
-          const padding = 5;
-          const isRound =
-            touchedElement.classList.contains('sidebar-btn') ||
-            touchedElement.classList.contains('project-arrow') ||
-            touchedElement.classList.contains('book-control') ||
-            touchedElement.classList.contains('contact-close') ||
-            Math.abs(rect.width - rect.height) < 3;
-
-          return {
-            x: rect.left - padding,
-            y: rect.top - padding,
-            w: rect.width + padding * 2,
-            h: rect.height + padding * 2,
-            locked: true,
-            hidden: false,
-            angle: 0,
-            path: roundedRectPath(isRound ? 0.48 : 0.18)
-          };
-        }
-
-        const pullDistance = Math.min(
-          Math.hypot(cursorState.targetX - cursorState.logicX, cursorState.targetY - cursorState.logicY),
-          170
-        );
-
-        const elastic = Math.min(speed * 1.15 + pullDistance * 0.34, 92);
-        const pulledWidth = 48 + elastic;
-        const pulledHeight = 48 + Math.min(elastic * 0.12, 12);
-        const pull = elastic / 92;
-
-        return {
-          x: cursorState.logicX - pulledWidth / 2,
-          y: cursorState.logicY - pulledHeight / 2,
-          w: pulledWidth,
-          h: pulledHeight,
-          locked: false,
-          hidden: false,
-          angle,
-          path: elasticLoopPath(pull)
-        };
-      }
-
-      function renderCursor(targetBox) {
-        const morphSpeed = targetBox.locked ? 0.22 : 0.34;
-
-        cursorState.visualX = lerp(cursorState.visualX, targetBox.x, morphSpeed);
-        cursorState.visualY = lerp(cursorState.visualY, targetBox.y, morphSpeed);
-        cursorState.visualW = lerp(cursorState.visualW, targetBox.w, morphSpeed);
-        cursorState.visualH = lerp(cursorState.visualH, targetBox.h, morphSpeed);
-
-        oceanCursor.classList.toggle('locked', targetBox.locked);
-        oceanCursor.classList.toggle('dark', overlapsBookPage());
-        oceanCursor.classList.toggle('hidden', targetBox.hidden);
-        oceanCursor.style.width = `${cursorState.visualW}px`;
-        oceanCursor.style.height = `${cursorState.visualH}px`;
-        oceanCursor.style.visibility = 'visible';
-        oceanCursorPath.setAttribute('d', targetBox.path);
-
-        oceanCursor.style.transform = `
-          translate3d(${cursorState.visualX}px, ${cursorState.visualY}px, 0)
-          rotate(${targetBox.angle}deg)
-        `;
-      }
-
-      window.addEventListener('pointermove', (event) => {
-        cursorState.targetX = event.clientX;
-        cursorState.targetY = event.clientY;
-        oceanCursor.style.visibility = 'visible';
+      Array.from(projectDots.children).forEach((dot, index) => {
+        dot.classList.toggle("active", index === activeProjectIndex);
       });
-
-      document.addEventListener('pointerleave', () => {
-        oceanCursor.style.visibility = 'visible';
-      });
-
-      document.addEventListener('click', (event) => {
-        const clickedRune = getRuneClickedByPointer(event);
-
-        if (clickedRune) {
-          clickedRune.element.classList.remove('rune-burst');
-          void clickedRune.element.offsetWidth;
-          clickedRune.element.classList.add('rune-burst');
-          clickedRune.element.classList.toggle('rune-lit');
-          createRuneSparks(clickedRune);
-
-          window.setTimeout(() => {
-            clickedRune.element.classList.remove('rune-burst');
-          }, 520);
-        }
-
-        if (cursorState.syntheticClick) {
-          return;
-        }
-
-        const target = cursorState.targetElement || getClickableTouchedByCircle();
-
-        if (!target) {
-          return;
-        }
-
-        const naturalTarget = getClickableFromElement(event.target);
-
-        if (naturalTarget === target) {
-          return;
-        }
-
-        event.preventDefault();
-        event.stopPropagation();
-
-        cursorState.syntheticClick = true;
-        target.click();
-        cursorState.syntheticClick = false;
-      }, true);
-
-      function animateOceanCursor() {
-        cursorState.logicX += (cursorState.targetX - cursorState.logicX) * 0.125;
-        cursorState.logicY += (cursorState.targetY - cursorState.logicY) * 0.125;
-
-        const dx = cursorState.logicX - cursorState.previousX;
-        const dy = cursorState.logicY - cursorState.previousY;
-        const speed = Math.min(Math.hypot(dx, dy), 52);
-        const angle = Math.atan2(dy, dx) * 180 / Math.PI;
-        const touchedElement = getClickableTouchedByCircle();
-        const targetBox = getTargetCursorBox(touchedElement, speed, angle);
-
-        cursorState.targetElement = touchedElement;
-
-        renderCursor(targetBox);
-
-        cursorState.previousX = cursorState.logicX;
-        cursorState.previousY = cursorState.logicY;
-
-        requestAnimationFrame(animateOceanCursor);
-      }
-
-      animateOceanCursor();
-
-      const runeGlyphs = ['ᚠ', 'ᚢ', 'ᚦ', 'ᚨ', 'ᚱ', 'ᚲ', 'ᚷ', 'ᚹ', 'ᚺ', 'ᚾ', 'ᛁ', 'ᛃ', 'ᛇ', 'ᛈ', 'ᛉ', 'ᛊ', 'ᛏ', 'ᛒ', 'ᛖ', 'ᛗ', 'ᛚ', 'ᛞ', 'ᛟ'];
-      const runeCount = window.innerWidth < 700 ? 14 : 24;
-      const runes = [];
-
-      function randomBetween(min, max) {
-        return min + Math.random() * (max - min);
-      }
-
-      function getRuneBounds() {
-        const topbarHeight = window.innerWidth <= 760 ? 50 : 54;
-
-        return {
-          left: 0,
-          top: topbarHeight,
-          right: window.innerWidth,
-          bottom: window.innerHeight
-        };
-      }
-
-      function getBounceRects() {
-        const selectors = [
-          '.topbar-btn',
-          '.topbar-link',
-          '.sidebar-btn',
-          '.project-arrow',
-          '.book-control',
-          '.experience-card'
-        ];
-
-        return Array.from(document.querySelectorAll(selectors.join(','))).map((element) => {
-          const rect = element.getBoundingClientRect();
-
-          return {
-            left: rect.left - 9,
-            right: rect.right + 9,
-            top: rect.top - 9,
-            bottom: rect.bottom + 9
-          };
-        });
-      }
-
-      function createRunes() {
-        if (!runeField) {
-          return;
-        }
-
-        runeField.innerHTML = '';
-        runes.length = 0;
-
-        const bounds = getRuneBounds();
-
-        for (let i = 0; i < runeCount; i += 1) {
-          const element = document.createElement('span');
-          element.className = 'golden-rune';
-          element.textContent = runeGlyphs[Math.floor(Math.random() * runeGlyphs.length)];
-
-          const size = randomBetween(16, 28);
-          element.style.fontSize = `${size}px`;
-          element.style.opacity = String(randomBetween(0.36, 0.7));
-
-          runeField.appendChild(element);
-
-          runes.push({
-            element,
-            x: randomBetween(bounds.left + 24, bounds.right - 48),
-            y: randomBetween(bounds.top + 24, bounds.bottom - 48),
-            vx: randomBetween(-0.25, 0.25) || 0.16,
-            vy: randomBetween(-0.19, 0.19) || 0.12,
-            size,
-            spin: randomBetween(-0.18, 0.18),
-            rotation: randomBetween(0, 360)
-          });
-        }
-      }
-
-      function runeHitsRect(rune, rect) {
-        const left = rune.x;
-        const right = rune.x + rune.size;
-        const top = rune.y;
-        const bottom = rune.y + rune.size;
-
-        return right > rect.left &&
-          left < rect.right &&
-          bottom > rect.top &&
-          top < rect.bottom;
-      }
-
-      function getRuneTouchedByCircle() {
-        const cursorRect = getCircleRect();
-
-        return runes.find((rune) => {
-          const runeRect = {
-            left: rune.x,
-            right: rune.x + rune.size,
-            top: rune.y,
-            bottom: rune.y + rune.size
-          };
-
-          return rectsOverlap(cursorRect, runeRect);
-        });
-      }
-
-      function getRuneClickedByPointer(event) {
-        return runes.find((rune) => (
-          event.clientX >= rune.x &&
-          event.clientX <= rune.x + rune.size &&
-          event.clientY >= rune.y &&
-          event.clientY <= rune.y + rune.size
-        ));
-      }
-
-      function createRuneSparks(rune) {
-        if (!runeField) {
-          return;
-        }
-
-        const bounds = getRuneBounds();
-        const centerX = rune.x + rune.size / 2;
-        const centerY = rune.y - bounds.top + rune.size / 2;
-        const sparkCount = 12;
-
-        for (let i = 0; i < sparkCount; i += 1) {
-          const spark = document.createElement('span');
-          const angle = (Math.PI * 2 * i) / sparkCount + randomBetween(-0.24, 0.24);
-          const distance = randomBetween(22, 58);
-
-          spark.className = 'rune-spark';
-          spark.style.setProperty('--spark-x', `${centerX}px`);
-          spark.style.setProperty('--spark-y', `${centerY}px`);
-          spark.style.setProperty('--spark-dx', `${Math.cos(angle) * distance}px`);
-          spark.style.setProperty('--spark-dy', `${Math.sin(angle) * distance}px`);
-          spark.style.animationDelay = `${randomBetween(0, 0.06)}s`;
-
-          runeField.appendChild(spark);
-
-          window.setTimeout(() => {
-            spark.remove();
-          }, 820);
-        }
-      }
-
-      function animateRunes() {
-        const bounds = getRuneBounds();
-        const bounceRects = getBounceRects();
-        const cursorRect = {
-          left: cursorState.visualX,
-          right: cursorState.visualX + cursorState.visualW,
-          top: cursorState.visualY,
-          bottom: cursorState.visualY + cursorState.visualH
-        };
-
-        runes.forEach((rune) => {
-          rune.x += rune.vx;
-          rune.y += rune.vy;
-          rune.rotation += rune.spin;
-
-          if (rune.x <= bounds.left || rune.x + rune.size >= bounds.right) {
-            rune.vx *= -1;
-            rune.x = Math.max(bounds.left, Math.min(rune.x, bounds.right - rune.size));
-          }
-
-          if (rune.y <= bounds.top || rune.y + rune.size >= bounds.bottom) {
-            rune.vy *= -1;
-            rune.y = Math.max(bounds.top, Math.min(rune.y, bounds.bottom - rune.size));
-          }
-
-          bounceRects.forEach((rect) => {
-            if (runeHitsRect(rune, rect)) {
-              const runeCenterX = rune.x + rune.size / 2;
-              const runeCenterY = rune.y + rune.size / 2;
-              const rectCenterX = (rect.left + rect.right) / 2;
-              const rectCenterY = (rect.top + rect.bottom) / 2;
-              const pushX = runeCenterX - rectCenterX;
-              const pushY = runeCenterY - rectCenterY;
-
-              if (Math.abs(pushX) > Math.abs(pushY)) {
-                rune.vx = Math.abs(rune.vx || 0.16) * Math.sign(pushX || 1);
-                rune.x += rune.vx * 6;
-              } else {
-                rune.vy = Math.abs(rune.vy || 0.12) * Math.sign(pushY || 1);
-                rune.y += rune.vy * 6;
-              }
-            }
-          });
-
-          const runeRect = {
-            left: rune.x,
-            right: rune.x + rune.size,
-            top: rune.y,
-            bottom: rune.y + rune.size
-          };
-
-          rune.element.classList.toggle('rune-glow', rectsOverlap(cursorRect, runeRect));
-          rune.element.style.transform = `translate3d(${rune.x}px, ${rune.y - bounds.top}px, 0) rotate(${rune.rotation}deg)`;
-        });
-
-        requestAnimationFrame(animateRunes);
-      }
-
-      createRunes();
-      animateRunes();
-
-      window.addEventListener('resize', createRunes);
     }
-  </script>
 
+    function setProject(index) {
+      activeProjectIndex = (index + projectSlides.length) % projectSlides.length;
+      updateProjectCarousel();
+    }
+
+    projectSlides.forEach((_, index) => {
+      const dot = document.createElement("button");
+      dot.className = "project-dot";
+      dot.type = "button";
+      dot.setAttribute("aria-label", `Go to project ${index + 1}`);
+      dot.addEventListener("click", () => setProject(index));
+      projectDots.appendChild(dot);
+    });
+
+    projectPrev.addEventListener("click", () => setProject(activeProjectIndex - 1));
+    projectNext.addEventListener("click", () => setProject(activeProjectIndex + 1));
+    updateProjectCarousel();
+
+    function pageCount() {
+      return Math.ceil(bookStories.length / 2);
+    }
+
+    function updateBookCarousel(direction = "none") {
+      const leftIndex = activeBookSpread * 2;
+      const rightIndex = leftIndex + 1;
+
+      const leftStory = bookStories[leftIndex];
+      const rightStory = bookStories[rightIndex];
+
+      if (leftStory) {
+        leftStoryLink.href = leftStory.href;
+        leftPageTitle.textContent = leftStory.title;
+        leftPageDescription.textContent = leftStory.description;
+        leftPageNumber.textContent = String(leftIndex + 1);
+      }
+
+      if (rightStory) {
+        rightStoryLink.href = rightStory.href;
+        rightPageTitle.textContent = rightStory.title;
+        rightPageDescription.textContent = rightStory.description;
+        rightPageNumber.textContent = String(rightIndex + 1);
+        rightStoryLink.style.visibility = "visible";
+        rightPageDescription.style.visibility = "visible";
+        rightPageNumber.style.visibility = "visible";
+      } else {
+        rightStoryLink.href = "#";
+        rightPageTitle.textContent = "";
+        rightPageDescription.textContent = "";
+        rightPageNumber.textContent = "";
+        rightStoryLink.style.visibility = "hidden";
+        rightPageDescription.style.visibility = "hidden";
+        rightPageNumber.style.visibility = "hidden";
+      }
+
+      bookPrev.disabled = activeBookSpread === 0;
+      bookNext.disabled = activeBookSpread >= pageCount() - 1;
+
+      if (bookPrev.disabled) {
+        bookPrev.setAttribute("aria-disabled", "true");
+      } else {
+        bookPrev.removeAttribute("aria-disabled");
+      }
+
+      if (bookNext.disabled) {
+        bookNext.setAttribute("aria-disabled", "true");
+      } else {
+        bookNext.removeAttribute("aria-disabled");
+      }
+
+      Array.from(bookDots.children).forEach((dot, index) => {
+        dot.classList.toggle("active", index === activeBookSpread);
+      });
+
+      if (direction !== "none") {
+        turningPage.classList.remove("forward", "backward");
+        void turningPage.offsetWidth;
+        turningPage.classList.add(direction);
+      }
+    }
+
+    for (let i = 0; i < pageCount(); i += 1) {
+      const dot = document.createElement("button");
+      dot.className = "book-dot";
+      dot.type = "button";
+      dot.setAttribute("aria-label", `Go to writing spread ${i + 1}`);
+      dot.addEventListener("click", () => {
+        const direction = i > activeBookSpread ? "forward" : "backward";
+        activeBookSpread = i;
+        updateBookCarousel(direction);
+      });
+      bookDots.appendChild(dot);
+    }
+
+    bookPrev.addEventListener("click", () => {
+      if (activeBookSpread <= 0) {
+        return;
+      }
+
+      activeBookSpread -= 1;
+      updateBookCarousel("backward");
+    });
+
+    bookNext.addEventListener("click", () => {
+      if (activeBookSpread >= pageCount() - 1) {
+        return;
+      }
+
+      activeBookSpread += 1;
+      updateBookCarousel("forward");
+    });
+
+    updateBookCarousel();
+
+    function buildElasticRingPath(width, height, velocityX, velocityY, locked) {
+      if (locked) {
+        const rx = width / 2;
+        const ry = height / 2;
+
+        return [
+          `M ${-rx} ${-ry}`,
+          `L ${rx} ${-ry}`,
+          `L ${rx} ${ry}`,
+          `L ${-rx} ${ry}`,
+          "Z"
+        ].join(" ");
+      }
+
+      const speed = Math.min(36, Math.hypot(velocityX, velocityY));
+      const angle = Math.atan2(velocityY, velocityX || 0.001);
+      const stretch = Math.min(18, speed * 0.42);
+      const squeeze = Math.min(8, speed * 0.16);
+
+      const rx = width / 2 + stretch;
+      const ry = Math.max(18, height / 2 - squeeze);
+      const pullX = Math.cos(angle) * stretch * 0.55;
+      const pullY = Math.sin(angle) * stretch * 0.55;
+      const lagX = -Math.cos(angle) * stretch * 0.42;
+      const lagY = -Math.sin(angle) * stretch * 0.42;
+
+      return [
+        `M ${-rx + lagX} 0`,
+        `C ${-rx + lagX} ${-ry}, ${rx * 0.52 + pullX} ${-ry}, ${rx + pullX} 0`,
+        `C ${rx * 0.52 + pullX} ${ry}, ${-rx + lagX} ${ry}, ${-rx + lagX} 0`,
+        "Z"
+      ].join(" ");
+    }
+
+    function getCursorTarget() {
+      if (!mouse.active) {
+        return null;
+      }
+
+      const hoveredElement = document.elementFromPoint(mouse.x, mouse.y);
+
+      if (!hoveredElement) {
+        return null;
+      }
+
+      const feature = hoveredElement.closest(
+        ".book-story-title h3, .book-story-title, .project-slide.active, .experience-card, .topbar-btn, .sidebar-btn, .project-arrow, .book-control:not(:disabled), .social-links a, .contact-socials a, .contact-row a"
+      );
+
+      if (!feature) {
+        return null;
+      }
+
+      const title = feature.closest(".book-story-title")?.querySelector("h3");
+
+      if (title && (feature.matches(".book-story-title") || feature.matches(".book-story-title h3"))) {
+        const rect = title.getBoundingClientRect();
+
+        return {
+          x: rect.left + rect.width / 2,
+          y: rect.top + rect.height / 2,
+          width: rect.width + 18,
+          height: rect.height + 12,
+          tawny: true
+        };
+      }
+
+      const rect = feature.getBoundingClientRect();
+
+      return {
+        x: rect.left + rect.width / 2,
+        y: rect.top + rect.height / 2,
+        width: rect.width + 16,
+        height: rect.height + 16,
+        tawny: Boolean(feature.closest(".book-page"))
+      };
+    }
+
+    function animateOceanCursor() {
+      const target = getCursorTarget();
+
+      cursorState.velocityX = mouse.x - mouse.lastX;
+      cursorState.velocityY = mouse.y - mouse.lastY;
+
+      if (target) {
+        cursorState.locked = true;
+        cursorState.targetX = target.x;
+        cursorState.targetY = target.y;
+        cursorState.targetWidth = Math.min(360, Math.max(36, target.width));
+        cursorState.targetHeight = Math.min(210, Math.max(28, target.height));
+        oceanCursor.classList.add("locked");
+        oceanCursor.classList.toggle("tawny", target.tawny);
+      } else {
+        cursorState.locked = false;
+        cursorState.targetX = mouse.x;
+        cursorState.targetY = mouse.y;
+        cursorState.targetWidth = 48;
+        cursorState.targetHeight = 48;
+        oceanCursor.classList.remove("locked", "tawny");
+      }
+
+      const follow = cursorState.locked ? 0.32 : 0.22;
+      const resize = cursorState.locked ? 0.28 : 0.16;
+
+      cursorState.x += (cursorState.targetX - cursorState.x) * follow;
+      cursorState.y += (cursorState.targetY - cursorState.y) * follow;
+      cursorState.width += (cursorState.targetWidth - cursorState.width) * resize;
+      cursorState.height += (cursorState.targetHeight - cursorState.height) * resize;
+
+      oceanCursor.style.width = `${cursorState.width}px`;
+      oceanCursor.style.height = `${cursorState.height}px`;
+      oceanCursor.style.transform = `translate3d(${cursorState.x - cursorState.width / 2}px, ${cursorState.y - cursorState.height / 2}px, 0)`;
+
+      oceanCursorPath.setAttribute(
+        "d",
+        buildElasticRingPath(
+          cursorState.width,
+          cursorState.height,
+          cursorState.velocityX,
+          cursorState.velocityY,
+          cursorState.locked
+        )
+      );
+
+      mouse.lastX += (mouse.x - mouse.lastX) * 0.35;
+      mouse.lastY += (mouse.y - mouse.lastY) * 0.35;
+
+      requestAnimationFrame(animateOceanCursor);
+    }
+
+    window.addEventListener("pointermove", (event) => {
+      mouse.x = event.clientX;
+      mouse.y = event.clientY;
+      mouse.active = true;
+      oceanCursor.classList.remove("hidden");
+    });
+
+    window.addEventListener("pointerleave", () => {
+      mouse.active = false;
+      oceanCursor.classList.add("hidden");
+    });
+
+    function createGoldSpark(x, y) {
+      const spark = document.createElement("span");
+      spark.className = "gold-spark";
+
+      const angle = Math.random() * Math.PI * 2;
+      const distance = 18 + Math.random() * 30;
+
+      spark.style.left = `${x}px`;
+      spark.style.top = `${y}px`;
+      spark.style.setProperty("--spark-x", `${Math.cos(angle) * distance}px`);
+      spark.style.setProperty("--spark-y", `${Math.sin(angle) * distance}px`);
+      spark.style.setProperty("--spark-delay", `${Math.random() * 0.06}s`);
+
+      document.body.appendChild(spark);
+
+      spark.addEventListener("animationend", () => {
+        spark.remove();
+      });
+    }
+
+    function burstRune(rune) {
+      const rect = rune.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+
+      rune.classList.remove("rune-burst");
+      void rune.offsetWidth;
+      rune.classList.add("rune-burst", "rune-lit");
+
+      for (let i = 0; i < 14; i += 1) {
+        createGoldSpark(
+          centerX + (Math.random() - 0.5) * 12,
+          centerY + (Math.random() - 0.5) * 12
+        );
+      }
+    }
+
+    function buildRuneField() {
+      const runeCharacters = ["ᚠ", "ᚢ", "ᚦ", "ᚨ", "ᚱ", "ᚲ", "ᚷ", "ᚹ", "ᛇ", "ᛈ", "ᛉ", "ᛟ", "✦", "✧", "✶", "☉"];
+      const runeCount = Math.max(34, Math.floor(window.innerWidth / 32));
+
+      runeField.innerHTML = "";
+
+      for (let i = 0; i < runeCount; i += 1) {
+        const rune = document.createElement("button");
+        rune.className = "golden-rune";
+        rune.type = "button";
+        rune.tabIndex = -1;
+        rune.textContent = runeCharacters[i % runeCharacters.length];
+
+        const x = Math.random() * 100;
+        const y = Math.random() * 100;
+        const scale = 0.75 + Math.random() * 0.75;
+        const duration = 16 + Math.random() * 24;
+        const delay = Math.random() * -duration;
+
+        rune.style.left = `${x}%`;
+        rune.style.top = `${y}%`;
+        rune.style.setProperty("--rune-scale", scale.toFixed(2));
+        rune.style.setProperty("--rune-duration", `${duration.toFixed(2)}s`);
+        rune.style.setProperty("--rune-delay", `${delay.toFixed(2)}s`);
+
+        rune.addEventListener("click", (event) => {
+          event.stopPropagation();
+          burstRune(rune);
+        });
+
+        runeField.appendChild(rune);
+      }
+    }
+
+    function updateRuneGlow() {
+      const runes = Array.from(document.querySelectorAll(".golden-rune"));
+
+      runes.forEach((rune) => {
+        const rect = rune.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        const distance = Math.hypot(mouse.x - centerX, mouse.y - centerY);
+
+        rune.classList.toggle("rune-glow", distance < 94);
+      });
+
+      requestAnimationFrame(updateRuneGlow);
+    }
+
+    window.addEventListener("resize", () => {
+      buildRuneField();
+    });
+
+    buildRuneField();
+    animateOceanCursor();
+    updateRuneGlow();
+  </script>
 </body>
 </html>
