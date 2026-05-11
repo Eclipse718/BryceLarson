@@ -20,13 +20,11 @@
     class="ocean-cursor hidden"
     id="oceanCursor"
     aria-hidden="true"
-    viewBox="-140 -100 280 200"
+    viewBox="-100 -100 200 200"
     preserveAspectRatio="none"
   >
     <path class="ocean-cursor-path" id="oceanCursorPath"></path>
   </svg>
-
-  <div class="rune-field" id="runeField" aria-hidden="true"></div>
 
   <nav class="topbar" aria-label="Primary navigation">
     <div class="topbar-brand">
@@ -35,9 +33,8 @@
           class="topbar-photo"
           src="website-images/circlecroppedme.png"
           alt=""
-          onerror="this.style.display='none'; this.parentElement.classList.add('avatar-failed');"
+          onerror="this.style.display='none';"
         >
-        <span class="topbar-avatar-fallback">BL</span>
       </div>
 
       <span class="topbar-name">Bryce Larson</span>
@@ -67,6 +64,8 @@
   </nav>
 
   <main class="scroll-container" id="scrollContainer">
+    <div class="rune-field" id="runeField" aria-hidden="true"></div>
+
     <section class="page-section" id="home">
       <div class="section-content hero">
         <h1>BRYCE LARSON</h1>
@@ -734,54 +733,69 @@
     updateBookCarousel();
 
     function buildElasticRingPath(width, height, velocityX, velocityY, locked) {
-      const baseRx = Math.max(18, width / 2 - 4);
-      const baseRy = Math.max(18, height / 2 - 4);
       const k = 0.5522847498;
 
-      if (locked) {
+      function ellipsePath(rx, ry, angle, offsetX, offsetY) {
+        const points = [
+          [0, -ry],
+          [rx * k, -ry],
+          [rx, -ry * k],
+          [rx, 0],
+          [rx, ry * k],
+          [rx * k, ry],
+          [0, ry],
+          [-rx * k, ry],
+          [-rx, ry * k],
+          [-rx, 0],
+          [-rx, -ry * k],
+          [-rx * k, -ry],
+          [0, -ry]
+        ];
+
+        const cos = Math.cos(angle);
+        const sin = Math.sin(angle);
+
+        function rotate(point) {
+          const x = point[0];
+          const y = point[1];
+
+          return [
+            offsetX + x * cos - y * sin,
+            offsetY + x * sin + y * cos
+          ];
+        }
+
+        const p = points.map(rotate);
+
         return [
-          "M 0 " + -baseRy,
-          "C " + baseRx * k + " " + -baseRy + ", " + baseRx + " " + -baseRy * k + ", " + baseRx + " 0",
-          "C " + baseRx + " " + baseRy * k + ", " + baseRx * k + " " + baseRy + ", 0 " + baseRy,
-          "C " + -baseRx * k + " " + baseRy + ", " + -baseRx + " " + baseRy * k + ", " + -baseRx + " 0",
-          "C " + -baseRx + " " + -baseRy * k + ", " + -baseRx * k + " " + -baseRy + ", 0 " + -baseRy,
+          "M " + p[0][0] + " " + p[0][1],
+          "C " + p[1][0] + " " + p[1][1] + ", " + p[2][0] + " " + p[2][1] + ", " + p[3][0] + " " + p[3][1],
+          "C " + p[4][0] + " " + p[4][1] + ", " + p[5][0] + " " + p[5][1] + ", " + p[6][0] + " " + p[6][1],
+          "C " + p[7][0] + " " + p[7][1] + ", " + p[8][0] + " " + p[8][1] + ", " + p[9][0] + " " + p[9][1],
+          "C " + p[10][0] + " " + p[10][1] + ", " + p[11][0] + " " + p[11][1] + ", " + p[12][0] + " " + p[12][1],
           "Z"
         ].join(" ");
       }
 
-      const speed = Math.min(34, Math.hypot(velocityX, velocityY));
+      if (locked) {
+        return ellipsePath(43, 43, 0, 0, 0);
+      }
 
-      if (speed < 0.8) {
-        return [
-          "M 0 " + -baseRy,
-          "C " + baseRx * k + " " + -baseRy + ", " + baseRx + " " + -baseRy * k + ", " + baseRx + " 0",
-          "C " + baseRx + " " + baseRy * k + ", " + baseRx * k + " " + baseRy + ", 0 " + baseRy,
-          "C " + -baseRx * k + " " + baseRy + ", " + -baseRx + " " + baseRy * k + ", " + -baseRx + " 0",
-          "C " + -baseRx + " " + -baseRy * k + ", " + -baseRx * k + " " + -baseRy + ", 0 " + -baseRy,
-          "Z"
-        ].join(" ");
+      const speed = Math.min(42, Math.hypot(velocityX, velocityY));
+
+      if (speed < 0.75) {
+        return ellipsePath(43, 43, 0, 0, 0);
       }
 
       const angle = Math.atan2(velocityY, velocityX || 0.001);
-      const stretch = Math.min(16, speed * 0.26);
-      const squeeze = Math.min(6, speed * 0.09);
+      const stretchRatio = 1 + Math.min(0.52, speed * 0.014);
+      const rx = 43 * Math.sqrt(stretchRatio);
+      const ry = 43 / Math.sqrt(stretchRatio);
+      const dragOffset = Math.min(8, speed * 0.14);
+      const offsetX = Math.cos(angle) * dragOffset;
+      const offsetY = Math.sin(angle) * dragOffset;
 
-      const rx = baseRx + stretch;
-      const ry = Math.max(28, baseRy - squeeze);
-
-      const leadX = Math.cos(angle) * stretch * 0.28;
-      const leadY = Math.sin(angle) * stretch * 0.28;
-      const tailX = -Math.cos(angle) * stretch * 0.22;
-      const tailY = -Math.sin(angle) * stretch * 0.22;
-
-      return [
-        "M " + leadX + " " + -ry,
-        "C " + (rx * 0.55 + leadX) + " " + -ry + ", " + (rx + leadX) + " " + (-ry * 0.55 + leadY) + ", " + (rx + leadX) + " 0",
-        "C " + (rx + leadX) + " " + (ry * 0.55 + leadY) + ", " + (rx * 0.55 + tailX) + " " + ry + ", " + tailX + " " + ry,
-        "C " + (-rx * 0.55 + tailX) + " " + ry + ", " + (-rx + tailX) + " " + (ry * 0.55 + tailY) + ", " + (-rx + tailX) + " 0",
-        "C " + (-rx + tailX) + " " + (-ry * 0.55 + tailY) + ", " + (-rx * 0.55 + leadX) + " " + -ry + ", " + leadX + " " + -ry,
-        "Z"
-      ].join(" ");
+      return ellipsePath(rx, ry, angle, offsetX, offsetY);
     }
 
     function clearHighlight() {
