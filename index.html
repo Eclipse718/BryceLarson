@@ -7,7 +7,7 @@
 
   <title>Bryce Larson</title>
 
-  <link rel="stylesheet" href="css/style.css?v=27">
+  <link rel="stylesheet" href="css/style.css?v=28">
 
   <link
     rel="stylesheet"
@@ -790,10 +790,10 @@
 
       function getCircleRect() {
         return {
-          left: cursorState.logicX - 22,
-          right: cursorState.logicX + 22,
-          top: cursorState.logicY - 22,
-          bottom: cursorState.logicY + 22
+          left: cursorState.visualX,
+          right: cursorState.visualX + cursorState.visualW,
+          top: cursorState.visualY,
+          bottom: cursorState.visualY + cursorState.visualH
         };
       }
 
@@ -804,39 +804,28 @@
           a.top < b.bottom;
       }
 
-      function elementFromCircleCenter() {
-        const element = document.elementFromPoint(cursorState.logicX, cursorState.logicY);
+      function elementFromPointer() {
+        const pointerX = Math.max(0, Math.min(window.innerWidth - 1, cursorState.targetX));
+        const pointerY = Math.max(0, Math.min(window.innerHeight - 1, cursorState.targetY));
+        const element = document.elementFromPoint(pointerX, pointerY);
         return getClickableFromElement(element);
       }
 
       function getClickableTouchedByCircle() {
+        const pointerTarget = elementFromPointer();
+
+        if (!pointerTarget || !isEligibleClickable(pointerTarget)) {
+          return null;
+        }
+
         const circleRect = getCircleRect();
-        const clickables = Array.from(document.querySelectorAll(clickableSelector));
-        let best = null;
-        let bestArea = 0;
+        const targetRect = pointerTarget.getBoundingClientRect();
 
-        clickables.forEach((element) => {
-          if (!isEligibleClickable(element)) {
-            return;
-          }
+        if (!rectsOverlap(circleRect, targetRect)) {
+          return null;
+        }
 
-          const rect = element.getBoundingClientRect();
-
-          if (!rectsOverlap(circleRect, rect)) {
-            return;
-          }
-
-          const overlapWidth = Math.min(circleRect.right, rect.right) - Math.max(circleRect.left, rect.left);
-          const overlapHeight = Math.min(circleRect.bottom, rect.bottom) - Math.max(circleRect.top, rect.top);
-          const area = overlapWidth * overlapHeight;
-
-          if (area > bestArea) {
-            best = element;
-            bestArea = area;
-          }
-        });
-
-        return best || elementFromCircleCenter();
+        return pointerTarget;
       }
 
       function lerp(current, target, amount) {
@@ -844,12 +833,7 @@
       }
 
       function overlapsBookPage() {
-        const cursorRect = {
-          left: cursorState.visualX,
-          right: cursorState.visualX + cursorState.visualW,
-          top: cursorState.visualY,
-          bottom: cursorState.visualY + cursorState.visualH
-        };
+        const cursorRect = getCircleRect();
 
         return Array.from(document.querySelectorAll('.book-page')).some((page) => {
           const rect = page.getBoundingClientRect();
@@ -878,30 +862,21 @@
 
       function elasticLoopPath(pull) {
         const p = Math.max(0, Math.min(1, pull));
-        const back = -92;
-        const front = 92 + p * 18;
-        const topBack = -54 + p * 18;
-        const bottomBack = 54 - p * 18;
-        const waist = 42 - p * 35;
-        const noseInset = 10 + p * 24;
-
-        if (p < 0.08) {
-          return `
-            M 0 -58
-            C 58 -58 102 -30 102 0
-            C 102 30 58 58 0 58
-            C -58 58 -102 30 -102 0
-            C -102 -30 -58 -58 0 -58
-            Z
-          `;
-        }
+        const back = -86 - p * 18;
+        const front = 86 + p * 24;
+        const top = -50 - p * 8;
+        const bottom = 50 + p * 8;
+        const shoulder = 42 + p * 20;
+        const frontRound = 18 + p * 16;
+        const backRound = 24 + p * 6;
 
         return `
           M ${back} 0
-          C ${back} ${topBack * 0.7} ${-52 - p * 10} ${topBack} ${-8} ${topBack}
-          C ${42} ${topBack} ${front - noseInset} ${-waist} ${front} 0
-          C ${front - noseInset} ${waist} ${42} ${bottomBack} ${-8} ${bottomBack}
-          C ${-52 - p * 10} ${bottomBack} ${back} ${bottomBack * 0.7} ${back} 0
+          C ${back} ${-backRound} ${back + 34} ${top} ${-18} ${top}
+          C ${shoulder} ${top} ${front - frontRound} ${-34 - p * 8} ${front} ${-10 - p * 2}
+          C ${front + 10} ${-4} ${front + 10} ${4} ${front} ${10 + p * 2}
+          C ${front - frontRound} ${34 + p * 8} ${shoulder} ${bottom} ${-18} ${bottom}
+          C ${back + 34} ${bottom} ${back} ${backRound} ${back} 0
           Z
         `;
       }
@@ -959,10 +934,10 @@
           170
         );
 
-        const elastic = Math.min(speed * 1.55 + pullDistance * 0.48, 112);
-        const pulledWidth = 44 + elastic;
-        const pulledHeight = Math.max(8, 44 - elastic * 0.32);
-        const pull = elastic / 112;
+        const elastic = Math.min(speed * 1.15 + pullDistance * 0.34, 92);
+        const pulledWidth = 48 + elastic;
+        const pulledHeight = 48 + Math.min(elastic * 0.12, 12);
+        const pull = elastic / 92;
 
         return {
           x: cursorState.logicX - pulledWidth / 2,
@@ -1009,13 +984,14 @@
       });
 
       document.addEventListener('click', (event) => {
-        const clickedRune = getRuneTouchedByCircle();
+        const clickedRune = getRuneClickedByPointer(event);
 
         if (clickedRune) {
           clickedRune.element.classList.remove('rune-burst');
           void clickedRune.element.offsetWidth;
           clickedRune.element.classList.add('rune-burst');
           clickedRune.element.classList.toggle('rune-lit');
+          createRuneSparks(clickedRune);
 
           window.setTimeout(() => {
             clickedRune.element.classList.remove('rune-burst');
@@ -1157,13 +1133,7 @@
       }
 
       function getRuneTouchedByCircle() {
-        const bounds = getRuneBounds();
-        const cursorRect = {
-          left: cursorState.visualX,
-          right: cursorState.visualX + cursorState.visualW,
-          top: cursorState.visualY,
-          bottom: cursorState.visualY + cursorState.visualH
-        };
+        const cursorRect = getCircleRect();
 
         return runes.find((rune) => {
           const runeRect = {
@@ -1175,6 +1145,45 @@
 
           return rectsOverlap(cursorRect, runeRect);
         });
+      }
+
+      function getRuneClickedByPointer(event) {
+        return runes.find((rune) => (
+          event.clientX >= rune.x &&
+          event.clientX <= rune.x + rune.size &&
+          event.clientY >= rune.y &&
+          event.clientY <= rune.y + rune.size
+        ));
+      }
+
+      function createRuneSparks(rune) {
+        if (!runeField) {
+          return;
+        }
+
+        const bounds = getRuneBounds();
+        const centerX = rune.x + rune.size / 2;
+        const centerY = rune.y - bounds.top + rune.size / 2;
+        const sparkCount = 12;
+
+        for (let i = 0; i < sparkCount; i += 1) {
+          const spark = document.createElement('span');
+          const angle = (Math.PI * 2 * i) / sparkCount + randomBetween(-0.24, 0.24);
+          const distance = randomBetween(22, 58);
+
+          spark.className = 'rune-spark';
+          spark.style.setProperty('--spark-x', `${centerX}px`);
+          spark.style.setProperty('--spark-y', `${centerY}px`);
+          spark.style.setProperty('--spark-dx', `${Math.cos(angle) * distance}px`);
+          spark.style.setProperty('--spark-dy', `${Math.sin(angle) * distance}px`);
+          spark.style.animationDelay = `${randomBetween(0, 0.06)}s`;
+
+          runeField.appendChild(spark);
+
+          window.setTimeout(() => {
+            spark.remove();
+          }, 820);
+        }
       }
 
       function animateRunes() {
