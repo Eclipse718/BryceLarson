@@ -7,7 +7,7 @@
 
   <title>Bryce Larson</title>
 
-  <link rel="stylesheet" href="css/style.css?v=25">
+  <link rel="stylesheet" href="css/style.css?v=26">
 
   <link
     rel="stylesheet"
@@ -872,22 +872,28 @@
           };
         }
 
-        const pulledWidth = 44 + speed * 2.35;
-        const pulledHeight = Math.max(9, 44 - speed * 1.02);
+        const pullDistance = Math.min(
+          Math.hypot(cursorState.targetX - cursorState.logicX, cursorState.targetY - cursorState.logicY),
+          150
+        );
+
+        const elastic = Math.min(speed * 1.4 + pullDistance * 0.42, 92);
+        const pulledWidth = 44 + elastic;
+        const pulledHeight = Math.max(7, 44 - elastic * 0.34);
 
         return {
           x: cursorState.logicX - pulledWidth / 2,
           y: cursorState.logicY - pulledHeight / 2,
           w: pulledWidth,
           h: pulledHeight,
-          radius: Math.max(4, pulledHeight / 2),
+          radius: pulledHeight / 2,
           locked: false,
           angle
         };
       }
 
       function renderCursor(targetBox) {
-        const morphSpeed = targetBox.locked ? 0.24 : 0.42;
+        const morphSpeed = targetBox.locked ? 0.22 : 0.36;
 
         cursorState.visualX = lerp(cursorState.visualX, targetBox.x, morphSpeed);
         cursorState.visualY = lerp(cursorState.visualY, targetBox.y, morphSpeed);
@@ -929,6 +935,19 @@
       });
 
       document.addEventListener('click', (event) => {
+        const clickedRune = getRuneTouchedByCircle();
+
+        if (clickedRune) {
+          clickedRune.element.classList.add('rune-lit');
+          clickedRune.element.classList.remove('rune-burst');
+          void clickedRune.element.offsetWidth;
+          clickedRune.element.classList.add('rune-burst');
+
+          window.setTimeout(() => {
+            clickedRune.element.classList.remove('rune-burst');
+          }, 460);
+        }
+
         if (cursorState.syntheticClick) {
           return;
         }
@@ -954,12 +973,12 @@
       }, true);
 
       function animateOceanCursor() {
-        cursorState.logicX += (cursorState.targetX - cursorState.logicX) * 0.16;
-        cursorState.logicY += (cursorState.targetY - cursorState.logicY) * 0.16;
+        cursorState.logicX += (cursorState.targetX - cursorState.logicX) * 0.13;
+        cursorState.logicY += (cursorState.targetY - cursorState.logicY) * 0.13;
 
         const dx = cursorState.logicX - cursorState.previousX;
         const dy = cursorState.logicY - cursorState.previousY;
-        const speed = Math.min(Math.hypot(dx, dy), 42);
+        const speed = Math.min(Math.hypot(dx, dy), 48);
         const angle = Math.atan2(dy, dx) * 180 / Math.PI;
         const touchedElement = getClickableTouchedByCircle();
         const targetBox = getTargetCursorBox(touchedElement, speed, angle);
@@ -1059,6 +1078,26 @@
           left < rect.right &&
           bottom > rect.top &&
           top < rect.bottom;
+      }
+
+      function getRuneTouchedByCircle() {
+        const cursorRect = {
+          left: cursorState.visualX,
+          right: cursorState.visualX + cursorState.visualW,
+          top: cursorState.visualY,
+          bottom: cursorState.visualY + cursorState.visualH
+        };
+
+        return runes.find((rune) => {
+          const runeRect = {
+            left: rune.x,
+            right: rune.x + rune.size,
+            top: rune.y,
+            bottom: rune.y + rune.size
+          };
+
+          return rectsOverlap(cursorRect, runeRect);
+        });
       }
 
       function animateRunes() {
