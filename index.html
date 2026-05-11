@@ -16,16 +16,6 @@
 <body>
   <div class="fade-overlay" aria-hidden="true"></div>
 
-  <svg
-    class="ocean-cursor hidden"
-    id="oceanCursor"
-    aria-hidden="true"
-    viewBox="-100 -100 200 200"
-    preserveAspectRatio="none"
-  >
-    <path class="ocean-cursor-path" id="oceanCursorPath"></path>
-  </svg>
-
   <nav class="topbar" aria-label="Primary navigation">
     <div class="topbar-brand">
       <div class="topbar-avatar" aria-hidden="true">
@@ -425,21 +415,7 @@
     const bookDots = document.getElementById("bookDots");
     const turningPage = document.getElementById("turningPage");
 
-    const oceanCursor = document.getElementById("oceanCursor");
-    const oceanCursorPath = document.getElementById("oceanCursorPath");
     const runeField = document.getElementById("runeField");
-
-    const highlightSelector = [
-      ".book-story-title h3",
-      ".book-story-title",
-      ".project-slide.active",
-      ".experience-card",
-      ".topbar-btn",
-      ".sidebar-btn",
-      ".project-arrow",
-      ".book-control:not(:disabled)",
-      ".contact-row a"
-    ].join(", ");
 
     const bookStories = [
       {
@@ -481,28 +457,11 @@
 
     let activeProjectIndex = 0;
     let activeBookSpread = 0;
-    let activeHighlight = null;
 
     const mouse = {
       x: window.innerWidth / 2,
       y: window.innerHeight / 2,
-      previousX: window.innerWidth / 2,
-      previousY: window.innerHeight / 2,
       active: false
-    };
-
-    const cursorState = {
-      x: window.innerWidth / 2,
-      y: window.innerHeight / 2,
-      width: 78,
-      height: 78,
-      targetX: window.innerWidth / 2,
-      targetY: window.innerHeight / 2,
-      targetWidth: 78,
-      targetHeight: 78,
-      velocityX: 0,
-      velocityY: 0,
-      locked: false
     };
 
     function setActiveSection(index) {
@@ -732,275 +691,50 @@
 
     updateBookCarousel();
 
-    function buildElasticRingPath(width, height, velocityX, velocityY, locked) {
-      const k = 0.5522847498;
-
-      function ellipsePath(rx, ry, angle, offsetX, offsetY) {
-        const points = [
-          [0, -ry],
-          [rx * k, -ry],
-          [rx, -ry * k],
-          [rx, 0],
-          [rx, ry * k],
-          [rx * k, ry],
-          [0, ry],
-          [-rx * k, ry],
-          [-rx, ry * k],
-          [-rx, 0],
-          [-rx, -ry * k],
-          [-rx * k, -ry],
-          [0, -ry]
-        ];
-
-        const cos = Math.cos(angle);
-        const sin = Math.sin(angle);
-
-        function rotate(point) {
-          const x = point[0];
-          const y = point[1];
-
-          return [
-            offsetX + x * cos - y * sin,
-            offsetY + x * sin + y * cos
-          ];
-        }
-
-        const p = points.map(rotate);
-
-        return [
-          "M " + p[0][0] + " " + p[0][1],
-          "C " + p[1][0] + " " + p[1][1] + ", " + p[2][0] + " " + p[2][1] + ", " + p[3][0] + " " + p[3][1],
-          "C " + p[4][0] + " " + p[4][1] + ", " + p[5][0] + " " + p[5][1] + ", " + p[6][0] + " " + p[6][1],
-          "C " + p[7][0] + " " + p[7][1] + ", " + p[8][0] + " " + p[8][1] + ", " + p[9][0] + " " + p[9][1],
-          "C " + p[10][0] + " " + p[10][1] + ", " + p[11][0] + " " + p[11][1] + ", " + p[12][0] + " " + p[12][1],
-          "Z"
-        ].join(" ");
-      }
-
-      if (locked) {
-        return ellipsePath(43, 43, 0, 0, 0);
-      }
-
-      const speed = Math.min(42, Math.hypot(velocityX, velocityY));
-
-      if (speed < 0.75) {
-        return ellipsePath(43, 43, 0, 0, 0);
-      }
-
-      const angle = Math.atan2(velocityY, velocityX || 0.001);
-      const stretchRatio = 1 + Math.min(0.52, speed * 0.014);
-      const rx = 43 * Math.sqrt(stretchRatio);
-      const ry = 43 / Math.sqrt(stretchRatio);
-      const dragOffset = Math.min(8, speed * 0.14);
-      const offsetX = Math.cos(angle) * dragOffset;
-      const offsetY = Math.sin(angle) * dragOffset;
-
-      return ellipsePath(rx, ry, angle, offsetX, offsetY);
-    }
-
-    function clearHighlight() {
-      if (activeHighlight) {
-        activeHighlight.classList.remove("cursor-highlighted", "cursor-highlighted-title");
-        activeHighlight = null;
-      }
-    }
-
-    function setHighlight(element, isTitle) {
-      if (activeHighlight && activeHighlight !== element) {
-        activeHighlight.classList.remove("cursor-highlighted", "cursor-highlighted-title");
-      }
-
-      activeHighlight = element;
-
-      if (activeHighlight) {
-        activeHighlight.classList.add("cursor-highlighted");
-
-        if (isTitle) {
-          activeHighlight.classList.add("cursor-highlighted-title");
-        } else {
-          activeHighlight.classList.remove("cursor-highlighted-title");
-        }
-      }
-    }
-
-    function getCursorTarget() {
-      if (!mouse.active) {
-        clearHighlight();
-        return null;
-      }
-
-      const hoveredElement = document.elementFromPoint(mouse.x, mouse.y);
-
-      if (!hoveredElement) {
-        clearHighlight();
-        return null;
-      }
-
-      const feature = hoveredElement.closest(highlightSelector);
-
-      if (!feature) {
-        clearHighlight();
-        return null;
-      }
-
-      const titleLink = feature.closest(".book-story-title");
-      const title = titleLink ? titleLink.querySelector("h3") : null;
-
-      if (title && (feature.matches(".book-story-title") || feature.matches(".book-story-title h3"))) {
-        const titleRect = title.getBoundingClientRect();
-
-        setHighlight(title, true);
-
-        return {
-          x: titleRect.left + titleRect.width / 2,
-          y: titleRect.top + titleRect.height / 2,
-          width: titleRect.width + 26,
-          height: titleRect.height + 16,
-          tawny: true
-        };
-      }
-
-      const rect = feature.getBoundingClientRect();
-
-      setHighlight(feature, false);
-
-      return {
-        x: rect.left + rect.width / 2,
-        y: rect.top + rect.height / 2,
-        width: rect.width + 22,
-        height: rect.height + 22,
-        tawny: Boolean(feature.closest(".book-page"))
-      };
-    }
-
-    function animateOceanCursor() {
-      const target = getCursorTarget();
-
-      cursorState.velocityX = mouse.x - mouse.previousX;
-      cursorState.velocityY = mouse.y - mouse.previousY;
-
-      if (target) {
-        cursorState.locked = true;
-        cursorState.targetX = target.x;
-        cursorState.targetY = target.y;
-        cursorState.targetWidth = Math.min(410, Math.max(62, target.width));
-        cursorState.targetHeight = Math.min(240, Math.max(42, target.height));
-        oceanCursor.classList.add("locked");
-        oceanCursor.classList.toggle("tawny", target.tawny);
-      } else {
-        cursorState.locked = false;
-        cursorState.targetX = mouse.x;
-        cursorState.targetY = mouse.y;
-        cursorState.targetWidth = 78;
-        cursorState.targetHeight = 78;
-        oceanCursor.classList.remove("locked", "tawny");
-      }
-
-      const follow = cursorState.locked ? 0.34 : 0.2;
-      const resize = cursorState.locked ? 0.28 : 0.14;
-
-      cursorState.x += (cursorState.targetX - cursorState.x) * follow;
-      cursorState.y += (cursorState.targetY - cursorState.y) * follow;
-      cursorState.width += (cursorState.targetWidth - cursorState.width) * resize;
-      cursorState.height += (cursorState.targetHeight - cursorState.height) * resize;
-
-      oceanCursor.style.width = cursorState.width + "px";
-      oceanCursor.style.height = cursorState.height + "px";
-      oceanCursor.style.transform = "translate3d(" + (cursorState.x - cursorState.width / 2) + "px, " + (cursorState.y - cursorState.height / 2) + "px, 0)";
-
-      oceanCursorPath.setAttribute(
-        "d",
-        buildElasticRingPath(
-          cursorState.width,
-          cursorState.height,
-          cursorState.velocityX,
-          cursorState.velocityY,
-          cursorState.locked
-        )
-      );
-
-      mouse.previousX += (mouse.x - mouse.previousX) * 0.35;
-      mouse.previousY += (mouse.y - mouse.previousY) * 0.35;
-
-      requestAnimationFrame(animateOceanCursor);
-    }
-
-    window.addEventListener("pointermove", function(event) {
-      mouse.x = event.clientX;
-      mouse.y = event.clientY;
-      mouse.active = true;
-      oceanCursor.classList.remove("hidden");
-    });
-
-    window.addEventListener("pointerleave", function() {
-      mouse.active = false;
-      clearHighlight();
-      oceanCursor.classList.add("hidden");
-    });
-
-    function createGoldSpark(x, y) {
-      const spark = document.createElement("span");
-      spark.className = "gold-spark";
-
-      const angle = Math.random() * Math.PI * 2;
-      const distance = 16 + Math.random() * 24;
-
-      spark.style.left = x + "px";
-      spark.style.top = y + "px";
-      spark.style.setProperty("--spark-x", Math.cos(angle) * distance + "px");
-      spark.style.setProperty("--spark-y", Math.sin(angle) * distance + "px");
-      spark.style.setProperty("--spark-delay", Math.random() * 0.06 + "s");
-
-      document.body.appendChild(spark);
-
-      spark.addEventListener("animationend", function() {
-        spark.remove();
-      });
-    }
-
-    function burstRune(rune) {
-      const rect = rune.getBoundingClientRect();
-      const centerX = rect.left + rect.width / 2;
-      const centerY = rect.top + rect.height / 2;
-
-      rune.classList.remove("rune-burst");
-      void rune.offsetWidth;
-      rune.classList.add("rune-burst", "rune-lit");
-
-      for (let i = 0; i < 10; i += 1) {
-        createGoldSpark(
-          centerX + (Math.random() - 0.5) * 8,
-          centerY + (Math.random() - 0.5) * 8
-        );
-      }
-    }
-
     function buildRuneField() {
       const runeCharacters = ["ᚠ", "ᚢ", "ᚦ", "ᚨ", "ᚱ", "ᚲ", "ᚷ", "ᚹ", "ᛇ", "ᛈ", "ᛉ", "ᛟ", "✦", "✧", "✶", "☉"];
-      const runeCount = Math.max(24, Math.floor(window.innerWidth / 46));
+      const runeCount = Math.max(34, Math.floor(window.innerWidth / 35));
 
       runeField.innerHTML = "";
 
       for (let i = 0; i < runeCount; i += 1) {
-        const rune = document.createElement("button");
-        rune.className = "golden-rune";
-        rune.type = "button";
-        rune.tabIndex = -1;
+        const rune = document.createElement("span");
+        const followsLine = i % 3 === 0;
+
+        rune.className = followsLine ? "golden-rune rune-orbit" : "golden-rune rune-drift";
         rune.textContent = runeCharacters[i % runeCharacters.length];
 
-        const duration = 42 + Math.random() * 38;
+        const duration = followsLine ? 82 + Math.random() * 64 : 58 + Math.random() * 52;
         const delay = Math.random() * -duration;
+        const scale = 1.08 + Math.random() * 0.72;
 
-        rune.style.left = Math.random() * 100 + "%";
-        rune.style.top = Math.random() * 100 + "%";
-        rune.style.setProperty("--rune-scale", (0.62 + Math.random() * 0.36).toFixed(2));
+        if (followsLine) {
+          const radius = Math.min(window.innerWidth, window.innerHeight) * (0.18 + Math.random() * 0.54);
+          const angle = Math.random() * 360;
+          const orbitAmount = (Math.random() > 0.5 ? 1 : -1) * (28 + Math.random() * 34);
+
+          rune.style.left = "50%";
+          rune.style.top = "50%";
+          rune.style.setProperty("--orbit-radius", radius.toFixed(1) + "px");
+          rune.style.setProperty("--orbit-angle", angle.toFixed(1) + "deg");
+          rune.style.setProperty("--orbit-amount", orbitAmount.toFixed(1) + "deg");
+        } else {
+          rune.style.left = Math.random() * 100 + "%";
+          rune.style.top = Math.random() * 100 + "%";
+          rune.style.setProperty("--drift-x-a", (-95 + Math.random() * 190).toFixed(1) + "px");
+          rune.style.setProperty("--drift-y-a", (-74 + Math.random() * 148).toFixed(1) + "px");
+          rune.style.setProperty("--drift-x-mid", (-95 + Math.random() * 190).toFixed(1) + "px");
+          rune.style.setProperty("--drift-y-mid", (-74 + Math.random() * 148).toFixed(1) + "px");
+          rune.style.setProperty("--drift-x-c", (-95 + Math.random() * 190).toFixed(1) + "px");
+          rune.style.setProperty("--drift-y-c", (-74 + Math.random() * 148).toFixed(1) + "px");
+          rune.style.setProperty("--drift-x-b", (-95 + Math.random() * 190).toFixed(1) + "px");
+          rune.style.setProperty("--drift-y-b", (-74 + Math.random() * 148).toFixed(1) + "px");
+        }
+
+        rune.style.setProperty("--rune-scale", scale.toFixed(2));
         rune.style.setProperty("--rune-duration", duration.toFixed(2) + "s");
         rune.style.setProperty("--rune-delay", delay.toFixed(2) + "s");
-
-        rune.addEventListener("click", function(event) {
-          event.stopPropagation();
-          burstRune(rune);
-        });
+        rune.style.setProperty("--rune-glow-strength", "0");
 
         runeField.appendChild(rune);
       }
@@ -1008,23 +742,55 @@
 
     function updateRuneGlow() {
       const runes = Array.from(document.querySelectorAll(".golden-rune"));
+      const glowRadius = 240;
 
       runes.forEach(function(rune) {
         const rect = rune.getBoundingClientRect();
         const centerX = rect.left + rect.width / 2;
         const centerY = rect.top + rect.height / 2;
-        const distance = Math.hypot(mouse.x - centerX, mouse.y - centerY);
+        const distance = mouse.active ? Math.hypot(mouse.x - centerX, mouse.y - centerY) : glowRadius + 1;
+        const strength = Math.max(0, 1 - distance / glowRadius);
+        const easedStrength = Math.pow(strength, 1.65);
 
-        rune.classList.toggle("rune-glow", distance < 82);
+        rune.style.setProperty("--rune-glow-strength", easedStrength.toFixed(3));
       });
 
       requestAnimationFrame(updateRuneGlow);
     }
 
+
+    function lightNearestRune(event) {
+      const runes = Array.from(document.querySelectorAll(".golden-rune"));
+      let nearestRune = null;
+      let nearestDistance = Infinity;
+
+      runes.forEach(function(rune) {
+        const rect = rune.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        const distance = Math.hypot(event.clientX - centerX, event.clientY - centerY);
+
+        if (distance < nearestDistance) {
+          nearestDistance = distance;
+          nearestRune = rune;
+        }
+      });
+
+      if (!nearestRune || nearestDistance > 95) {
+        return;
+      }
+
+      nearestRune.classList.add("rune-lit", "rune-click-flash");
+      window.setTimeout(function() {
+        nearestRune.classList.remove("rune-click-flash");
+      }, 520);
+    }
+
+    window.addEventListener("click", lightNearestRune, { passive: true });
+
     window.addEventListener("resize", buildRuneField);
 
     buildRuneField();
-    animateOceanCursor();
     updateRuneGlow();
   </script>
 </body>
