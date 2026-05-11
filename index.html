@@ -7,7 +7,7 @@
 
   <title>Bryce Larson</title>
 
-  <link rel="stylesheet" href="css/style.css?v=24">
+  <link rel="stylesheet" href="css/style.css?v=25">
 
   <link
     rel="stylesheet"
@@ -713,7 +713,7 @@
         visualY: window.innerHeight / 2 - 22,
         visualW: 44,
         visualH: 44,
-        visualRadius: 999,
+        visualRadius: 22,
         targetElement: null,
         syntheticClick: false
       };
@@ -793,7 +793,6 @@
       }
 
       function elementFromCircleCenter() {
-        oceanCursor.style.pointerEvents = 'none';
         const element = document.elementFromPoint(cursorState.logicX, cursorState.logicY);
         return getClickableFromElement(element);
       }
@@ -832,6 +831,20 @@
         return current + (target - current) * amount;
       }
 
+      function overlapsBookPage() {
+        const cursorRect = {
+          left: cursorState.visualX,
+          right: cursorState.visualX + cursorState.visualW,
+          top: cursorState.visualY,
+          bottom: cursorState.visualY + cursorState.visualH
+        };
+
+        return Array.from(document.querySelectorAll('.book-page')).some((page) => {
+          const rect = page.getBoundingClientRect();
+          return rectsOverlap(cursorRect, rect);
+        });
+      }
+
       function getTargetCursorBox(touchedElement, speed, angle) {
         if (touchedElement) {
           const rect = touchedElement.getBoundingClientRect();
@@ -854,48 +867,52 @@
             w: rect.width + padding * 2,
             h: rect.height + padding * 2,
             radius,
-            locked: true
+            locked: true,
+            angle: 0
           };
         }
 
-        const stretch = 1 + speed / 28;
-        const squeeze = Math.max(0.78, 1 - speed / 115);
-        const width = 44 * stretch;
-        const height = 44 * squeeze;
+        const pulledWidth = 44 + speed * 2.35;
+        const pulledHeight = Math.max(9, 44 - speed * 1.02);
 
         return {
-          x: cursorState.logicX - width / 2,
-          y: cursorState.logicY - height / 2,
-          w: width,
-          h: height,
-          radius: 999,
+          x: cursorState.logicX - pulledWidth / 2,
+          y: cursorState.logicY - pulledHeight / 2,
+          w: pulledWidth,
+          h: pulledHeight,
+          radius: Math.max(4, pulledHeight / 2),
           locked: false,
           angle
         };
       }
 
       function renderCursor(targetBox) {
-        const morphSpeed = targetBox.locked ? 0.34 : 0.46;
+        const morphSpeed = targetBox.locked ? 0.24 : 0.42;
 
         cursorState.visualX = lerp(cursorState.visualX, targetBox.x, morphSpeed);
         cursorState.visualY = lerp(cursorState.visualY, targetBox.y, morphSpeed);
         cursorState.visualW = lerp(cursorState.visualW, targetBox.w, morphSpeed);
         cursorState.visualH = lerp(cursorState.visualH, targetBox.h, morphSpeed);
-        cursorState.visualRadius = targetBox.radius === 999
-          ? 999
-          : lerp(cursorState.visualRadius === 999 ? 22 : cursorState.visualRadius, targetBox.radius, morphSpeed);
+
+        const targetRadius = targetBox.radius === 999
+          ? Math.min(cursorState.visualW, cursorState.visualH) / 2
+          : targetBox.radius;
+
+        cursorState.visualRadius = lerp(cursorState.visualRadius, targetRadius, morphSpeed);
 
         oceanCursor.classList.toggle('locked', targetBox.locked);
+        oceanCursor.classList.toggle('dark', overlapsBookPage());
         oceanCursor.style.width = `${cursorState.visualW}px`;
         oceanCursor.style.height = `${cursorState.visualH}px`;
-        oceanCursor.style.borderRadius = targetBox.radius === 999 ? '999px' : `${cursorState.visualRadius}px`;
+        oceanCursor.style.borderRadius = targetBox.locked && targetBox.radius === 999
+          ? '999px'
+          : `${cursorState.visualRadius}px`;
         oceanCursor.style.opacity = '1';
-
-        const rotation = targetBox.locked ? 0 : targetBox.angle;
+        oceanCursor.style.visibility = 'visible';
 
         oceanCursor.style.transform = `
           translate3d(${cursorState.visualX}px, ${cursorState.visualY}px, 0)
-          rotate(${rotation}deg)
+          rotate(${targetBox.angle}deg)
         `;
       }
 
@@ -903,10 +920,12 @@
         cursorState.targetX = event.clientX;
         cursorState.targetY = event.clientY;
         oceanCursor.style.opacity = '1';
+        oceanCursor.style.visibility = 'visible';
       });
 
       document.addEventListener('pointerleave', () => {
         oceanCursor.style.opacity = '1';
+        oceanCursor.style.visibility = 'visible';
       });
 
       document.addEventListener('click', (event) => {
@@ -940,7 +959,7 @@
 
         const dx = cursorState.logicX - cursorState.previousX;
         const dy = cursorState.logicY - cursorState.previousY;
-        const speed = Math.min(Math.hypot(dx, dy), 34);
+        const speed = Math.min(Math.hypot(dx, dy), 42);
         const angle = Math.atan2(dy, dx) * 180 / Math.PI;
         const touchedElement = getClickableTouchedByCircle();
         const targetBox = getTargetCursorBox(touchedElement, speed, angle);
@@ -1045,6 +1064,12 @@
       function animateRunes() {
         const bounds = getRuneBounds();
         const bounceRects = getBounceRects();
+        const cursorRect = {
+          left: cursorState.visualX,
+          right: cursorState.visualX + cursorState.visualW,
+          top: cursorState.visualY,
+          bottom: cursorState.visualY + cursorState.visualH
+        };
 
         runes.forEach((rune) => {
           rune.x += rune.vx;
@@ -1080,6 +1105,14 @@
             }
           });
 
+          const runeRect = {
+            left: rune.x,
+            right: rune.x + rune.size,
+            top: rune.y,
+            bottom: rune.y + rune.size
+          };
+
+          rune.element.classList.toggle('rune-glow', rectsOverlap(cursorRect, runeRect));
           rune.element.style.transform = `translate3d(${rune.x}px, ${rune.y}px, 0) rotate(${rune.rotation}deg)`;
         });
 
