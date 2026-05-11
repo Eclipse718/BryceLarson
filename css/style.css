@@ -1,10 +1,6 @@
-/* ======================
-   Global
-====================== */
+/* ======================Global====================== */
 
-*,
-*::before,
-*::after {
+*, *::before, *::after {
   box-sizing: border-box;
 }
 
@@ -16,6 +12,8 @@
   --water-line: rgba(175, 225, 232, 0.075);
   --gold: #c9a96e;
   --gold-bright: #f0d899;
+  --tawny-gold: #a36a2c;
+  --tawny-gold-bright: #d69a42;
 }
 
 html,
@@ -46,9 +44,7 @@ a {
   }
 }
 
-/* ======================
-   Fade Overlay
-====================== */
+/* ======================Fade Overlay====================== */
 
 .fade-overlay {
   position: fixed;
@@ -70,28 +66,25 @@ a {
   }
 }
 
-/* ======================
-   Solar-System Background Effects
-====================== */
+/* ======================Solar-System Background Effects====================== */
 
 .ocean-cursor {
   position: fixed;
   left: 0;
   top: 0;
-  width: 44px;
-  height: 44px;
+  width: 48px;
+  height: 48px;
   z-index: 10000;
   pointer-events: none;
   opacity: 1;
   visibility: visible;
   overflow: visible;
-  transform: translate3d(calc(50vw - 22px), calc(50vh - 22px), 0);
-  transform-origin: center center;
+  transform: translate3d(calc(50vw - 24px), calc(50vh - 24px), 0);
   will-change: transform, width, height;
 }
 
 .ocean-cursor-path {
-  fill: none;
+  fill: rgba(240, 216, 153, 0.035);
   stroke: rgba(240, 216, 153, 0.98);
   stroke-width: 7;
   stroke-linejoin: round;
@@ -99,20 +92,23 @@ a {
   filter: drop-shadow(0 0 7px rgba(240, 216, 153, 0.46));
   transition:
     stroke 0.16s ease,
+    fill 0.16s ease,
     filter 0.16s ease,
     opacity 0.16s ease;
 }
 
 .ocean-cursor.locked .ocean-cursor-path {
   stroke: rgba(240, 216, 153, 1);
+  fill: rgba(240, 216, 153, 0.055);
   filter: drop-shadow(0 0 10px rgba(240, 216, 153, 0.55));
 }
 
-.ocean-cursor.dark .ocean-cursor-path {
-  stroke: rgba(171, 115, 45, 0.98);
+.ocean-cursor.tawny .ocean-cursor-path {
+  stroke: rgba(190, 121, 45, 0.98);
+  fill: rgba(163, 106, 44, 0.12);
   filter:
-    drop-shadow(0 0 7px rgba(171, 115, 45, 0.44))
-    drop-shadow(0 0 13px rgba(214, 168, 89, 0.22));
+    drop-shadow(0 0 7px rgba(214, 154, 66, 0.45))
+    drop-shadow(0 0 16px rgba(125, 77, 31, 0.24));
 }
 
 .ocean-cursor.hidden {
@@ -131,14 +127,21 @@ a {
   position: absolute;
   left: 0;
   top: 0;
+  border: none;
+  padding: 0;
+  background: transparent;
   color: rgba(240, 216, 153, 0.62);
+  font-family: "Times New Roman", Georgia, serif;
   font-size: 1.35rem;
   line-height: 1;
   text-shadow:
     0 0 8px rgba(240, 216, 153, 0.42),
     0 0 18px rgba(201, 169, 110, 0.22);
   user-select: none;
+  pointer-events: auto;
   will-change: transform, opacity, filter;
+  transform: translate3d(0, 0, 0) scale(var(--rune-scale, 1));
+  animation: runeFloat var(--rune-duration, 24s) ease-in-out var(--rune-delay, 0s) infinite alternate;
   transition:
     opacity 0.18s ease,
     filter 0.18s ease,
@@ -166,43 +169,33 @@ a {
 }
 
 .golden-rune.rune-burst {
-  animation: runeBurst 0.5s ease-out;
+  animation:
+    runeFloat var(--rune-duration, 24s) ease-in-out var(--rune-delay, 0s) infinite alternate,
+    runeBurst 0.5s ease-out;
 }
 
-.rune-spark {
-  position: absolute;
-  left: 0;
-  top: 0;
+.gold-spark {
+  position: fixed;
   width: 5px;
   height: 5px;
+  z-index: 10001;
   border-radius: 50%;
-  background: #ffe89f;
+  background: #ffe89b;
   box-shadow:
-    0 0 8px rgba(255, 232, 159, 0.95),
-    0 0 18px rgba(240, 216, 153, 0.58),
-    0 0 30px rgba(201, 169, 110, 0.42);
+    0 0 8px rgba(255, 232, 155, 0.95),
+    0 0 18px rgba(240, 216, 153, 0.58);
   pointer-events: none;
-  opacity: 0;
-  animation: runeSpark 0.72s ease-out forwards;
+  transform: translate3d(-50%, -50%, 0);
+  animation: goldSpark 0.72s ease-out var(--spark-delay, 0s) forwards;
 }
 
-@keyframes runeSpark {
+@keyframes runeFloat {
   0% {
-    opacity: 1;
-    transform: translate3d(var(--spark-x), var(--spark-y), 0) scale(0.45);
-  }
-
-  55% {
-    opacity: 1;
+    transform: translate3d(-8px, -6px, 0) rotate(-4deg) scale(var(--rune-scale, 1));
   }
 
   100% {
-    opacity: 0;
-    transform: translate3d(
-      calc(var(--spark-x) + var(--spark-dx)),
-      calc(var(--spark-y) + var(--spark-dy)),
-      0
-    ) scale(0.08);
+    transform: translate3d(8px, 7px, 0) rotate(5deg) scale(var(--rune-scale, 1));
   }
 }
 
@@ -235,9 +228,29 @@ a {
   }
 }
 
-/* ======================
-   Top Bar
-====================== */
+@keyframes goldSpark {
+  0% {
+    opacity: 0;
+    transform: translate3d(-50%, -50%, 0) scale(0.45);
+  }
+
+  20% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform:
+      translate3d(
+        calc(-50% + var(--spark-x, 0px)),
+        calc(-50% + var(--spark-y, 0px)),
+        0
+      )
+      scale(0.1);
+  }
+}
+
+/* ======================Top Bar====================== */
 
 .topbar {
   position: fixed;
@@ -320,9 +333,7 @@ a {
   text-decoration: none;
 }
 
-/* ======================
-   Scroll Container
-====================== */
+/* ======================Scroll Container====================== */
 
 .scroll-container {
   position: fixed;
@@ -354,11 +365,11 @@ a {
 
 .scroll-container::before {
   z-index: 0;
-  opacity: 0.5;
+  opacity: 0.44;
   background:
     repeating-radial-gradient(
-      ellipse at 50% 10%,
-      rgba(180, 230, 236, 0.06) 0 2px,
+      ellipse at 50% 14%,
+      rgba(180, 230, 236, 0.062) 0 2px,
       transparent 3px 38px
     );
   animation: solarDrift 36s ease-in-out infinite alternate;
@@ -546,9 +557,7 @@ a {
   letter-spacing: 0.05em;
 }
 
-/* ======================
-   Experience Cards
-====================== */
+/* ======================Experience Cards====================== */
 
 .experience-content {
   width: min(860px, 94vw);
@@ -584,7 +593,7 @@ a {
 
 .experience-card:hover {
   transform: translateY(-5px);
-  border-color: rgba(201, 169, 110, 0.35);
+  border-color: rgba(201, 169, 110, 0.72);
   background: rgba(255, 255, 255, 0.08);
   text-decoration: none;
 }
@@ -611,9 +620,7 @@ a {
   line-height: 1.5;
 }
 
-/* ======================
-   Project Carousel
-====================== */
+/* ======================Project Carousel====================== */
 
 .projects-content {
   width: min(1040px, 94vw);
@@ -657,7 +664,11 @@ a {
   border: 1px solid rgba(201, 169, 110, 0.38);
   border-radius: 18px;
   background:
-    linear-gradient(145deg, rgba(255, 255, 255, 0.078), rgba(255, 255, 255, 0.025));
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.078),
+      rgba(255, 255, 255, 0.025)
+    );
   color: #f5f0e8;
   text-decoration: none;
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.24);
@@ -680,9 +691,13 @@ a {
 }
 
 .project-slide:hover {
-  border-color: rgba(201, 169, 110, 0.38);
+  border-color: rgba(201, 169, 110, 0.74);
   background:
-    linear-gradient(145deg, rgba(255, 255, 255, 0.105), rgba(255, 255, 255, 0.04));
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.105),
+      rgba(255, 255, 255, 0.04)
+    );
   text-decoration: none;
 }
 
@@ -769,7 +784,7 @@ a {
 
 .project-arrow:hover {
   background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(201, 169, 110, 0.52);
+  border-color: rgba(201, 169, 110, 0.82);
   transform: scale(1.07);
 }
 
@@ -842,9 +857,7 @@ a {
   transform: translateY(-1px);
 }
 
-/* ======================
-   Sidebar
-====================== */
+/* ======================Sidebar====================== */
 
 .sidebar {
   position: fixed;
@@ -886,9 +899,7 @@ a {
   transform: scale(1.08);
 }
 
-/* ======================
-   Writing Book Carousel
-====================== */
+/* ======================Writing Book Carousel====================== */
 
 .writing-stage {
   width: min(980px, 94vw);
@@ -930,7 +941,14 @@ a {
   grid-template-columns: 1fr 1fr;
   border-radius: 18px;
   background:
-    linear-gradient(90deg, #c7a56b 0 2%, #f2e2bd 2% 48%, #7b5731 49%, #f2e2bd 52% 98%, #c7a56b 98%);
+    linear-gradient(
+      90deg,
+      #c7a56b 0 2%,
+      #f2e2bd 2% 48%,
+      #7b5731 49%,
+      #f2e2bd 52% 98%,
+      #c7a56b 98%
+    );
   box-shadow:
     0 28px 55px rgba(0, 0, 0, 0.45),
     inset 0 0 35px rgba(84, 45, 18, 0.2);
@@ -991,7 +1009,7 @@ a {
 }
 
 .book-story-title {
-  display: inline-block;
+  display: block;
   width: fit-content;
   max-width: 100%;
   margin: 0 auto;
@@ -1008,6 +1026,7 @@ a {
 }
 
 .book-page h3 {
+  display: inline-block;
   margin: 0 0 0.85rem;
   color: inherit;
   font-size: 1.02rem;
@@ -1176,9 +1195,7 @@ a {
   transform: translateY(-1px);
 }
 
-/* ======================
-   Contact Modal
-====================== */
+/* ======================Contact Modal====================== */
 
 .contact-modal {
   position: fixed;
@@ -1274,9 +1291,7 @@ a {
   font-size: 2rem;
 }
 
-/* ======================
-   Shared Detail Pages
-====================== */
+/* ======================Shared Detail Pages====================== */
 
 .timeline-body,
 .project-body,
@@ -1347,9 +1362,7 @@ a {
   transform: translateX(-3px);
 }
 
-/* ======================
-   Timeline Page
-====================== */
+/* ======================Timeline Page====================== */
 
 .timeline {
   position: relative;
@@ -1366,13 +1379,14 @@ a {
   left: 50%;
   width: 3px;
   transform: translateX(-50%);
-  background: linear-gradient(
-    to bottom,
-    transparent,
-    #c9a96e 8%,
-    #c9a96e 92%,
-    transparent
-  );
+  background:
+    linear-gradient(
+      to bottom,
+      transparent,
+      #c9a96e 8%,
+      #c9a96e 92%,
+      transparent
+    );
 }
 
 .timeline-item {
@@ -1438,7 +1452,7 @@ a {
 }
 
 .timeline-text h2 {
-  margin: 0 0 0.5rem 0;
+  margin: 0 0 0.5rem;
   color: #f5f0e8;
   font-size: 1.5rem;
   font-weight: normal;
@@ -1451,9 +1465,7 @@ a {
   line-height: 1.6;
 }
 
-/* ======================
-   Project Detail Pages
-====================== */
+/* ======================Project Detail Pages====================== */
 
 .project-gallery {
   width: min(1060px, 94vw);
@@ -1555,9 +1567,7 @@ a {
   padding-left: 1.2rem;
 }
 
-/* ======================
-   Writing Detail Page
-====================== */
+/* ======================Writing Detail Page====================== */
 
 .document-stage {
   width: min(900px, 94vw);
@@ -1591,9 +1601,7 @@ a {
   background: white;
 }
 
-/* ======================
-   Reduced Motion
-====================== */
+/* ======================Reduced Motion====================== */
 
 @media (prefers-reduced-motion: reduce) {
   .scroll-container {
@@ -1619,9 +1627,7 @@ a {
   }
 }
 
-/* ======================
-   Mobile
-====================== */
+/* ======================Mobile====================== */
 
 @media screen and (max-width: 760px) {
   .topbar {
