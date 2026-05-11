@@ -7,7 +7,7 @@
 
   <title>Bryce Larson</title>
 
-  <link rel="stylesheet" href="css/style.css?v=21">
+  <link rel="stylesheet" href="css/style.css?v=22">
 
   <link
     rel="stylesheet"
@@ -708,35 +708,32 @@
         x: window.innerWidth / 2,
         y: window.innerHeight / 2,
         previousX: window.innerWidth / 2,
-        previousY: window.innerHeight / 2,
-        visible: false
+        previousY: window.innerHeight / 2
       };
 
       window.addEventListener('pointermove', (event) => {
         cursorState.targetX = event.clientX;
         cursorState.targetY = event.clientY;
-        cursorState.visible = true;
         oceanCursor.style.opacity = '1';
       });
 
       window.addEventListener('pointerleave', () => {
-        cursorState.visible = false;
         oceanCursor.style.opacity = '0';
       });
 
       function animateOceanCursor() {
-        cursorState.x += (cursorState.targetX - cursorState.x) * 0.18;
-        cursorState.y += (cursorState.targetY - cursorState.y) * 0.18;
+        cursorState.x += (cursorState.targetX - cursorState.x) * 0.16;
+        cursorState.y += (cursorState.targetY - cursorState.y) * 0.16;
 
         const dx = cursorState.x - cursorState.previousX;
         const dy = cursorState.y - cursorState.previousY;
         const speed = Math.min(Math.hypot(dx, dy), 34);
         const angle = Math.atan2(dy, dx) * 180 / Math.PI;
-        const stretch = 1 + speed / 22;
-        const squeeze = Math.max(0.72, 1 - speed / 95);
+        const stretch = 1 + speed / 24;
+        const squeeze = Math.max(0.74, 1 - speed / 100);
 
         oceanCursor.style.transform = `
-          translate3d(${cursorState.x - 23}px, ${cursorState.y - 23}px, 0)
+          translate3d(${cursorState.x - 27}px, ${cursorState.y - 27}px, 0)
           rotate(${angle}deg)
           scale(${stretch}, ${squeeze})
         `;
@@ -750,7 +747,7 @@
       animateOceanCursor();
 
       const runeGlyphs = ['ᚠ', 'ᚢ', 'ᚦ', 'ᚨ', 'ᚱ', 'ᚲ', 'ᚷ', 'ᚹ', 'ᚺ', 'ᚾ', 'ᛁ', 'ᛃ', 'ᛇ', 'ᛈ', 'ᛉ', 'ᛊ', 'ᛏ', 'ᛒ', 'ᛖ', 'ᛗ', 'ᛚ', 'ᛞ', 'ᛟ'];
-      const runeCount = window.innerWidth < 700 ? 16 : 28;
+      const runeCount = window.innerWidth < 700 ? 14 : 24;
       const runes = [];
 
       function randomBetween(min, max) {
@@ -768,7 +765,7 @@
         };
       }
 
-      function getMenuRects() {
+      function getBounceRects() {
         const selectors = [
           '.topbar-btn',
           '.topbar-link',
@@ -782,10 +779,10 @@
           const rect = element.getBoundingClientRect();
 
           return {
-            left: rect.left - 10,
-            right: rect.right + 10,
-            top: rect.top - 10,
-            bottom: rect.bottom + 10
+            left: rect.left - 9,
+            right: rect.right + 9,
+            top: rect.top - 9,
+            bottom: rect.bottom + 9
           };
         });
       }
@@ -805,20 +802,20 @@
           element.className = 'golden-rune';
           element.textContent = runeGlyphs[Math.floor(Math.random() * runeGlyphs.length)];
 
-          const size = randomBetween(17, 31);
+          const size = randomBetween(16, 28);
           element.style.fontSize = `${size}px`;
-          element.style.opacity = String(randomBetween(0.42, 0.82));
+          element.style.opacity = String(randomBetween(0.36, 0.7));
 
           runeField.appendChild(element);
 
           runes.push({
             element,
-            x: randomBetween(bounds.left + 20, bounds.right - 40),
-            y: randomBetween(bounds.top + 20, bounds.bottom - 40),
-            vx: randomBetween(-0.34, 0.34) || 0.2,
-            vy: randomBetween(-0.24, 0.24) || 0.14,
+            x: randomBetween(bounds.left + 24, bounds.right - 48),
+            y: randomBetween(bounds.top + 24, bounds.bottom - 48),
+            vx: randomBetween(-0.25, 0.25) || 0.16,
+            vy: randomBetween(-0.19, 0.19) || 0.12,
             size,
-            spin: randomBetween(-0.35, 0.35),
+            spin: randomBetween(-0.18, 0.18),
             rotation: randomBetween(0, 360)
           });
         }
@@ -838,7 +835,7 @@
 
       function animateRunes() {
         const bounds = getRuneBounds();
-        const menuRects = getMenuRects();
+        const bounceRects = getBounceRects();
 
         runes.forEach((rune) => {
           rune.x += rune.vx;
@@ -855,7 +852,7 @@
             rune.y = Math.max(bounds.top, Math.min(rune.y, bounds.bottom - rune.size));
           }
 
-          menuRects.forEach((rect) => {
+          bounceRects.forEach((rect) => {
             if (runeHitsRect(rune, rect)) {
               const runeCenterX = rune.x + rune.size / 2;
               const runeCenterY = rune.y + rune.size / 2;
@@ -865,11 +862,11 @@
               const pushY = runeCenterY - rectCenterY;
 
               if (Math.abs(pushX) > Math.abs(pushY)) {
-                rune.vx = Math.abs(rune.vx || 0.2) * Math.sign(pushX || 1);
-                rune.x += rune.vx * 5;
+                rune.vx = Math.abs(rune.vx || 0.16) * Math.sign(pushX || 1);
+                rune.x += rune.vx * 6;
               } else {
-                rune.vy = Math.abs(rune.vy || 0.2) * Math.sign(pushY || 1);
-                rune.y += rune.vy * 5;
+                rune.vy = Math.abs(rune.vy || 0.12) * Math.sign(pushY || 1);
+                rune.y += rune.vy * 6;
               }
             }
           });
@@ -883,9 +880,7 @@
       createRunes();
       animateRunes();
 
-      window.addEventListener('resize', () => {
-        createRunes();
-      });
+      window.addEventListener('resize', createRunes);
     }
   </script>
 
