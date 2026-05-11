@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bryce Larson</title>
 
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="css/style.css">
 
   <link
     rel="stylesheet"
@@ -481,11 +481,11 @@
     };
 
     function setActiveSection(index) {
-      topbarButtons.forEach((button) => {
+      topbarButtons.forEach(function(button) {
         button.classList.toggle("active", Number(button.dataset.index) === index);
       });
 
-      sidebarButtons.forEach((button) => {
+      sidebarButtons.forEach(function(button) {
         button.classList.toggle("active", Number(button.dataset.index) === index);
       });
     }
@@ -503,23 +503,27 @@
       });
     }
 
-    topbarButtons.forEach((button) => {
-      button.addEventListener("click", () => {
+    topbarButtons.forEach(function(button) {
+      button.addEventListener("click", function() {
         scrollToSection(Number(button.dataset.index));
       });
     });
 
-    sidebarButtons.forEach((button) => {
-      button.addEventListener("click", () => {
+    sidebarButtons.forEach(function(button) {
+      button.addEventListener("click", function() {
         scrollToSection(Number(button.dataset.index));
       });
     });
 
     const sectionObserver = new IntersectionObserver(
-      (entries) => {
+      function(entries) {
         const visibleEntry = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+          .filter(function(entry) {
+            return entry.isIntersecting;
+          })
+          .sort(function(a, b) {
+            return b.intersectionRatio - a.intersectionRatio;
+          })[0];
 
         if (!visibleEntry) {
           return;
@@ -537,7 +541,7 @@
       }
     );
 
-    sections.forEach((section) => {
+    sections.forEach(function(section) {
       sectionObserver.observe(section);
     });
 
@@ -552,22 +556,22 @@
     contactOpenButton.addEventListener("click", openContactModal);
     contactCloseButton.addEventListener("click", closeContactModal);
 
-    contactModal.addEventListener("click", (event) => {
+    contactModal.addEventListener("click", function(event) {
       if (event.target === contactModal) {
         closeContactModal();
       }
     });
 
-    window.addEventListener("keydown", (event) => {
+    window.addEventListener("keydown", function(event) {
       if (event.key === "Escape") {
         closeContactModal();
       }
     });
 
     function updateProjectCarousel() {
-      projectTrack.style.transform = `translateX(-${activeProjectIndex * 100}%)`;
+      projectTrack.style.transform = "translateX(-" + activeProjectIndex * 100 + "%)";
 
-      projectSlides.forEach((slide, index) => {
+      projectSlides.forEach(function(slide, index) {
         slide.classList.toggle("active", index === activeProjectIndex);
 
         const video = slide.querySelector("video");
@@ -577,14 +581,14 @@
         }
 
         if (index === activeProjectIndex) {
-          video.play().catch(() => {});
+          video.play().catch(function() {});
         } else {
           video.pause();
           video.currentTime = 0;
         }
       });
 
-      Array.from(projectDots.children).forEach((dot, index) => {
+      Array.from(projectDots.children).forEach(function(dot, index) {
         dot.classList.toggle("active", index === activeProjectIndex);
       });
     }
@@ -594,24 +598,36 @@
       updateProjectCarousel();
     }
 
-    projectSlides.forEach((_, index) => {
+    projectSlides.forEach(function(_, index) {
       const dot = document.createElement("button");
       dot.className = "project-dot";
       dot.type = "button";
-      dot.setAttribute("aria-label", `Go to project ${index + 1}`);
-      dot.addEventListener("click", () => setProject(index));
+      dot.setAttribute("aria-label", "Go to project " + (index + 1));
+      dot.addEventListener("click", function() {
+        setProject(index);
+      });
       projectDots.appendChild(dot);
     });
 
-    projectPrev.addEventListener("click", () => setProject(activeProjectIndex - 1));
-    projectNext.addEventListener("click", () => setProject(activeProjectIndex + 1));
+    projectPrev.addEventListener("click", function() {
+      setProject(activeProjectIndex - 1);
+    });
+
+    projectNext.addEventListener("click", function() {
+      setProject(activeProjectIndex + 1);
+    });
+
     updateProjectCarousel();
 
     function pageCount() {
       return Math.ceil(bookStories.length / 2);
     }
 
-    function updateBookCarousel(direction = "none") {
+    function updateBookCarousel(direction) {
+      if (!direction) {
+        direction = "none";
+      }
+
       const leftIndex = activeBookSpread * 2;
       const rightIndex = leftIndex + 1;
       const leftStory = bookStories[leftIndex];
@@ -645,7 +661,7 @@
       bookPrev.disabled = activeBookSpread === 0;
       bookNext.disabled = activeBookSpread >= pageCount() - 1;
 
-      Array.from(bookDots.children).forEach((dot, index) => {
+      Array.from(bookDots.children).forEach(function(dot, index) {
         dot.classList.toggle("active", index === activeBookSpread);
       });
 
@@ -660,16 +676,18 @@
       const dot = document.createElement("button");
       dot.className = "book-dot";
       dot.type = "button";
-      dot.setAttribute("aria-label", `Go to writing spread ${i + 1}`);
-      dot.addEventListener("click", () => {
+      dot.setAttribute("aria-label", "Go to writing spread " + (i + 1));
+
+      dot.addEventListener("click", function() {
         const direction = i > activeBookSpread ? "forward" : "backward";
         activeBookSpread = i;
         updateBookCarousel(direction);
       });
+
       bookDots.appendChild(dot);
     }
 
-    bookPrev.addEventListener("click", () => {
+    bookPrev.addEventListener("click", function() {
       if (activeBookSpread <= 0) {
         return;
       }
@@ -678,7 +696,7 @@
       updateBookCarousel("backward");
     });
 
-    bookNext.addEventListener("click", () => {
+    bookNext.addEventListener("click", function() {
       if (activeBookSpread >= pageCount() - 1) {
         return;
       }
@@ -695,10 +713,10 @@
         const ry = height / 2;
 
         return [
-          `M ${-rx} ${-ry}`,
-          `L ${rx} ${-ry}`,
-          `L ${rx} ${ry}`,
-          `L ${-rx} ${ry}`,
+          "M " + -rx + " " + -ry,
+          "L " + rx + " " + -ry,
+          "L " + rx + " " + ry,
+          "L " + -rx + " " + ry,
           "Z"
         ].join(" ");
       }
@@ -717,9 +735,9 @@
       const tailY = -Math.sin(angle) * stretch * 0.32;
 
       return [
-        `M ${-rx + tailX} 0`,
-        `C ${-rx + tailX} ${-ry}, ${rx * 0.62 + leadX} ${-ry + leadY}, ${rx + leadX} 0`,
-        `C ${rx * 0.62 + leadX} ${ry + leadY}, ${-rx + tailX} ${ry}, ${-rx + tailX} 0`,
+        "M " + (-rx + tailX) + " 0",
+        "C " + (-rx + tailX) + " " + -ry + ", " + (rx * 0.62 + leadX) + " " + (-ry + leadY) + ", " + (rx + leadX) + " 0",
+        "C " + (rx * 0.62 + leadX) + " " + (ry + leadY) + ", " + (-rx + tailX) + " " + ry + ", " + (-rx + tailX) + " 0",
         "Z"
       ].join(" ");
     }
@@ -743,16 +761,17 @@
         return null;
       }
 
-      const title = feature.closest(".book-story-title")?.querySelector("h3");
+      const titleLink = feature.closest(".book-story-title");
+      const title = titleLink ? titleLink.querySelector("h3") : null;
 
       if (title && (feature.matches(".book-story-title") || feature.matches(".book-story-title h3"))) {
-        const rect = title.getBoundingClientRect();
+        const titleRect = title.getBoundingClientRect();
 
         return {
-          x: rect.left + rect.width / 2,
-          y: rect.top + rect.height / 2,
-          width: rect.width + 18,
-          height: rect.height + 12,
+          x: titleRect.left + titleRect.width / 2,
+          y: titleRect.top + titleRect.height / 2,
+          width: titleRect.width + 18,
+          height: titleRect.height + 12,
           tawny: true
         };
       }
@@ -799,9 +818,9 @@
       cursorState.width += (cursorState.targetWidth - cursorState.width) * resize;
       cursorState.height += (cursorState.targetHeight - cursorState.height) * resize;
 
-      oceanCursor.style.width = `${cursorState.width}px`;
-      oceanCursor.style.height = `${cursorState.height}px`;
-      oceanCursor.style.transform = `translate3d(${cursorState.x - cursorState.width / 2}px, ${cursorState.y - cursorState.height / 2}px, 0)`;
+      oceanCursor.style.width = cursorState.width + "px";
+      oceanCursor.style.height = cursorState.height + "px";
+      oceanCursor.style.transform = "translate3d(" + (cursorState.x - cursorState.width / 2) + "px, " + (cursorState.y - cursorState.height / 2) + "px, 0)";
 
       oceanCursorPath.setAttribute(
         "d",
@@ -820,14 +839,14 @@
       requestAnimationFrame(animateOceanCursor);
     }
 
-    window.addEventListener("pointermove", (event) => {
+    window.addEventListener("pointermove", function(event) {
       mouse.x = event.clientX;
       mouse.y = event.clientY;
       mouse.active = true;
       oceanCursor.classList.remove("hidden");
     });
 
-    window.addEventListener("pointerleave", () => {
+    window.addEventListener("pointerleave", function() {
       mouse.active = false;
       oceanCursor.classList.add("hidden");
     });
@@ -839,15 +858,15 @@
       const angle = Math.random() * Math.PI * 2;
       const distance = 18 + Math.random() * 30;
 
-      spark.style.left = `${x}px`;
-      spark.style.top = `${y}px`;
-      spark.style.setProperty("--spark-x", `${Math.cos(angle) * distance}px`);
-      spark.style.setProperty("--spark-y", `${Math.sin(angle) * distance}px`);
-      spark.style.setProperty("--spark-delay", `${Math.random() * 0.06}s`);
+      spark.style.left = x + "px";
+      spark.style.top = y + "px";
+      spark.style.setProperty("--spark-x", Math.cos(angle) * distance + "px");
+      spark.style.setProperty("--spark-y", Math.sin(angle) * distance + "px");
+      spark.style.setProperty("--spark-delay", Math.random() * 0.06 + "s");
 
       document.body.appendChild(spark);
 
-      spark.addEventListener("animationend", () => {
+      spark.addEventListener("animationend", function() {
         spark.remove();
       });
     }
@@ -885,13 +904,13 @@
         const duration = 16 + Math.random() * 24;
         const delay = Math.random() * -duration;
 
-        rune.style.left = `${Math.random() * 100}%`;
-        rune.style.top = `${Math.random() * 100}%`;
+        rune.style.left = Math.random() * 100 + "%";
+        rune.style.top = Math.random() * 100 + "%";
         rune.style.setProperty("--rune-scale", (0.75 + Math.random() * 0.75).toFixed(2));
-        rune.style.setProperty("--rune-duration", `${duration.toFixed(2)}s`);
-        rune.style.setProperty("--rune-delay", `${delay.toFixed(2)}s`);
+        rune.style.setProperty("--rune-duration", duration.toFixed(2) + "s");
+        rune.style.setProperty("--rune-delay", delay.toFixed(2) + "s");
 
-        rune.addEventListener("click", (event) => {
+        rune.addEventListener("click", function(event) {
           event.stopPropagation();
           burstRune(rune);
         });
@@ -903,7 +922,7 @@
     function updateRuneGlow() {
       const runes = Array.from(document.querySelectorAll(".golden-rune"));
 
-      runes.forEach((rune) => {
+      runes.forEach(function(rune) {
         const rect = rune.getBoundingClientRect();
         const centerX = rect.left + rect.width / 2;
         const centerY = rect.top + rect.height / 2;
