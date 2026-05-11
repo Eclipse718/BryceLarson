@@ -70,7 +70,7 @@ a {
 }
 
 /* ======================
-   Ocean Effects
+   Ocean Cursor + Runes
 ====================== */
 
 .ocean-cursor {
@@ -79,28 +79,42 @@ a {
   top: 0;
   width: 44px;
   height: 44px;
-  border: 2px solid rgba(240, 216, 153, 0.97);
-  border-radius: 999px;
-  z-index: 260;
+  border: 2px solid rgba(240, 216, 153, 0.98);
+  border-radius: 50%;
+  z-index: 10000;
   pointer-events: none;
   opacity: 1;
+  visibility: visible;
   background: transparent;
   box-shadow:
-    0 0 9px rgba(240, 216, 153, 0.34),
-    inset 0 0 7px rgba(240, 216, 153, 0.14);
-  mix-blend-mode: screen;
+    0 0 10px rgba(240, 216, 153, 0.46),
+    inset 0 0 8px rgba(240, 216, 153, 0.18);
   transform: translate3d(calc(50vw - 22px), calc(50vh - 22px), 0);
   transition:
-    border-color 0.14s ease,
-    box-shadow 0.14s ease;
+    border-color 0.16s ease,
+    box-shadow 0.16s ease;
   will-change: transform, width, height, border-radius;
 }
 
 .ocean-cursor.locked {
   border-color: rgba(240, 216, 153, 1);
   box-shadow:
-    0 0 13px rgba(240, 216, 153, 0.42),
-    inset 0 0 8px rgba(240, 216, 153, 0.16);
+    0 0 14px rgba(240, 216, 153, 0.52),
+    inset 0 0 9px rgba(240, 216, 153, 0.18);
+}
+
+.ocean-cursor.dark {
+  border-color: rgba(19, 20, 22, 0.96);
+  box-shadow:
+    0 0 8px rgba(19, 20, 22, 0.34),
+    inset 0 0 7px rgba(19, 20, 22, 0.12);
+}
+
+.ocean-cursor.dark.locked {
+  border-color: rgba(19, 20, 22, 1);
+  box-shadow:
+    0 0 10px rgba(19, 20, 22, 0.38),
+    inset 0 0 8px rgba(19, 20, 22, 0.14);
 }
 
 .rune-field {
@@ -122,7 +136,20 @@ a {
     0 0 8px rgba(240, 216, 153, 0.38),
     0 0 16px rgba(201, 169, 110, 0.18);
   user-select: none;
-  will-change: transform;
+  will-change: transform, opacity, filter;
+  transition:
+    opacity 0.18s ease,
+    filter 0.18s ease,
+    text-shadow 0.18s ease;
+}
+
+.golden-rune.rune-glow {
+  opacity: 1 !important;
+  filter: brightness(1.35);
+  text-shadow:
+    0 0 10px rgba(240, 216, 153, 0.68),
+    0 0 24px rgba(240, 216, 153, 0.42),
+    0 0 40px rgba(201, 169, 110, 0.24);
 }
 
 /* ======================
