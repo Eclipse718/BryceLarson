@@ -1,1812 +1,1031 @@
-/* ======================
-   Global
-====================== */
-
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
-:root {
-  --dark-ocean: #050d14;
-  --deep-ocean: #071923;
-  --mid-ocean: #0b2836;
-  --water-line: rgba(176, 225, 232, 0.07);
-  --water-glow: rgba(95, 168, 190, 0.14);
-  --gold: #c9a96e;
-  --gold-bright: #f0d899;
-}
-
-html,
-body {
-  margin: 0;
-  width: 100%;
-  min-height: 100%;
-  font-family: "Times New Roman", Times, serif;
-  background: var(--dark-ocean);
-}
-
-body {
-  overflow: hidden;
-}
-
-a {
-  color: inherit;
-}
-
-@media (pointer: fine) {
-  html,
-  body,
-  a,
-  button,
-  [role="button"] {
-    cursor: none;
-  }
-}
-
-/* ======================
-   Fade Overlay
-====================== */
-
-.fade-overlay {
-  position: fixed;
-  inset: 0;
-  background: black;
-  z-index: 300;
-  animation: fadeOut 2.2s ease forwards;
-  pointer-events: none;
-}
-
-@keyframes fadeOut {
-  0% {
-    opacity: 1;
-  }
-
-  100% {
-    opacity: 0;
-    visibility: hidden;
-  }
-}
-
-/* ======================
-   Ocean Effects
-====================== */
-
-.ocean-cursor {
-  position: fixed;
-  left: 0;
-  top: 0;
-  width: 44px;
-  height: 44px;
-  border: 2px solid rgba(240, 216, 153, 0.96);
-  border-radius: 999px;
-  z-index: 260;
-  pointer-events: none;
-  opacity: 0;
-  transform: translate3d(-999px, -999px, 0);
-  background: transparent;
-  box-shadow:
-    0 0 9px rgba(240, 216, 153, 0.36),
-    inset 0 0 7px rgba(240, 216, 153, 0.16);
-  mix-blend-mode: screen;
-  transition:
-    width 0.22s ease,
-    height 0.22s ease,
-    border-radius 0.22s ease,
-    border-color 0.22s ease,
-    box-shadow 0.22s ease,
-    opacity 0.18s ease;
-  will-change: transform, width, height;
-}
-
-.ocean-cursor.locked {
-  border-color: rgba(240, 216, 153, 1);
-  box-shadow:
-    0 0 12px rgba(240, 216, 153, 0.48),
-    inset 0 0 9px rgba(240, 216, 153, 0.18);
-}
-
-.rune-field {
-  position: fixed;
-  inset: 0;
-  z-index: 45;
-  pointer-events: none;
-  overflow: hidden;
-}
-
-.golden-rune {
-  position: absolute;
-  left: 0;
-  top: 0;
-  color: rgba(240, 216, 153, 0.56);
-  font-size: 1.35rem;
-  line-height: 1;
-  text-shadow:
-    0 0 8px rgba(240, 216, 153, 0.38),
-    0 0 16px rgba(201, 169, 110, 0.18);
-  user-select: none;
-  will-change: transform;
-}
-
-/* ======================
-   Top Bar
-====================== */
-
-.topbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 200;
-  width: 100%;
-  height: 54px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 2rem;
-  background: rgba(5, 14, 22, 0.88);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(201, 169, 110, 0.24);
-}
-
-.topbar-brand {
-  display: flex;
-  align-items: center;
-  gap: 0.65rem;
-  color: #f5f0e8;
-  white-space: nowrap;
-}
-
-.topbar-photo {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  object-fit: cover;
-  object-position: center top;
-  border: 1.5px solid #c9a96e;
-  background: white;
-}
-
-.topbar-name {
-  font-size: 1rem;
-  letter-spacing: 0.08em;
-}
-
-.topbar-links {
-  display: flex;
-  align-items: center;
-  gap: 0.45rem;
-}
-
-.topbar-btn,
-.topbar-link {
-  border: none;
-  outline: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  padding: 0.34rem 0.78rem;
-  border-radius: 999px;
-  background: transparent;
-  color: #c9a96e;
-  font-family: inherit;
-  font-size: 0.9rem;
-  letter-spacing: 0.04em;
-  text-decoration: none;
-  cursor: pointer;
-  transition:
-    background 0.25s ease,
-    color 0.25s ease,
-    transform 0.25s ease;
-}
-
-.topbar-btn.active {
-  background: rgba(201, 169, 110, 0.16);
-  color: #f5f0e8;
-}
-
-.topbar-btn:hover:not(.active),
-.topbar-link:hover {
-  background: rgba(255, 255, 255, 0.08);
-  color: #f0d899;
-  transform: translateY(-1px);
-  text-decoration: none;
-}
-
-/* ======================
-   Scroll Container
-====================== */
-
-.scroll-container {
-  position: fixed;
-  top: 54px;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  overflow-y: auto;
-  scroll-snap-type: y mandatory;
-  scroll-behavior: smooth;
-  scrollbar-width: auto;
-  scrollbar-color: #c9a96e #071019;
-  background:
-    linear-gradient(180deg, #050d14 0%, #071923 44%, #06111a 100%),
-    linear-gradient(90deg, rgba(75, 145, 165, 0.08), transparent 26%, transparent 70%, rgba(61, 124, 148, 0.08));
-}
-
-.scroll-container::before,
-.scroll-container::after {
-  content: "";
-  position: fixed;
-  top: 54px;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  pointer-events: none;
-}
-
-.scroll-container::before {
-  z-index: 0;
-  opacity: 0.58;
-  background:
-    repeating-linear-gradient(
-      182deg,
-      transparent 0 28px,
-      rgba(180, 225, 232, 0.03) 29px,
-      rgba(180, 225, 232, 0.055) 31px,
-      transparent 35px 76px
-    ),
-    repeating-linear-gradient(
-      176deg,
-      transparent 0 44px,
-      rgba(101, 175, 195, 0.035) 46px,
-      transparent 49px 112px
-    ),
-    linear-gradient(
-      115deg,
-      transparent 0 32%,
-      rgba(255, 255, 255, 0.035) 43%,
-      transparent 55% 100%
-    );
-  animation: stillWater 32s ease-in-out infinite alternate;
-}
-
-.scroll-container::after {
-  z-index: 1;
-  opacity: 0.24;
-  background:
-    linear-gradient(
-      180deg,
-      rgba(205, 238, 240, 0.045),
-      transparent 16%,
-      transparent 100%
-    ),
-    repeating-linear-gradient(
-      92deg,
-      transparent 0 82px,
-      rgba(177, 226, 234, 0.038) 88px,
-      transparent 98px 190px
-    );
-  mix-blend-mode: screen;
-  animation: waterGlimmer 42s ease-in-out infinite alternate;
-}
-
-@keyframes stillWater {
-  0% {
-    transform: translate3d(-0.6%, -0.25%, 0) skewY(-0.2deg);
-  }
-
-  100% {
-    transform: translate3d(0.6%, 0.25%, 0) skewY(0.2deg);
-  }
-}
-
-@keyframes waterGlimmer {
-  0% {
-    transform: translate3d(-0.8%, 0, 0);
-    opacity: 0.18;
-  }
-
-  100% {
-    transform: translate3d(0.8%, 0.3%, 0);
-    opacity: 0.28;
-  }
-}
-
-.scroll-container::-webkit-scrollbar {
-  width: 13px;
-}
-
-.scroll-container::-webkit-scrollbar-track {
-  background: #071019;
-}
-
-.scroll-container::-webkit-scrollbar-thumb {
-  background-color: #c9a96e;
-  border-radius: 999px;
-  border: 2px solid #071019;
-}
-
-.page-section {
-  width: 100%;
-  min-height: calc(100vh - 54px);
-  scroll-snap-align: start;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  padding: 2rem 1.5rem;
-  background: transparent;
-}
-
-.page-section::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.025), transparent 22%),
-    linear-gradient(90deg, transparent 0 12%, rgba(93, 160, 181, 0.055) 44%, transparent 78% 100%);
-}
-
-#home {
-  background-image: url("../website-images/Suzzallo_Library.jpg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-
-#home::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(
-      rgba(6, 16, 24, 0.6),
-      rgba(6, 18, 28, 0.82)
-    );
-  z-index: 1;
-}
-
-#experience,
-#projects,
-#writing {
-  background: transparent;
-}
-
-.section-content {
-  position: relative;
-  z-index: 2;
-  width: min(900px, 94vw);
-  text-align: center;
-  color: white;
-}
-
-#experience .section-content,
-#projects .section-content,
-#writing .section-content {
-  padding: 1.35rem;
-  border: 1px solid rgba(201, 169, 110, 0.14);
-  border-radius: 22px;
-  background: rgba(5, 18, 27, 0.26);
-  backdrop-filter: blur(1.5px);
-  -webkit-backdrop-filter: blur(1.5px);
-  box-shadow:
-    0 22px 62px rgba(0, 0, 0, 0.2),
-    inset 0 0 55px rgba(65, 137, 158, 0.045);
-}
-
-.hero h1 {
-  margin: 0 0 1.2rem 0;
-  color: white;
-  font-size: clamp(2.4rem, 6vw, 4.8rem);
-  font-weight: normal;
-  letter-spacing: 0.2em;
-  text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.75);
-}
-
-.divider {
-  width: 150px;
-  height: 1px;
-  background-color: #c9a96e;
-  margin: 0 auto 1.4rem auto;
-}
-
-.social-links {
-  display: flex;
-  justify-content: center;
-  gap: 1.8rem;
-}
-
-.social-links a {
-  color: #c9a96e;
-  font-size: 2.4rem;
-  text-decoration: none;
-  transition:
-    color 0.25s ease,
-    transform 0.25s ease;
-}
-
-.social-links a:hover {
-  color: #f0d899;
-  transform: translateY(-2px);
-}
-
-.section-content h2 {
-  margin: 0;
-  color: #f5f0e8;
-  font-size: clamp(2rem, 4vw, 2.8rem);
-  font-weight: normal;
-  letter-spacing: 0.15em;
-}
-
-.section-content p {
-  margin-top: 0.8rem;
-  color: #b8b8b8;
-  font-size: 1rem;
-  letter-spacing: 0.05em;
-}
-
-/* ======================
-   Experience Cards
-====================== */
-
-.experience-content {
-  width: min(860px, 94vw);
-}
-
-.experience-subtitle {
-  margin-bottom: 1.4rem;
-}
-
-.experience-options {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(220px, 1fr));
-  gap: 1.25rem;
-}
-
-.experience-card {
-  min-height: 170px;
-  padding: 1.55rem;
-  border: 1px solid rgba(201, 169, 110, 0.35);
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.04);
-  color: #f5f0e8;
-  text-decoration: none;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  transition:
-    transform 0.25s ease,
-    border-color 0.25s ease,
-    background 0.25s ease;
-}
-
-.experience-card:hover {
-  transform: translateY(-5px);
-  border-color: rgba(201, 169, 110, 0.35);
-  background: rgba(255, 255, 255, 0.08);
-  text-decoration: none;
-}
-
-.experience-card-emoji {
-  margin-bottom: 0.7rem;
-  font-size: 2.55rem;
-  line-height: 1;
-  color: #f5f0e8;
-  font-family: "Times New Roman", Georgia, serif;
-}
-
-.experience-card h3 {
-  margin: 0 0 0.5rem 0;
-  color: #f5f0e8;
-  font-size: 1.5rem;
-  font-weight: normal;
-  letter-spacing: 0.08em;
-}
-
-.experience-card p {
-  margin: 0;
-  color: #b9b0a3;
-  line-height: 1.5;
-}
-
-/* ======================
-   Project Carousel
-====================== */
-
-.projects-content {
-  width: min(1040px, 94vw);
-}
-
-.projects-subtitle {
-  margin-bottom: 1.1rem;
-}
-
-.project-carousel {
-  width: min(990px, 96vw);
-  display: grid;
-  grid-template-columns: 62px minmax(0, 1fr) 62px;
-  grid-template-areas:
-    "left carousel right"
-    ". dots .";
-  align-items: center;
-  gap: 1rem;
-  margin: 0 auto;
-}
-
-.project-window {
-  grid-area: carousel;
-  overflow: hidden;
-  border-radius: 18px;
-}
-
-.project-track {
-  display: flex;
-  width: 100%;
-  transition: transform 0.45s ease;
-}
-
-.project-slide {
-  min-width: 100%;
-  display: grid;
-  grid-template-columns: minmax(0, 1.08fr) minmax(260px, 0.92fr);
-  align-items: center;
-  gap: 1.25rem;
-  padding: 1.1rem;
-  border: 1px solid rgba(201, 169, 110, 0.38);
-  border-radius: 18px;
-  background:
-    linear-gradient(145deg, rgba(255, 255, 255, 0.078), rgba(255, 255, 255, 0.025));
-  color: #f5f0e8;
-  text-decoration: none;
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.24);
-  opacity: 0.52;
-  transform: scale(0.985);
-  transition:
-    opacity 0.35s ease,
-    transform 0.35s ease,
-    border-color 0.35s ease,
-    background 0.35s ease;
-}
-
-.project-slide.active {
-  opacity: 1;
-  transform: scale(1);
-}
-
-.project-slide:hover {
-  border-color: rgba(201, 169, 110, 0.38);
-  background:
-    linear-gradient(145deg, rgba(255, 255, 255, 0.105), rgba(255, 255, 255, 0.04));
-  text-decoration: none;
-}
-
-.project-preview-shell {
-  width: 100%;
-  height: 300px;
-  overflow: hidden;
-  border: 3px solid #c9a96e;
-  border-radius: 14px;
-  background:
-    linear-gradient(180deg, rgba(26, 86, 108, 0.35), #030c12 72%);
-  box-shadow:
-    0 18px 38px rgba(0, 0, 0, 0.35),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.08);
-}
-
-.project-preview {
-  width: 100%;
-  height: 100%;
-  display: block;
-  object-position: center center;
-  border: none;
-  border-radius: 0;
-  background: transparent;
-}
-
-.project-preview-contain {
-  object-fit: contain;
-}
-
-.project-preview-cover {
-  object-fit: cover;
-  object-position: center center;
-}
-
-.project-preview-zoom {
-  object-fit: cover;
-  transform: scale(1.2);
-  transform-origin: center center;
-}
-
-.project-slide video.project-preview {
-  object-fit: contain;
-}
-
-.project-slide video.project-preview-zoom {
-  object-fit: cover;
-}
-
-.project-slide-text {
-  text-align: left;
-}
-
-.project-slide-text h3 {
-  margin: 0 0 0.7rem;
-  color: #f5f0e8;
-  font-size: clamp(1.55rem, 3.4vw, 2.32rem);
-  font-weight: normal;
-  letter-spacing: 0.09em;
-}
-
-.project-slide-text p {
-  margin: 0;
-  color: #b9b0a3;
-  font-size: 1rem;
-  line-height: 1.6;
-  letter-spacing: 0.04em;
-}
-
-.project-arrow {
-  width: 54px;
-  height: 54px;
-  border: 2px solid rgba(201, 169, 110, 0.52);
-  border-radius: 50%;
-  background: rgba(6, 17, 25, 0.72);
-  cursor: pointer;
-  position: relative;
-  justify-self: center;
-  transition:
-    background 0.25s ease,
-    transform 0.25s ease,
-    border-color 0.25s ease;
-}
-
-.project-arrow:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(201, 169, 110, 0.52);
-  transform: scale(1.07);
-}
-
-.project-arrow-left {
-  grid-area: left;
-  transform: translateX(-6px);
-}
-
-.project-arrow-right {
-  grid-area: right;
-  transform: translateX(6px);
-}
-
-.project-arrow-left:hover {
-  transform: translateX(-6px) scale(1.07);
-}
-
-.project-arrow-right:hover {
-  transform: translateX(6px) scale(1.07);
-}
-
-.project-arrow::before {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-}
-
-.project-arrow-left::before {
-  transform: translate(-56%, -50%);
-  border-top: 12px solid transparent;
-  border-bottom: 12px solid transparent;
-  border-right: 18px solid #c9a96e;
-}
-
-.project-arrow-right::before {
-  transform: translate(-44%, -50%);
-  border-top: 12px solid transparent;
-  border-bottom: 12px solid transparent;
-  border-left: 18px solid #c9a96e;
-}
-
-.project-dots {
-  grid-area: dots;
-  display: flex;
-  justify-content: center;
-  gap: 0.45rem;
-  margin-top: 0.75rem;
-}
-
-.project-dot {
-  width: 34px;
-  height: 7px;
-  border: 1px solid rgba(201, 169, 110, 0.48);
-  background: transparent;
-  cursor: pointer;
-  padding: 0;
-  transition:
-    background 0.25s ease,
-    transform 0.25s ease;
-}
-
-.project-dot.active {
-  background: #c9a96e;
-}
-
-.project-dot:hover {
-  transform: translateY(-1px);
-}
-
-/* ======================
-   Sidebar
-====================== */
-
-.sidebar {
-  position: fixed;
-  right: 2rem;
-  top: calc(54px + ((100vh - 54px) / 2));
-  transform: translateY(-50%);
-  z-index: 150;
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-}
-
-.sidebar-btn {
-  width: 44px;
-  height: 44px;
-  border: 1px solid rgba(201, 169, 110, 0.22);
-  border-radius: 50%;
-  background: rgba(6, 17, 25, 0.54);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  cursor: pointer;
-  font-size: 1.3rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition:
-    background 0.25s ease,
-    transform 0.25s ease,
-    border-color 0.25s ease;
-}
-
-.sidebar-btn.active {
-  background: rgba(201, 169, 110, 0.16);
-  border-color: rgba(201, 169, 110, 0.7);
-}
-
-.sidebar-btn:hover:not(.active) {
-  background: rgba(255, 255, 255, 0.08);
-  transform: scale(1.08);
-}
-
-/* ======================
-   Writing Book Carousel
-====================== */
-
-.writing-stage {
-  width: min(980px, 94vw);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.95rem;
-}
-
-.writing-subtitle {
-  margin: 0;
-  color: #c9a96e;
-  font-size: 0.95rem;
-  letter-spacing: 0.08em;
-}
-
-.book-carousel {
-  width: min(820px, 92vw);
-  display: grid;
-  grid-template-columns: 58px 1fr 58px;
-  grid-template-areas:
-    "left book right"
-    ". dots .";
-  align-items: center;
-  gap: 0.85rem;
-}
-
-.book-shell {
-  grid-area: book;
-  position: relative;
-  height: 390px;
-  perspective: 1600px;
-}
-
-.book-base {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  border-radius: 18px;
-  background:
-    linear-gradient(90deg, #c7a56b 0 2%, #f2e2bd 2% 48%, #7b5731 49%, #f2e2bd 52% 98%, #c7a56b 98%);
-  box-shadow:
-    0 28px 55px rgba(0, 0, 0, 0.45),
-    inset 0 0 35px rgba(84, 45, 18, 0.2);
-  overflow: hidden;
-}
-
-.book-base::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  width: 34px;
-  transform: translateX(-50%);
-  background:
-    linear-gradient(
-      90deg,
-      rgba(0, 0, 0, 0.25),
-      rgba(255, 255, 255, 0.15),
-      rgba(0, 0, 0, 0.25)
-    );
-  z-index: 5;
-}
-
-.book-base::after {
-  content: "";
-  position: absolute;
-  inset: 12px;
-  border: 1px solid rgba(108, 70, 30, 0.18);
-  border-radius: 12px;
-  pointer-events: none;
-}
-
-.book-page {
-  position: relative;
-  padding: 1.85rem 2.1rem;
-  color: #1b2133;
-  background:
-    repeating-linear-gradient(
-      0deg,
-      rgba(120, 83, 42, 0.08),
-      rgba(120, 83, 42, 0.08) 1px,
-      transparent 1px,
-      transparent 25px
-    ),
-    #f7ecd2;
-  overflow: hidden;
-}
-
-.book-page.left {
-  border-radius: 18px 0 0 18px;
-  box-shadow: inset -18px 0 28px rgba(82, 45, 18, 0.18);
-}
-
-.book-page.right {
-  border-radius: 0 18px 18px 0;
-  box-shadow: inset 18px 0 28px rgba(82, 45, 18, 0.16);
-}
-
-.book-story-title {
-  display: block;
-  color: #5b321f;
-  text-decoration: none;
-  transition:
-    color 0.25s ease,
-    transform 0.25s ease;
-}
-
-.book-story-title:hover {
-  color: #8a4423;
-  transform: translateY(-2px);
-}
-
-.book-page h3 {
-  margin: 0 0 0.85rem;
-  color: inherit;
-  font-size: 1.02rem;
-  font-weight: normal;
-  letter-spacing: 0.08em;
-  text-align: center;
-  text-transform: uppercase;
-  line-height: 1.35;
-}
-
-.book-page p {
-  margin: 0;
-  color: #2b2b2b;
-  font-size: 0.92rem;
-  line-height: 1.56;
-  letter-spacing: 0.02em;
-  text-align: left;
-}
-
-.page-number {
-  position: absolute;
-  bottom: 1.1rem;
-  color: rgba(91, 50, 31, 0.72);
-  font-size: 0.85rem;
-  letter-spacing: 0.08em;
-}
-
-.book-page.left .page-number {
-  left: 2.3rem;
-}
-
-.book-page.right .page-number {
-  right: 2.3rem;
-}
-
-.turning-page {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  width: 50%;
-  transform-origin: left center;
-  transform: rotateY(0deg);
-  background:
-    repeating-linear-gradient(
-      0deg,
-      rgba(120, 83, 42, 0.08),
-      rgba(120, 83, 42, 0.08) 1px,
-      transparent 1px,
-      transparent 25px
-    ),
-    #f7ecd2;
-  border-radius: 0 18px 18px 0;
-  box-shadow:
-    inset 18px 0 28px rgba(82, 45, 18, 0.14),
-    0 20px 40px rgba(0, 0, 0, 0.26);
-  pointer-events: none;
-  opacity: 0;
-  z-index: 20;
-}
-
-.turning-page.forward {
-  animation: pageFlipForward 0.7s ease both;
-}
-
-.turning-page.backward {
-  left: 0;
-  width: 50%;
-  transform-origin: right center;
-  border-radius: 18px 0 0 18px;
-  animation: pageFlipBackward 0.7s ease both;
-}
-
-@keyframes pageFlipForward {
-  0% {
-    opacity: 1;
-    transform: rotateY(0deg);
-  }
-
-  45% {
-    opacity: 1;
-  }
-
-  100% {
-    opacity: 0;
-    transform: rotateY(-178deg);
-  }
-}
-
-@keyframes pageFlipBackward {
-  0% {
-    opacity: 1;
-    transform: rotateY(0deg);
-  }
-
-  45% {
-    opacity: 1;
-  }
-
-  100% {
-    opacity: 0;
-    transform: rotateY(178deg);
-  }
-}
-
-.book-control {
-  width: 52px;
-  height: 52px;
-  border: 1px solid rgba(201, 169, 110, 0.36);
-  border-radius: 50%;
-  background: rgba(6, 17, 25, 0.72);
-  color: #c9a96e;
-  font-size: 1.25rem;
-  cursor: pointer;
-  transition:
-    color 0.25s ease,
-    background 0.25s ease,
-    transform 0.25s ease,
-    opacity 0.25s ease;
-}
-
-.book-control:hover:not(:disabled) {
-  color: #f0d899;
-  background: rgba(255, 255, 255, 0.08);
-  transform: scale(1.06);
-}
-
-.book-control:disabled {
-  opacity: 0.35;
-  cursor: default;
-}
-
-.book-control.prev {
-  grid-area: left;
-}
-
-.book-control.next {
-  grid-area: right;
-}
-
-.book-dots {
-  grid-area: dots;
-  display: flex;
-  justify-content: center;
-  gap: 0.45rem;
-  margin-top: 0.65rem;
-}
-
-.book-dot {
-  width: 34px;
-  height: 7px;
-  border: 1px solid rgba(201, 169, 110, 0.45);
-  background: transparent;
-  cursor: pointer;
-  padding: 0;
-  transition:
-    background 0.25s ease,
-    transform 0.25s ease;
-}
-
-.book-dot.active {
-  background: #c9a96e;
-}
-
-.book-dot:hover {
-  transform: translateY(-1px);
-}
-
-/* ======================
-   Contact Modal
-====================== */
-
-.contact-modal {
-  position: fixed;
-  inset: 0;
-  z-index: 250;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  padding: 1.5rem;
-  background: rgba(5, 8, 14, 0.72);
-  backdrop-filter: blur(7px);
-  -webkit-backdrop-filter: blur(7px);
-}
-
-.contact-modal.open {
-  display: flex;
-}
-
-.contact-card {
-  position: relative;
-  width: min(520px, 92vw);
-  padding: 2.2rem;
-  border: 1px solid rgba(201, 169, 110, 0.35);
-  border-radius: 18px;
-  background: rgba(6, 17, 25, 0.92);
-  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.45);
-  text-align: left;
-  color: white;
-}
-
-.contact-close {
-  position: absolute;
-  top: 0.85rem;
-  right: 0.9rem;
-  border: none;
-  background: transparent;
-  color: #c9a96e;
-  font-size: 1.4rem;
-  cursor: pointer;
-  transition: color 0.25s ease;
-}
-
-.contact-close:hover {
-  color: #f0d899;
-}
-
-.contact-card h2 {
-  margin: 0 0 1.5rem 0;
-  text-align: center;
-  color: #f5f0e8;
-  font-size: clamp(1.8rem, 4vw, 2.3rem);
-  font-weight: normal;
-  letter-spacing: 0.1em;
-}
-
-.contact-row {
-  display: flex;
-  align-items: center;
-  gap: 0.9rem;
-  margin: 1rem 0;
-  color: #f5f0e8;
-  font-size: 1.08rem;
-  letter-spacing: 0.03em;
-}
-
-.contact-row i {
-  width: 28px;
-  color: #c9a96e;
-  font-size: 1.25rem;
-  text-align: center;
-}
-
-.contact-row a {
-  color: #f5f0e8;
-  text-decoration: none;
-  transition: color 0.25s ease;
-}
-
-.contact-row a:hover {
-  color: #f0d899;
-}
-
-.contact-socials {
-  display: flex;
-  justify-content: center;
-  gap: 1.7rem;
-  margin-top: 1.8rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid rgba(201, 169, 110, 0.25);
-}
-
-.contact-socials a {
-  color: #c9a96e;
-  font-size: 2rem;
-  text-decoration: none;
-  transition:
-    color 0.25s ease,
-    transform 0.25s ease;
-}
-
-.contact-socials a:hover {
-  color: #f0d899;
-  transform: translateY(-2px);
-}
-
-/* ======================
-   Shared Detail Pages
-====================== */
-
-.timeline-body,
-.project-body,
-.writing-body {
-  min-height: 100%;
-  height: auto;
-  overflow-y: auto;
-  background:
-    linear-gradient(180deg, #08111a, #0a1f2b 52%, #061018);
-  color: #f5f0e8;
-}
-
-.timeline-page,
-.project-detail-page,
-.writing-detail-page {
-  min-height: 100vh;
-  padding: 8rem 1.5rem 5rem;
-}
-
-.timeline-header,
-.project-detail-header,
-.writing-detail-header {
-  max-width: 820px;
-  margin: 0 auto 3rem;
-  text-align: center;
-}
-
-.timeline-header h1,
-.project-detail-header h1,
-.writing-detail-header h1 {
-  margin: 0 0 1.1rem;
-  color: #f5f0e8;
-  font-size: clamp(2.1rem, 5vw, 3.4rem);
-  font-weight: normal;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-
-.timeline-header p,
-.project-detail-header p,
-.writing-detail-header p {
-  margin: 0;
-  color: #b9b0a3;
-  font-size: 1.08rem;
-  line-height: 1.7;
-  letter-spacing: 0.04em;
-}
-
-.back-to-projects,
-.back-to-writing {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  margin-bottom: 1.5rem;
-  color: #c9a96e;
-  text-decoration: none;
-  font-size: 0.95rem;
-  letter-spacing: 0.06em;
-  transition:
-    color 0.25s ease,
-    transform 0.25s ease;
-}
-
-.back-to-projects:hover,
-.back-to-writing:hover {
-  color: #f0d899;
-  transform: translateX(-3px);
-}
-
-/* ======================
-   Timeline Page
-====================== */
-
-.timeline {
-  position: relative;
-  width: min(1000px, 92%);
-  margin: 0 auto;
-  padding: 1rem 0 4rem;
-}
-
-.timeline::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  width: 3px;
-  transform: translateX(-50%);
-  background: linear-gradient(
-    to bottom,
-    transparent,
-    #c9a96e 8%,
-    #c9a96e 92%,
-    transparent
-  );
-}
-
-.timeline-item {
-  position: relative;
-  width: 50%;
-  margin-bottom: 5rem;
-}
-
-.timeline-item::before {
-  content: "";
-  position: absolute;
-  top: 50%;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: #c9a96e;
-  box-shadow: 0 0 18px rgba(201, 169, 110, 0.8);
-}
-
-.timeline-left {
-  left: 0;
-  padding-right: 4rem;
-  text-align: right;
-}
-
-.timeline-left::before {
-  right: -9px;
-}
-
-.timeline-right {
-  left: 50%;
-  padding-left: 4rem;
-  text-align: left;
-}
-
-.timeline-right::before {
-  left: -9px;
-}
-
-.timeline-card {
-  padding: 1.5rem;
-  border: 1px solid rgba(201, 169, 110, 0.35);
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.045);
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
-  display: flex;
-  align-items: center;
-  gap: 1.2rem;
-}
-
-.timeline-left .timeline-card {
-  flex-direction: row-reverse;
-}
-
-.timeline-logo {
-  width: 86px;
-  height: 86px;
-  border-radius: 50%;
-  object-fit: contain;
-  background: white;
-  padding: 0.45rem;
-  border: 2px solid #c9a96e;
-}
-
-.timeline-text h2 {
-  margin: 0 0 0.5rem 0;
-  color: #f5f0e8;
-  font-size: 1.5rem;
-  font-weight: normal;
-  letter-spacing: 0.08em;
-}
-
-.timeline-text p {
-  margin: 0;
-  color: #b9b0a3;
-  line-height: 1.6;
-}
-
-/* ======================
-   Project Detail Pages
-====================== */
-
-.project-gallery {
-  width: min(1060px, 94vw);
-  margin: 0 auto;
-  display: grid;
-  gap: 1.5rem;
-}
-
-.project-media-card {
-  padding: 1rem;
-  border: 1px solid rgba(201, 169, 110, 0.34);
-  border-radius: 18px;
-  background: rgba(255, 255, 255, 0.045);
-  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.28);
-}
-
-.project-media-card img,
-.project-media-card video {
-  width: 100%;
-  max-height: 640px;
-  display: block;
-  object-fit: contain;
-  border: 3px solid #c9a96e;
-  border-radius: 14px;
-  background:
-    linear-gradient(180deg, rgba(26, 86, 108, 0.35), #030c12 72%);
-}
-
-.project-media-card video {
-  min-height: 280px;
-}
-
-.project-detail-zoom-image {
-  transform: scale(1.04);
-  transform-origin: center center;
-}
-
-.project-media-card h2 {
-  margin: 1rem 0 0.35rem;
-  color: #f5f0e8;
-  font-size: 1.45rem;
-  font-weight: normal;
-  letter-spacing: 0.08em;
-}
-
-.project-media-card p {
-  margin: 0 0 0.2rem;
-  color: #b9b0a3;
-  line-height: 1.6;
-  letter-spacing: 0.04em;
-}
-
-.project-media-card a {
-  color: #c9a96e;
-  text-decoration: none;
-  border-bottom: 1px solid rgba(201, 169, 110, 0.45);
-  transition:
-    color 0.25s ease,
-    border-color 0.25s ease;
-}
-
-.project-media-card a:hover {
-  color: #f0d899;
-  border-color: #f0d899;
-}
-
-.project-detail-grid {
-  width: min(1060px, 94vw);
-  margin: 2.5rem auto 0;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(220px, 1fr));
-  gap: 1.2rem;
-}
-
-.project-info-card {
-  padding: 1.5rem;
-  border: 1px solid rgba(201, 169, 110, 0.28);
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.04);
-}
-
-.project-info-card h2 {
-  margin: 0 0 0.75rem;
-  color: #f5f0e8;
-  font-size: 1.35rem;
-  font-weight: normal;
-  letter-spacing: 0.08em;
-}
-
-.project-info-card p,
-.project-info-card li {
-  color: #b9b0a3;
-  line-height: 1.65;
-  letter-spacing: 0.04em;
-}
-
-.project-info-card ul {
-  margin: 0;
-  padding-left: 1.2rem;
-}
-
-/* ======================
-   Writing Detail Page
-====================== */
-
-.document-stage {
-  width: min(900px, 94vw);
-  margin: 0 auto;
-}
-
-.document-stage .back-to-writing {
-  display: flex;
-  width: fit-content;
-  margin: 0 0 1rem 0;
-}
-
-.document-paper {
-  width: 100%;
-  min-height: 920px;
-  margin: 0 auto;
-  background: transparent;
-  color: #1c1c1c;
-  box-shadow:
-    0 20px 60px rgba(0, 0, 0, 0.35),
-    0 0 0 1px rgba(255, 255, 255, 0.08);
-  font-family: Georgia, "Times New Roman", serif;
-  text-align: left;
-}
-
-.document-embed {
-  width: 100%;
-  min-height: 920px;
-  display: block;
-  border: none;
-  background: white;
-}
-
-/* ======================
-   Reduced Motion
-====================== */
-
-@media (prefers-reduced-motion: reduce) {
-  .scroll-container {
-    scroll-behavior: auto;
-  }
-
-  .scroll-container::before,
-  .scroll-container::after {
-    animation: none;
-  }
-
-  .ocean-cursor,
-  .rune-field {
-    display: none;
-  }
-
-  *,
-  *::before,
-  *::after {
-    transition-duration: 0.01ms !important;
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-  }
-}
-
-/* ======================
-   Mobile
-====================== */
-
-@media screen and (max-width: 760px) {
-  .topbar {
-    height: 50px;
-    padding: 0 0.8rem;
-  }
-
-  .topbar-photo {
-    width: 30px;
-    height: 30px;
-  }
-
-  .topbar-name {
-    font-size: 0.85rem;
-    letter-spacing: 0.05em;
-  }
-
-  .topbar-links {
-    gap: 0.12rem;
-  }
-
-  .topbar-btn,
-  .topbar-link {
-    padding: 0.28rem 0.42rem;
-    font-size: 0.78rem;
-  }
-
-  .scroll-container {
-    top: 50px;
-  }
-
-  .scroll-container::before,
-  .scroll-container::after {
-    top: 50px;
-  }
-
-  .page-section {
-    min-height: calc(100vh - 50px);
-    padding: 2rem 1rem;
-  }
-
-  #experience .section-content,
-  #projects .section-content,
-  #writing .section-content {
-    padding: 1rem;
-    border-radius: 18px;
-  }
-
-  .hero h1 {
-    letter-spacing: 0.14em;
-  }
-
-  .experience-options {
-    grid-template-columns: 1fr;
-  }
-
-  .experience-card {
-    min-height: 145px;
-  }
-
-  .project-carousel {
-    grid-template-columns: 50px minmax(0, 1fr) 50px;
-    gap: 0.65rem;
-  }
-
-  .project-slide {
-    grid-template-columns: 1fr;
-    padding: 1rem;
-  }
-
-  .project-preview-shell {
-    height: 240px;
-  }
-
-  .project-slide-text {
-    text-align: center;
-  }
-
-  .project-arrow {
-    width: 44px;
-    height: 44px;
-  }
-
-  .project-arrow-left {
-    transform: translateX(-3px);
-  }
-
-  .project-arrow-right {
-    transform: translateX(3px);
-  }
-
-  .project-arrow-left:hover {
-    transform: translateX(-3px) scale(1.07);
-  }
-
-  .project-arrow-right:hover {
-    transform: translateX(3px) scale(1.07);
-  }
-
-  .project-arrow-left::before {
-    border-top-width: 9px;
-    border-bottom-width: 9px;
-    border-right-width: 14px;
-  }
-
-  .project-arrow-right::before {
-    border-top-width: 9px;
-    border-bottom-width: 9px;
-    border-left-width: 14px;
-  }
-
-  .sidebar {
-    right: 0.75rem;
-    top: calc(50px + ((100vh - 50px) / 2));
-  }
-
-  .sidebar-btn {
-    width: 38px;
-    height: 38px;
-    font-size: 1.1rem;
-  }
-
-  .book-carousel {
-    grid-template-columns: 46px 1fr 46px;
-    gap: 0.55rem;
-  }
-
-  .book-shell {
-    height: 340px;
-  }
-
-  .book-page {
-    padding: 1.3rem 1.08rem;
-  }
-
-  .book-page h3 {
-    font-size: 0.88rem;
-  }
-
-  .book-page p {
-    font-size: 0.76rem;
-    line-height: 1.46;
-  }
-
-  .book-control {
-    width: 42px;
-    height: 42px;
-    font-size: 1rem;
-  }
-
-  .contact-card {
-    padding: 1.6rem;
-  }
-
-  .contact-row {
-    font-size: 0.98rem;
-  }
-
-  .timeline-page,
-  .project-detail-page,
-  .writing-detail-page {
-    padding-top: 7rem;
-  }
-
-  .timeline {
-    width: min(620px, 92%);
-  }
-
-  .timeline::before {
-    left: 0;
-  }
-
-  .timeline-item {
-    width: 100%;
-    left: 0;
-    padding-left: 2rem;
-    padding-right: 0;
-    text-align: left;
-  }
-
-  .timeline-left::before,
-  .timeline-right::before {
-    left: -8px;
-    right: auto;
-  }
-
-  .timeline-left .timeline-card {
-    flex-direction: row;
-  }
-
-  .timeline-card {
-    align-items: flex-start;
-  }
-
-  .timeline-logo {
-    width: 64px;
-    height: 64px;
-  }
-
-  .project-detail-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .document-stage {
-    width: min(900px, 94vw);
-  }
-
-  .document-paper,
-  .document-embed {
-    min-height: 760px;
-  }
-}
-
-@media screen and (max-width: 620px) {
-  .topbar {
-    justify-content: center;
-  }
-
-  .topbar-brand {
-    display: none;
-  }
-
-  .topbar-btn,
-  .topbar-link {
-    font-size: 0.76rem;
-    padding: 0.28rem 0.38rem;
-  }
-
-  .project-carousel {
-    grid-template-columns: 1fr 1fr;
-    grid-template-areas:
-      "carousel carousel"
-      "left right"
-      "dots dots";
-  }
-
-  .project-arrow-left {
-    justify-self: end;
-  }
-
-  .project-arrow-right {
-    justify-self: start;
-  }
-
-  .project-preview-shell {
-    height: 215px;
-  }
-
-  .book-carousel {
-    grid-template-columns: 1fr 1fr;
-    grid-template-areas:
-      "book book"
-      "left right"
-      "dots dots";
-  }
-
-  .book-control.prev {
-    justify-self: end;
-  }
-
-  .book-control.next {
-    justify-self: start;
-  }
-
-  .book-shell {
-    height: 320px;
-  }
-
-  .book-page {
-    padding: 1.08rem 0.9rem;
-  }
-
-  .book-page h3 {
-    font-size: 0.78rem;
-  }
-
-  .book-page p {
-    font-size: 0.68rem;
-  }
-
-  .page-number {
-    display: none;
-  }
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Bryce Larson</title>
+
+  <link rel="stylesheet" href="css/style.css?v=23">
+
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+  >
+</head>
+
+<body>
+
+  <div class="fade-overlay"></div>
+  <div class="ocean-cursor" id="oceanCursor" aria-hidden="true"></div>
+  <div class="rune-field" id="runeField" aria-hidden="true"></div>
+
+  <nav class="topbar" aria-label="Top navigation">
+    <div class="topbar-brand">
+      <img
+        src="website-images/circlecroppedme.png"
+        alt="Bryce Larson"
+        class="topbar-photo"
+      >
+
+      <span class="topbar-name">Bryce Larson</span>
+    </div>
+
+    <div class="topbar-links">
+      <button class="topbar-btn active" data-index="0" title="Home" type="button">
+        <span>Home</span>
+      </button>
+
+      <button class="topbar-btn" data-index="1" title="Experience" type="button">
+        <span>Experience</span>
+      </button>
+
+      <button class="topbar-btn" data-index="2" title="Projects" type="button">
+        <span>Projects</span>
+      </button>
+
+      <button class="topbar-btn" data-index="3" title="Writing" type="button">
+        <span>Writing</span>
+      </button>
+
+      <button class="topbar-btn contact-open-btn" title="Contact" type="button">
+        <span>Contact</span>
+      </button>
+    </div>
+  </nav>
+
+  <nav class="sidebar" aria-label="Side page navigation">
+    <button class="sidebar-btn active" data-index="0" title="Home" type="button">🏠</button>
+    <button class="sidebar-btn" data-index="1" title="Experience" type="button">💼</button>
+    <button class="sidebar-btn" data-index="2" title="Projects" type="button">🚀</button>
+    <button class="sidebar-btn" data-index="3" title="Writing" type="button">📖</button>
+  </nav>
+
+  <main class="scroll-container" id="scroller">
+
+    <section class="page-section" id="home">
+      <div class="section-content hero">
+        <h1>BRYCE LARSON</h1>
+
+        <div class="divider"></div>
+
+        <div class="social-links">
+          <a
+            href="https://www.linkedin.com/in/bryce-larson718/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="LinkedIn"
+          >
+            <i class="fa-brands fa-linkedin"></i>
+          </a>
+
+          <a
+            href="https://instagram.com/brycel717"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Instagram"
+          >
+            <i class="fa-brands fa-instagram"></i>
+          </a>
+
+          <a
+            href="https://github.com/Eclipse718"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="GitHub"
+          >
+            <i class="fa-brands fa-github"></i>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="page-section" id="experience">
+      <div class="section-content experience-content">
+        <h2>EXPERIENCE</h2>
+
+        <p class="experience-subtitle">
+           See my resume or view a timeline.
+        </p>
+
+        <div class="experience-options">
+          <a
+            class="experience-card"
+            href="documents/BryceLarsonResume.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <div class="experience-card-emoji">👁︎</div>
+
+            <h3>View CV</h3>
+
+            <p>
+              Open my resume as a PDF.
+            </p>
+          </a>
+
+          <a
+            class="experience-card"
+            href="timeline.html"
+          >
+            <div class="experience-card-emoji">🕒︎</div>
+
+            <h3>See Timeline</h3>
+
+            <p>
+              Walk through my education and experience.
+            </p>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="page-section" id="projects">
+      <div class="section-content projects-content">
+        <h2>PROJECTS</h2>
+
+        <p class="projects-subtitle">
+          Some personal projects I've worked on.
+        </p>
+
+        <div class="project-carousel" aria-label="Project carousel">
+          <button
+            class="project-arrow project-arrow-left"
+            type="button"
+            aria-label="Previous project"
+          ></button>
+
+          <div class="project-window">
+            <div class="project-track" id="projectTrack">
+
+              <a class="project-slide active" href="gans.html">
+                <div class="project-preview-shell">
+                  <img
+                    src="Gans/GANS Faces.png"
+                    alt="GANs Image Generation preview"
+                    class="project-preview project-preview-contain"
+                  >
+                </div>
+
+                <div class="project-slide-text">
+                  <h3>GANs Image Generation</h3>
+                  <p>
+                    A Generative Adversarial Network for Image Generation 
+                  </p>
+                </div>
+              </a>
+
+              <a class="project-slide" href="buttonbattle.html">
+                <div class="project-preview-shell">
+                  <img
+                    src="buttonbattle/buttonbattle1.png"
+                    alt="Button Battle Game preview"
+                    class="project-preview project-preview-contain"
+                  >
+                </div>
+
+                <div class="project-slide-text">
+                  <h3>Button Battle Game</h3>
+                  <p>
+                    A game where you select two "buttons" to fight one another.
+                  </p>
+                </div>
+              </a>
+
+              <a class="project-slide" href="colony.html">
+                <div class="project-preview-shell">
+                  <img
+                    src="colony/colony1.png"
+                    alt="Colony project preview"
+                    class="project-preview project-preview-contain"
+                  >
+                </div>
+
+                <div class="project-slide-text">
+                  <h3>Colony</h3>
+                  <p>
+                    A card-based Real Time Strategy game where the player builds a colony of magical bees to collect resources and fight off waves of mushroom-themed enemies.
+                  </p>
+                </div>
+              </a>
+
+              <a class="project-slide" href="digital-antfarm.html">
+                <div class="project-preview-shell">
+                  <video
+                    class="project-preview project-preview-contain project-preview-zoom"
+                    muted
+                    loop
+                    playsinline
+                    preload="metadata"
+                  >
+                    <source src="digital%20antfarm/asciiland1.mp4" type="video/mp4">
+                  </video>
+                </div>
+
+                <div class="project-slide-text">
+                  <h3>Digital Antfarm</h3>
+                  <p>
+                    An ASCII/ Dwarf fortress inspired "Digital Ant Farm" simulating a 2D Fantasy environment.
+                  </p>
+                </div>
+              </a>
+
+              <a class="project-slide" href="chessbot.html">
+                <div class="project-preview-shell">
+                  <video
+                    class="project-preview project-preview-contain"
+                    muted
+                    loop
+                    playsinline
+                    preload="metadata"
+                  >
+                    <source src="chessbot/chessbot1.mp4" type="video/mp4">
+                  </video>
+                </div>
+
+                <div class="project-slide-text">
+                  <h3>Chessbot</h3>
+                  <p>
+                    A chessbot program which uses an algorithmic decision tree and can use machine learning to train a chess engine.
+                  </p>
+                </div>
+              </a>
+
+              <a class="project-slide" href="miscellaneous.html">
+                <div class="project-preview-shell">
+                  <img
+                    src="miscellaneous/minesweeper.png"
+                    alt="Miscellaneous projects preview"
+                    class="project-preview project-preview-cover"
+                  >
+                </div>
+
+                <div class="project-slide-text">
+                  <h3>Miscellaneous</h3>
+                  <p>
+                    Various other projects I've worked on including several games and simulations.
+                  </p>
+                </div>
+              </a>
+
+            </div>
+          </div>
+
+          <button
+            class="project-arrow project-arrow-right"
+            type="button"
+            aria-label="Next project"
+          ></button>
+
+          <div class="project-dots" id="projectDots" aria-label="Project carousel indicators"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page-section" id="writing">
+      <div class="section-content writing-stage">
+        <h2>WRITING</h2>
+
+        <p class="writing-subtitle">
+          A collection of some of my works of creative writing. Click on a story's header to read.
+        </p>
+
+        <div class="book-carousel" aria-label="Writing archive book carousel">
+          <button class="book-control prev" type="button" aria-label="Previous page">
+            <i class="fa-solid fa-chevron-left"></i>
+          </button>
+
+          <div class="book-shell">
+            <div class="book-base">
+              <div class="book-page left">
+                <a id="leftStoryLink" class="book-story-title" href="#">
+                  <h3 id="leftPageTitle">Window Shopping</h3>
+                </a>
+
+                <p id="leftPageDescription"></p>
+
+                <span class="page-number" id="leftPageNumber">1</span>
+              </div>
+
+              <div class="book-page right">
+                <a id="rightStoryLink" class="book-story-title" href="#">
+                  <h3 id="rightPageTitle">a Cold Day</h3>
+                </a>
+
+                <p id="rightPageDescription"></p>
+
+                <span class="page-number" id="rightPageNumber">2</span>
+              </div>
+            </div>
+
+            <div class="turning-page" id="turningPage"></div>
+            <div class="book-shadow"></div>
+          </div>
+
+          <button class="book-control next" type="button" aria-label="Next page">
+            <i class="fa-solid fa-chevron-right"></i>
+          </button>
+
+          <div class="book-dots" id="bookDots" aria-label="Book page indicators"></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <div class="contact-modal" id="contactModal" aria-hidden="true">
+    <div class="contact-card" role="dialog" aria-modal="true" aria-labelledby="contactTitle">
+      <button class="contact-close" type="button" aria-label="Close contact information">
+        ×
+      </button>
+
+      <h2 id="contactTitle">Contact Information</h2>
+
+      <div class="contact-row">
+        <i class="fa-solid fa-envelope"></i>
+        <a href="mailto:brycelarson718@gmail.com">brycelarson718@gmail.com</a>
+      </div>
+
+      <div class="contact-row">
+        <i class="fa-solid fa-location-dot"></i>
+        <span>Seattle, Washington</span>
+      </div>
+
+      <div class="contact-socials">
+        <a
+          href="https://www.linkedin.com/in/bryce-larson718/"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="LinkedIn"
+        >
+          <i class="fa-brands fa-linkedin"></i>
+        </a>
+
+        <a
+          href="https://instagram.com/brycel717"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Instagram"
+        >
+          <i class="fa-brands fa-instagram"></i>
+        </a>
+
+        <a
+          href="https://github.com/Eclipse718"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="GitHub"
+        >
+          <i class="fa-brands fa-github"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const scroller = document.querySelector('#scroller');
+    const pages = document.querySelectorAll('.page-section');
+    const topbarPageBtns = document.querySelectorAll('.topbar-btn[data-index]');
+    const sidebarBtns = document.querySelectorAll('.sidebar-btn');
+    const allPageNavBtns = document.querySelectorAll('.topbar-btn[data-index], .sidebar-btn');
+
+    const contactOpenBtn = document.querySelector('.contact-open-btn');
+    const contactModal = document.querySelector('#contactModal');
+    const contactCloseBtn = document.querySelector('.contact-close');
+
+    const projectTrack = document.querySelector('#projectTrack');
+    const projectSlides = document.querySelectorAll('.project-slide');
+    const prevProjectBtn = document.querySelector('.project-arrow-left');
+    const nextProjectBtn = document.querySelector('.project-arrow-right');
+    const projectDots = document.querySelector('#projectDots');
+    const projectVideos = document.querySelectorAll('.project-slide video');
+
+    const prevBookBtn = document.querySelector('.book-control.prev');
+    const nextBookBtn = document.querySelector('.book-control.next');
+    const turningPage = document.querySelector('#turningPage');
+    const bookDots = document.querySelector('#bookDots');
+
+    const leftStoryLink = document.querySelector('#leftStoryLink');
+    const rightStoryLink = document.querySelector('#rightStoryLink');
+    const leftPageTitle = document.querySelector('#leftPageTitle');
+    const rightPageTitle = document.querySelector('#rightPageTitle');
+    const leftPageDescription = document.querySelector('#leftPageDescription');
+    const rightPageDescription = document.querySelector('#rightPageDescription');
+    const leftPageNumber = document.querySelector('#leftPageNumber');
+    const rightPageNumber = document.querySelector('#rightPageNumber');
+
+    let currentProject = 0;
+
+    function renderProjectCarousel() {
+      if (!projectTrack || projectSlides.length === 0) {
+        return;
+      }
+
+      projectTrack.style.transform = `translateX(-${currentProject * 100}%)`;
+
+      projectSlides.forEach((slide, index) => {
+        slide.classList.toggle('active', index === currentProject);
+        slide.setAttribute('tabindex', index === currentProject ? '0' : '-1');
+      });
+
+      const dots = projectDots.querySelectorAll('.project-dot');
+
+      dots.forEach((dot, index) => {
+        dot.classList.toggle('active', index === currentProject);
+      });
+
+      projectVideos.forEach((video) => {
+        video.pause();
+      });
+
+      const activeVideo = projectSlides[currentProject].querySelector('video');
+
+      if (activeVideo) {
+        activeVideo.play().catch(() => {});
+      }
+    }
+
+    function goToProject(index) {
+      if (projectSlides.length === 0) {
+        return;
+      }
+
+      currentProject = (index + projectSlides.length) % projectSlides.length;
+      renderProjectCarousel();
+    }
+
+    projectSlides.forEach((_, index) => {
+      const dot = document.createElement('button');
+      dot.className = 'project-dot';
+      dot.type = 'button';
+      dot.setAttribute('aria-label', `Go to project ${index + 1}`);
+
+      dot.addEventListener('click', () => {
+        goToProject(index);
+      });
+
+      projectDots.appendChild(dot);
+    });
+
+    if (prevProjectBtn && nextProjectBtn) {
+      prevProjectBtn.addEventListener('click', () => {
+        goToProject(currentProject - 1);
+      });
+
+      nextProjectBtn.addEventListener('click', () => {
+        goToProject(currentProject + 1);
+      });
+    }
+
+    renderProjectCarousel();
+
+    const writingPages = [
+      {
+        title: 'Window Shopping',
+        href: 'window-shopping.html',
+        description: 'A 500 word sci-fi flash fiction story about a shop which paints humans to life. This short story was an attempt at utilizing a minimalistic style to convey a sense of hollowness to a story about human objectification.'
+      },
+      {
+        title: 'a Cold Day',
+        href: 'a-cold-day.html',
+        description: 'A 1000 word short story about a miner returning home on an unnaturally cold winter day. This is the first of three short stories written for a competition where my genre was "cryptid fiction".'
+      },
+      {
+        title: "If You're Happy and You Know It...",
+        href: 'if-youre-happy-and-you-know-it.html',
+        description: 'Another 1000 word short story written for the "cryptid fiction" competition. This story features a private investigator paid to look into an impossible disappearance.'
+      },
+      {
+        title: 'Circus Freaks.',
+        href: 'circus-freaks.html',
+        description: 'The third cryptid fiction 1000 word short story, this one being ultimately chosen for submission. This story follows two boys who learn that the Mothman has been captured and placed in the circus.'
+      },
+      {
+        title: 'Poppets',
+        href: 'poppets.html',
+        description: 'A 5000 word fantasy short story inspired by African voudou following an Ewe chieftain\'s meeting with a British Colonial Officer.'
+      },
+      {
+        title: 'INFINA',
+        href: 'infina.html',
+        description: 'A 10,000 word novelette about a planet which experiences storms of extreme gravity as a weather phenomena. The story follows two characters and their perspectives on a quadrillionaire\'s attempt to monetize the planet\'s gravity by building perpetual motion machines across the planet\'s surface.'
+      },
+      {
+        title: 'Life in Reverse',
+        href: 'lifeinreverse.html',
+        description: 'A 3000 word short story following a man who suddenly finds his experience of time has been reversed and begins documenting his life and efforts to break his condition.'
+      }
+    ];
+
+    const spreads = [];
+
+    for (let i = 0; i < writingPages.length; i += 2) {
+      spreads.push({
+        left: writingPages[i],
+        right: writingPages[i + 1] || null
+      });
+    }
+
+    let currentSpread = 0;
+    let isTurning = false;
+
+    function renderStoryPage(side, story, pageNumber) {
+      const link = side === 'left' ? leftStoryLink : rightStoryLink;
+      const title = side === 'left' ? leftPageTitle : rightPageTitle;
+      const description = side === 'left' ? leftPageDescription : rightPageDescription;
+      const number = side === 'left' ? leftPageNumber : rightPageNumber;
+
+      if (!story) {
+        link.style.visibility = 'hidden';
+        description.textContent = '';
+        number.textContent = '';
+        return;
+      }
+
+      link.style.visibility = 'visible';
+      link.href = story.href;
+      title.textContent = story.title;
+      description.textContent = story.description;
+      number.textContent = String(pageNumber);
+    }
+
+    function renderBook() {
+      const spread = spreads[currentSpread];
+
+      renderStoryPage('left', spread.left, currentSpread * 2 + 1);
+      renderStoryPage('right', spread.right, currentSpread * 2 + 2);
+
+      prevBookBtn.disabled = currentSpread === 0;
+      nextBookBtn.disabled = currentSpread === spreads.length - 1;
+
+      const dots = bookDots.querySelectorAll('.book-dot');
+
+      dots.forEach((dot, index) => {
+        dot.classList.toggle('active', index === currentSpread);
+      });
+    }
+
+    function turnBook(direction, targetSpread) {
+      if (
+        isTurning ||
+        targetSpread < 0 ||
+        targetSpread >= spreads.length ||
+        targetSpread === currentSpread
+      ) {
+        return;
+      }
+
+      isTurning = true;
+
+      turningPage.classList.remove('forward', 'backward');
+      void turningPage.offsetWidth;
+      turningPage.classList.add(direction);
+
+      window.setTimeout(() => {
+        currentSpread = targetSpread;
+        renderBook();
+      }, 330);
+
+      window.setTimeout(() => {
+        turningPage.classList.remove('forward', 'backward');
+        isTurning = false;
+      }, 720);
+    }
+
+    spreads.forEach((_, index) => {
+      const dot = document.createElement('button');
+      dot.className = 'book-dot';
+      dot.type = 'button';
+      dot.setAttribute('aria-label', `Go to writing spread ${index + 1}`);
+
+      dot.addEventListener('click', () => {
+        if (index > currentSpread) {
+          turnBook('forward', index);
+        } else if (index < currentSpread) {
+          turnBook('backward', index);
+        }
+      });
+
+      bookDots.appendChild(dot);
+    });
+
+    prevBookBtn.addEventListener('click', () => {
+      turnBook('backward', currentSpread - 1);
+    });
+
+    nextBookBtn.addEventListener('click', () => {
+      turnBook('forward', currentSpread + 1);
+    });
+
+    renderBook();
+
+    allPageNavBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const index = Number.parseInt(btn.dataset.index, 10);
+
+        if (pages[index]) {
+          pages[index].scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+
+    contactOpenBtn.addEventListener('click', () => {
+      contactModal.classList.add('open');
+      contactModal.setAttribute('aria-hidden', 'false');
+      contactOpenBtn.classList.add('active');
+    });
+
+    function closeContactModal() {
+      contactModal.classList.remove('open');
+      contactModal.setAttribute('aria-hidden', 'true');
+      contactOpenBtn.classList.remove('active');
+    }
+
+    contactCloseBtn.addEventListener('click', closeContactModal);
+
+    contactModal.addEventListener('click', (event) => {
+      if (event.target === contactModal) {
+        closeContactModal();
+      }
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && contactModal.classList.contains('open')) {
+        closeContactModal();
+      }
+    });
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
+          const index = Array.from(pages).indexOf(entry.target);
+
+          topbarPageBtns.forEach((btn) => btn.classList.remove('active'));
+          sidebarBtns.forEach((btn) => btn.classList.remove('active'));
+
+          if (topbarPageBtns[index]) {
+            topbarPageBtns[index].classList.add('active');
+          }
+
+          if (sidebarBtns[index]) {
+            sidebarBtns[index].classList.add('active');
+          }
+        }
+      });
+    }, {
+      threshold: 0.5,
+      root: scroller
+    });
+
+    pages.forEach((page) => observer.observe(page));
+
+    window.addEventListener('load', () => {
+      if (window.location.hash) {
+        const target = document.querySelector(window.location.hash);
+
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'auto',
+            block: 'start'
+          });
+        }
+      }
+    });
+
+    const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    if (!motionQuery.matches) {
+      const oceanCursor = document.querySelector('#oceanCursor');
+      const runeField = document.querySelector('#runeField');
+
+      const cursorState = {
+        targetX: window.innerWidth / 2,
+        targetY: window.innerHeight / 2,
+        x: window.innerWidth / 2,
+        y: window.innerHeight / 2,
+        previousX: window.innerWidth / 2,
+        previousY: window.innerHeight / 2,
+        width: 44,
+        height: 44,
+        radius: 999,
+        targetElement: null,
+        syntheticClick: false
+      };
+
+      const clickableSelector = [
+        'a[href]',
+        'button:not(:disabled)',
+        '[role="button"]',
+        '[tabindex]:not([tabindex="-1"])'
+      ].join(',');
+
+      function getClickableFromElement(element) {
+        if (!element || element === document.documentElement || element === document.body) {
+          return null;
+        }
+
+        return element.closest(clickableSelector);
+      }
+
+      function elementFromCircleCenter() {
+        oceanCursor.style.visibility = 'hidden';
+        const element = document.elementFromPoint(cursorState.x, cursorState.y);
+        oceanCursor.style.visibility = 'visible';
+
+        return getClickableFromElement(element);
+      }
+
+      function getCircleRect() {
+        return {
+          left: cursorState.x - cursorState.width / 2,
+          right: cursorState.x + cursorState.width / 2,
+          top: cursorState.y - cursorState.height / 2,
+          bottom: cursorState.y + cursorState.height / 2
+        };
+      }
+
+      function rectsOverlap(a, b) {
+        return a.right > b.left &&
+          a.left < b.right &&
+          a.bottom > b.top &&
+          a.top < b.bottom;
+      }
+
+      function getClickableTouchedByCircle() {
+        const circleRect = getCircleRect();
+        const clickables = Array.from(document.querySelectorAll(clickableSelector));
+        let best = null;
+        let bestArea = 0;
+
+        clickables.forEach((element) => {
+          if (element.offsetParent === null && !element.classList.contains('contact-close')) {
+            return;
+          }
+
+          const rect = element.getBoundingClientRect();
+
+          if (!rectsOverlap(circleRect, rect)) {
+            return;
+          }
+
+          const overlapWidth = Math.min(circleRect.right, rect.right) - Math.max(circleRect.left, rect.left);
+          const overlapHeight = Math.min(circleRect.bottom, rect.bottom) - Math.max(circleRect.top, rect.top);
+          const area = overlapWidth * overlapHeight;
+
+          if (area > bestArea) {
+            best = element;
+            bestArea = area;
+          }
+        });
+
+        return best || elementFromCircleCenter();
+      }
+
+      function setCursorToFreeCircle(speed, angle) {
+        const stretch = 1 + speed / 26;
+        const squeeze = Math.max(0.78, 1 - speed / 110);
+
+        cursorState.width = 44;
+        cursorState.height = 44;
+        cursorState.radius = 999;
+
+        oceanCursor.classList.remove('locked');
+        oceanCursor.style.width = '44px';
+        oceanCursor.style.height = '44px';
+        oceanCursor.style.borderRadius = '999px';
+        oceanCursor.style.transform = `
+          translate3d(${cursorState.x - 22}px, ${cursorState.y - 22}px, 0)
+          rotate(${angle}deg)
+          scale(${stretch}, ${squeeze})
+        `;
+      }
+
+      function setCursorToElement(element) {
+        const rect = element.getBoundingClientRect();
+        const padding = 5;
+
+        cursorState.width = rect.width + padding * 2;
+        cursorState.height = rect.height + padding * 2;
+
+        let radius = 14;
+
+        if (
+          element.classList.contains('sidebar-btn') ||
+          element.classList.contains('project-arrow') ||
+          element.classList.contains('book-control') ||
+          element.classList.contains('contact-close') ||
+          rect.width === rect.height
+        ) {
+          radius = 999;
+        }
+
+        oceanCursor.classList.add('locked');
+        oceanCursor.style.width = `${cursorState.width}px`;
+        oceanCursor.style.height = `${cursorState.height}px`;
+        oceanCursor.style.borderRadius = radius === 999 ? '999px' : `${radius}px`;
+        oceanCursor.style.transform = `translate3d(${rect.left - padding}px, ${rect.top - padding}px, 0)`;
+      }
+
+      window.addEventListener('pointermove', (event) => {
+        cursorState.targetX = event.clientX;
+        cursorState.targetY = event.clientY;
+        oceanCursor.style.opacity = '1';
+      });
+
+      window.addEventListener('pointerleave', () => {
+        oceanCursor.style.opacity = '0';
+      });
+
+      document.addEventListener('click', (event) => {
+        if (cursorState.syntheticClick) {
+          return;
+        }
+
+        const target = cursorState.targetElement || getClickableTouchedByCircle();
+
+        if (!target) {
+          return;
+        }
+
+        const naturalTarget = getClickableFromElement(event.target);
+
+        if (naturalTarget === target) {
+          return;
+        }
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        cursorState.syntheticClick = true;
+        target.click();
+        cursorState.syntheticClick = false;
+      }, true);
+
+      function animateOceanCursor() {
+        cursorState.x += (cursorState.targetX - cursorState.x) * 0.16;
+        cursorState.y += (cursorState.targetY - cursorState.y) * 0.16;
+
+        const dx = cursorState.x - cursorState.previousX;
+        const dy = cursorState.y - cursorState.previousY;
+        const speed = Math.min(Math.hypot(dx, dy), 34);
+        const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+        const touchedElement = getClickableTouchedByCircle();
+
+        cursorState.targetElement = touchedElement;
+
+        if (touchedElement) {
+          setCursorToElement(touchedElement);
+        } else {
+          setCursorToFreeCircle(speed, angle);
+        }
+
+        cursorState.previousX = cursorState.x;
+        cursorState.previousY = cursorState.y;
+
+        requestAnimationFrame(animateOceanCursor);
+      }
+
+      animateOceanCursor();
+
+      const runeGlyphs = ['ᚠ', 'ᚢ', 'ᚦ', 'ᚨ', 'ᚱ', 'ᚲ', 'ᚷ', 'ᚹ', 'ᚺ', 'ᚾ', 'ᛁ', 'ᛃ', 'ᛇ', 'ᛈ', 'ᛉ', 'ᛊ', 'ᛏ', 'ᛒ', 'ᛖ', 'ᛗ', 'ᛚ', 'ᛞ', 'ᛟ'];
+      const runeCount = window.innerWidth < 700 ? 14 : 24;
+      const runes = [];
+
+      function randomBetween(min, max) {
+        return min + Math.random() * (max - min);
+      }
+
+      function getRuneBounds() {
+        return {
+          left: 0,
+          top: 0,
+          right: window.innerWidth,
+          bottom: window.innerHeight
+        };
+      }
+
+      function getBounceRects() {
+        const selectors = [
+          '.topbar-btn',
+          '.topbar-link',
+          '.sidebar-btn',
+          '.project-arrow',
+          '.book-control',
+          '.experience-card'
+        ];
+
+        return Array.from(document.querySelectorAll(selectors.join(','))).map((element) => {
+          const rect = element.getBoundingClientRect();
+
+          return {
+            left: rect.left - 9,
+            right: rect.right + 9,
+            top: rect.top - 9,
+            bottom: rect.bottom + 9
+          };
+        });
+      }
+
+      function createRunes() {
+        if (!runeField) {
+          return;
+        }
+
+        runeField.innerHTML = '';
+        runes.length = 0;
+
+        const bounds = getRuneBounds();
+
+        for (let i = 0; i < runeCount; i += 1) {
+          const element = document.createElement('span');
+          element.className = 'golden-rune';
+          element.textContent = runeGlyphs[Math.floor(Math.random() * runeGlyphs.length)];
+
+          const size = randomBetween(16, 28);
+          element.style.fontSize = `${size}px`;
+          element.style.opacity = String(randomBetween(0.34, 0.64));
+
+          runeField.appendChild(element);
+
+          runes.push({
+            element,
+            x: randomBetween(bounds.left + 24, bounds.right - 48),
+            y: randomBetween(bounds.top + 64, bounds.bottom - 48),
+            vx: randomBetween(-0.22, 0.22) || 0.15,
+            vy: randomBetween(-0.16, 0.16) || 0.11,
+            size,
+            spin: randomBetween(-0.15, 0.15),
+            rotation: randomBetween(0, 360)
+          });
+        }
+      }
+
+      function runeHitsRect(rune, rect) {
+        const left = rune.x;
+        const right = rune.x + rune.size;
+        const top = rune.y;
+        const bottom = rune.y + rune.size;
+
+        return right > rect.left &&
+          left < rect.right &&
+          bottom > rect.top &&
+          top < rect.bottom;
+      }
+
+      function animateRunes() {
+        const bounds = getRuneBounds();
+        const bounceRects = getBounceRects();
+
+        runes.forEach((rune) => {
+          rune.x += rune.vx;
+          rune.y += rune.vy;
+          rune.rotation += rune.spin;
+
+          if (rune.x <= bounds.left || rune.x + rune.size >= bounds.right) {
+            rune.vx *= -1;
+            rune.x = Math.max(bounds.left, Math.min(rune.x, bounds.right - rune.size));
+          }
+
+          if (rune.y <= bounds.top || rune.y + rune.size >= bounds.bottom) {
+            rune.vy *= -1;
+            rune.y = Math.max(bounds.top, Math.min(rune.y, bounds.bottom - rune.size));
+          }
+
+          bounceRects.forEach((rect) => {
+            if (runeHitsRect(rune, rect)) {
+              const runeCenterX = rune.x + rune.size / 2;
+              const runeCenterY = rune.y + rune.size / 2;
+              const rectCenterX = (rect.left + rect.right) / 2;
+              const rectCenterY = (rect.top + rect.bottom) / 2;
+              const pushX = runeCenterX - rectCenterX;
+              const pushY = runeCenterY - rectCenterY;
+
+              if (Math.abs(pushX) > Math.abs(pushY)) {
+                rune.vx = Math.abs(rune.vx || 0.15) * Math.sign(pushX || 1);
+                rune.x += rune.vx * 6;
+              } else {
+                rune.vy = Math.abs(rune.vy || 0.11) * Math.sign(pushY || 1);
+                rune.y += rune.vy * 6;
+              }
+            }
+          });
+
+          rune.element.style.transform = `translate3d(${rune.x}px, ${rune.y}px, 0) rotate(${rune.rotation}deg)`;
+        });
+
+        requestAnimationFrame(animateRunes);
+      }
+
+      createRunes();
+      animateRunes();
+
+      window.addEventListener('resize', createRunes);
+    }
+  </script>
+
+</body>
+</html>
