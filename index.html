@@ -465,7 +465,7 @@
     let runeItems = [];
     let clickedRuneOrder = [];
     let constellationSvg = null;
-    let constellationPolyline = null;
+    let constellationSegments = null;
     let lastRuneTime = performance.now();
     let runeAnimationFrame = null;
 
@@ -864,14 +864,21 @@
       constellationSvg.setAttribute("viewBox", "0 0 100 100");
       constellationSvg.setAttribute("preserveAspectRatio", "none");
 
-      constellationPolyline = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
-      constellationPolyline.classList.add("rune-constellation-line");
-      constellationSvg.appendChild(constellationPolyline);
+      constellationSegments = document.createElementNS("http://www.w3.org/2000/svg", "g");
+      constellationSegments.classList.add("rune-constellation-segments");
+      constellationSvg.appendChild(constellationSegments);
       runeField.appendChild(constellationSvg);
     }
 
+    function getRuneConnectionPoint(item) {
+      return {
+        x: item.clickedLit && item.frozen ? item.freezeX : item.smoothX,
+        y: item.clickedLit && item.frozen ? item.freezeY : item.smoothY
+      };
+    }
+
     function updateConstellationLines() {
-      if (!constellationSvg || !constellationPolyline) {
+      if (!constellationSvg || !constellationSegments) {
         return;
       }
 
@@ -882,19 +889,30 @@
         return item.clickedLit;
       });
 
+      constellationSegments.replaceChildren();
+
       if (litRunes.length < 2) {
-        constellationPolyline.setAttribute("points", "");
         constellationSvg.classList.remove("has-lines");
         return;
       }
 
-      const points = litRunes.map(function(item) {
-        const centerX = item.clickedLit && item.frozen ? item.freezeX : item.smoothX;
-        const centerY = item.clickedLit && item.frozen ? item.freezeY : item.smoothY;
-        return centerX.toFixed(2) + "," + centerY.toFixed(2);
-      }).join(" ");
+      for (let i = 1; i < litRunes.length; i += 1) {
+        const start = getRuneConnectionPoint(litRunes[i - 1]);
+        const end = getRuneConnectionPoint(litRunes[i]);
+        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
 
-      constellationPolyline.setAttribute("points", points);
+        line.classList.add("rune-constellation-line");
+        line.setAttribute("x1", start.x.toFixed(2));
+        line.setAttribute("y1", start.y.toFixed(2));
+        line.setAttribute("x2", end.x.toFixed(2));
+        line.setAttribute("y2", end.y.toFixed(2));
+        line.setAttribute("fill", "none");
+        line.setAttribute("stroke-linecap", "round");
+        line.setAttribute("vector-effect", "non-scaling-stroke");
+
+        constellationSegments.appendChild(line);
+      }
+
       constellationSvg.classList.add("has-lines");
     }
 
