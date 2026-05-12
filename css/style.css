@@ -281,7 +281,6 @@ button {
   z-index: 0;
   opacity: 0.42;
   background:
-    repeating-radial-gradient(ellipse at 50% -4%, rgba(180, 230, 236, 0.062) 0 2px, transparent 3px 38px),
     radial-gradient(circle at var(--cursor-x, 50vw) var(--cursor-y-scroll, 50vh), rgba(255, 232, 155, 0.12), transparent 190px);
 }
 
