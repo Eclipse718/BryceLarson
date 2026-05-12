@@ -606,62 +606,62 @@
       runeAnimationFrame = requestAnimationFrame(animateRunes);
     }
 
-function updateRuneGlow(item) {
-  if (item.clickedLit) {
-    item.element.classList.add("rune-glow");
-    item.element.style.setProperty("--rune-glow-strength", "1.6");
-    return;
-  }
-
-  if (!mouse.active) {
-    item.element.classList.remove("rune-glow");
-    item.element.style.setProperty("--rune-glow-strength", "0");
-    item.glowStrength = 0;
-    item.glowScale = 1;
-    return;
-  }
-
-  const distance = Math.hypot(
-    mouse.x - item.smoothX,
-    mouse.y - (item.smoothY + 54)
-  );
-
-  const maxDistance = 200;
-
-  if (distance < maxDistance) {
-    const distanceRatio = 1 - distance / maxDistance;
-
-    const strength =
-      distance < 120
-        ? Math.pow(distanceRatio, 1.35)
-        : distance < 160
-          ? Math.pow(distanceRatio, 1.9)
-          : Math.pow(distanceRatio, 2.6);
-
-    if (strength < 0.012) {
-      item.glowStrength = 0;
-      item.glowScale = 1;
-      item.element.classList.remove("rune-glow");
-      item.element.style.setProperty("--rune-glow-strength", "0");
-      return;
+    function updateRuneGlow(item) {
+      if (item.clickedLit) {
+        item.element.classList.add("rune-glow");
+        item.element.style.setProperty("--rune-glow-strength", "1.6");
+        return;
+      }
+    
+      if (!mouse.active) {
+        item.element.classList.remove("rune-glow");
+        item.element.style.setProperty("--rune-glow-strength", "0");
+        item.glowStrength = 0;
+        item.glowScale = 1;
+        return;
+      }
+    
+      const distance = Math.hypot(
+        mouse.x - item.smoothX,
+        mouse.y - (item.smoothY + 54)
+      );
+    
+      const maxDistance = 200;
+    
+      if (distance < maxDistance) {
+        const distanceRatio = 1 - distance / maxDistance;
+    
+        const strength =
+          distance < 120
+            ? Math.pow(distanceRatio, 1.35)
+            : distance < 160
+              ? Math.pow(distanceRatio, 1.9)
+              : Math.pow(distanceRatio, 2.6);
+    
+        if (strength < 0.012) {
+          item.glowStrength = 0;
+          item.glowScale = 1;
+          item.element.classList.remove("rune-glow");
+          item.element.style.setProperty("--rune-glow-strength", "0");
+          return;
+        }
+    
+        item.glowStrength = strength * 2.2;
+        item.glowScale = 1 + strength * 0.34;
+    
+        item.element.classList.add("rune-glow");
+    
+        item.element.style.setProperty(
+          "--rune-glow-strength",
+          item.glowStrength.toFixed(3)
+        );
+      } else {
+        item.glowStrength = 0;
+        item.glowScale = 1;
+        item.element.classList.remove("rune-glow");
+        item.element.style.setProperty("--rune-glow-strength", "0");
+      }
     }
-
-    item.glowStrength = strength * 2.2;
-    item.glowScale = 1 + strength * 0.34;
-
-    item.element.classList.add("rune-glow");
-
-    item.element.style.setProperty(
-      "--rune-glow-strength",
-      item.glowStrength.toFixed(3)
-    );
-  } else {
-    item.glowStrength = 0;
-    item.glowScale = 1;
-    item.element.classList.remove("rune-glow");
-    item.element.style.setProperty("--rune-glow-strength", "0");
-  }
-}
 
     function animateRunes(now) {
       const dt = Math.min(0.05, Math.max(0.001, (now - lastRuneTime) / 1000));
