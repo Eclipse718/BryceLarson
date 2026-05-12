@@ -302,25 +302,7 @@ button {
 }
 
 .scroll-container::after {
-  z-index: 1;
-  opacity: 0.34;
-  background:
-    radial-gradient(
-      circle at 34% 26%,
-      rgba(201, 169, 110, 0.22),
-      transparent 4%
-    ),
-    radial-gradient(
-      circle at 68% 54%,
-      rgba(201, 169, 110, 0.15),
-      transparent 3%
-    ),
-    radial-gradient(
-      circle at 48% 76%,
-      rgba(201, 169, 110, 0.12),
-      transparent 2.5%
-    );
-  mix-blend-mode: screen;
+  display: none;
 }
 
 .scroll-container::-webkit-scrollbar {
