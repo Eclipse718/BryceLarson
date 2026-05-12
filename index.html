@@ -463,9 +463,6 @@
     let activeProjectIndex = 0;
     let activeBookSpread = 0;
     let runeItems = [];
-    let clickedRuneOrder = [];
-    let constellationSvg = null;
-    let constellationSegments = null;
     let lastRuneTime = performance.now();
     let runeAnimationFrame = null;
 
@@ -734,23 +731,11 @@
         item.freezeX = null;
         item.freezeY = null;
         item.element.classList.remove("rune-burst", "rune-lit");
-        clickedRuneOrder = clickedRuneOrder.filter(function(clickedItem) {
-          return clickedItem !== item;
-        });
-        updateConstellationLines();
         return;
       }
 
-      clickedRuneOrder = clickedRuneOrder.filter(function(clickedItem) {
-        return clickedItem !== item;
-      });
-      clickedRuneOrder.push(item);
-
-      const fieldRect = runeField.getBoundingClientRect();
       const frozenX = item.smoothX;
       const frozenY = item.smoothY;
-      const centerX = fieldRect.left + frozenX;
-      const centerY = fieldRect.top + frozenY;
 
       item.frozen = true;
       item.freezeX = frozenX;
@@ -769,14 +754,13 @@
       item.element.classList.add("rune-burst");
       item.element.classList.add("rune-lit");
 
-      for (let i = 0; i < 18; i += 1) {
-        createGoldSpark(
-          centerX + (Math.random() - 0.5) * 16,
-          centerY + (Math.random() - 0.5) * 16
-        );
-      }
+      const runeRect = item.element.getBoundingClientRect();
+      const centerX = runeRect.left + runeRect.width / 2;
+      const centerY = runeRect.top + runeRect.height / 2;
 
-      updateConstellationLines();
+      for (let i = 0; i < 18; i += 1) {
+        createGoldSpark(centerX, centerY);
+      }
     }
 
     function randomBetween(min, max) {
@@ -856,66 +840,6 @@
       };
     }
 
-    function createConstellationLayer() {
-      constellationSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-      constellationSvg.classList.add("rune-constellation");
-      constellationSvg.setAttribute("aria-hidden", "true");
-      constellationSvg.setAttribute("focusable", "false");
-      constellationSvg.setAttribute("viewBox", "0 0 100 100");
-      constellationSvg.setAttribute("preserveAspectRatio", "none");
-
-      constellationSegments = document.createElementNS("http://www.w3.org/2000/svg", "g");
-      constellationSegments.classList.add("rune-constellation-segments");
-      constellationSvg.appendChild(constellationSegments);
-      runeField.appendChild(constellationSvg);
-    }
-
-    function getRuneConnectionPoint(item) {
-      return {
-        x: item.clickedLit && item.frozen ? item.freezeX : item.smoothX,
-        y: item.clickedLit && item.frozen ? item.freezeY : item.smoothY
-      };
-    }
-
-    function updateConstellationLines() {
-      if (!constellationSvg || !constellationSegments) {
-        return;
-      }
-
-      const bounds = getRuneBounds();
-      constellationSvg.setAttribute("viewBox", "0 0 " + bounds.width.toFixed(2) + " " + bounds.height.toFixed(2));
-
-      const litRunes = clickedRuneOrder.filter(function(item) {
-        return item.clickedLit;
-      });
-
-      constellationSegments.replaceChildren();
-
-      if (litRunes.length < 2) {
-        constellationSvg.classList.remove("has-lines");
-        return;
-      }
-
-      for (let i = 1; i < litRunes.length; i += 1) {
-        const start = getRuneConnectionPoint(litRunes[i - 1]);
-        const end = getRuneConnectionPoint(litRunes[i]);
-        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-
-        line.classList.add("rune-constellation-line");
-        line.setAttribute("x1", start.x.toFixed(2));
-        line.setAttribute("y1", start.y.toFixed(2));
-        line.setAttribute("x2", end.x.toFixed(2));
-        line.setAttribute("y2", end.y.toFixed(2));
-        line.setAttribute("fill", "none");
-        line.setAttribute("stroke-linecap", "round");
-        line.setAttribute("vector-effect", "non-scaling-stroke");
-
-        constellationSegments.appendChild(line);
-      }
-
-      constellationSvg.classList.add("has-lines");
-    }
-
     function buildRuneField() {
       const runeCharacters = ["ᚠ", "ᚢ", "ᚦ", "ᚨ", "ᚱ", "ᚲ", "ᚷ", "ᚹ", "ᚺ", "ᚾ", "ᛁ", "ᛃ", "ᛇ", "ᛈ", "ᛉ", "ᛊ", "ᛏ", "ᛒ", "ᛖ", "ᛗ", "ᛚ", "ᛜ", "ᛞ", "ᛟ"];
       const bounds = getRuneBounds();
@@ -932,9 +856,6 @@
 
       runeField.innerHTML = "";
       runeItems = [];
-      clickedRuneOrder = [];
-      createConstellationLayer();
-
       for (let i = 0; i < runeCount; i += 1) {
         const rune = document.createElement("button");
         const isOrbiter = i < orbitCount;
@@ -1178,7 +1099,6 @@
         item.element.style.transform = "translate(-50%, -50%) rotate(var(--rune-rotation))";
       });
 
-      updateConstellationLines();
 
       runeAnimationFrame = requestAnimationFrame(animateRunes);
     }
