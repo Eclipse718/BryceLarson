@@ -622,11 +622,11 @@
       }
 
       const distance = Math.hypot(mouse.x - item.smoothX, mouse.y - (item.smoothY + 54));
-      const maxDistance = 185;
+      const maxDistance = 130;
 
       if (distance < maxDistance) {
         const distanceRatio = 1 - distance / maxDistance;
-        const strength = Math.pow(distanceRatio, 3.4);
+        const strength = Math.pow(distanceRatio, 5.2);
 
         if (strength < 0.025) {
           item.glowStrength = 0;
