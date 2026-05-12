@@ -35,15 +35,117 @@
       color: #f5d89a;
       text-decoration: underline;
     }
+
+    .project-gallery {
+      width: min(1200px, 94vw);
+      margin: 0 auto 4rem;
+      display: flex;
+      flex-direction: column;
+      gap: 4rem;
+    }
+
+    .project-media-card,
+    .project-info-card {
+      text-align: center;
+      padding: 1.5rem;
+      border: 1px solid rgba(201, 169, 110, 0.35);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.045);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+    }
+
+    .project-media-card {
+      width: 100%;
+    }
+
+    .project-media-card img,
+    .project-media-card video {
+      width: 100%;
+      height: auto;
+      max-height: none;
+      object-fit: contain;
+      display: block;
+      border-radius: 14px;
+      border: 2px solid rgba(201, 169, 110, 0.65);
+      background: #030c12;
+    }
+
+    .project-media-card h2,
+    .project-info-card h2 {
+      margin: 1.35rem 0 0.65rem;
+      color: #f5f0e8;
+      font-weight: normal;
+      letter-spacing: 0.08em;
+      text-align: center;
+    }
+
+    .project-media-card p,
+    .project-info-card p,
+    .project-info-card li {
+      color: #b9b0a3;
+      line-height: 1.6;
+      letter-spacing: 0.03em;
+      text-align: center;
+    }
+
+    .project-detail-grid {
+      width: min(1000px, 92vw);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .project-info-card ul {
+      padding-left: 0;
+      list-style-position: inside;
+    }
+
+    @media (max-width: 700px) {
+      .project-detail-page {
+        padding-top: 8rem;
+      }
+
+      .project-gallery {
+        width: 94vw;
+        gap: 2.5rem;
+      }
+
+      .project-media-card,
+      .project-info-card {
+        padding: 1rem;
+      }
+
+      .project-back-row {
+        width: 94vw;
+        margin: -2rem auto 2rem;
+      }
+    }
   </style>
 </head>
 
 <body class="project-body">
 
+  <nav class="topbar" aria-label="Top navigation">
+    <div class="topbar-brand">
+      <div class="topbar-avatar" aria-hidden="true">
+        <img src="website-images/circlecroppedme.png" alt="" class="topbar-photo">
+      </div>
+      <span class="topbar-name">Bryce Larson</span>
+    </div>
+
+    <div class="topbar-links">
+      <a class="topbar-link" href="index.html#home">Home</a>
+      <a class="topbar-link" href="index.html#experience">Experience</a>
+      <a class="topbar-link" href="index.html#projects">Projects</a>
+      <a class="topbar-link" href="index.html#writing">Writing</a>
+      <a class="topbar-link" href="mailto:brycelarson718@gmail.com">Contact</a>
+    </div>
+  </nav>
+
   <main class="project-detail-page">
 
     <header class="project-detail-header">
-
       <h1>Colony</h1>
 
       <div class="divider"></div>
@@ -55,10 +157,89 @@
     </header>
 
     <div class="project-back-row">
-      <a class="back-to-projects" href="index.html#projects">
-        ← Back to Projects
-      </a>
+      <a class="back-to-projects" href="index.html#projects">← Back to Projects</a>
     </div>
+
+    <section class="project-gallery" aria-label="Colony media">
+
+      <article class="project-media-card">
+        <img src="colony/colony1.png" alt="Colony screenshot 1">
+        <h2>Colony Screenshot I</h2>
+        <p>Opening screenshot from the Colony project.</p>
+      </article>
+
+      <article class="project-media-card">
+        <img src="colony/colony_early_gif.gif" alt="Early Colony gameplay animation">
+        <h2>Early Prototype</h2>
+        <p>Animated prototype footage from an earlier version of Colony.</p>
+      </article>
+
+      <article class="project-media-card">
+        <img src="colony/colony2.png" alt="Colony screenshot 2">
+        <h2>Colony Screenshot II</h2>
+        <p>Additional screenshot from the Colony build.</p>
+      </article>
+
+      <article class="project-media-card">
+        <video controls preload="metadata" playsinline>
+          <source src="colony/card_buy.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+        <h2>Card Buying</h2>
+        <p>
+          Demonstration of the card-buying interaction.
+          If the embedded player does not load, open the video directly:
+          <a href="colony/card_buy.mp4" target="_blank" rel="noopener noreferrer">card_buy.mp4</a>.
+        </p>
+      </article>
+
+      <article class="project-media-card">
+        <img src="colony/colony4.png" alt="Colony screenshot 4">
+        <h2>Colony Screenshot III</h2>
+        <p>Additional visual from the Colony project.</p>
+      </article>
+
+      <article class="project-media-card">
+        <video controls preload="metadata" playsinline>
+          <source src="colony/colony_boss.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+        <h2>Boss Encounter</h2>
+        <p>
+          Gameplay footage showing a boss encounter.
+          If the embedded player does not load, open the video directly:
+          <a href="colony/colony_boss.mp4" target="_blank" rel="noopener noreferrer">colony_boss.mp4</a>.
+        </p>
+      </article>
+
+      <article class="project-media-card">
+        <img src="colony/Broodmother.png" alt="Broodmother boss artwork from Colony">
+        <h2>Broodmother</h2>
+        <p>Boss or enemy visual from the Colony project.</p>
+      </article>
+
+    </section>
+
+    <section class="project-detail-grid">
+      <article class="project-info-card">
+        <h2>Focus</h2>
+        <p>
+          Colony explores interactive game systems, combat pacing,
+          progression loops, card interactions, and encounter design.
+        </p>
+      </article>
+
+      <article class="project-info-card">
+        <h2>Media</h2>
+        <ul>
+          <li>Colony PNG screenshots</li>
+          <li>Early prototype animation</li>
+          <li>Card-buying video</li>
+          <li>Boss encounter video</li>
+          <li>Broodmother visual</li>
+        </ul>
+      </article>
+    </section>
 
   </main>
 
