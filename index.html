@@ -755,6 +755,8 @@
           centerY + (Math.random() - 0.5) * 16
         );
       }
+
+      updateConstellationLines();
     }
 
     function randomBetween(min, max) {
@@ -1074,6 +1076,14 @@
 
       if (toggled) {
         item.element.style.opacity = "1";
+        item.element.style.color = "rgba(255, 252, 232, 1)";
+        item.element.style.filter = "brightness(2.9) saturate(1.35)";
+        item.element.style.textShadow = [
+          "0 0 8px rgba(255, 255, 255, 0.95)",
+          "0 0 18px rgba(255, 247, 211, 0.92)",
+          "0 0 34px rgba(255, 226, 136, 0.72)",
+          "0 0 58px rgba(240, 174, 64, 0.48)"
+        ].join(", ");
         return;
       }
 
