@@ -108,6 +108,30 @@ button {
   pointer-events: none;
 }
 
+.rune-constellation {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.22s ease;
+}
+
+.rune-constellation.has-lines {
+  opacity: 1;
+}
+
+.rune-constellation-path {
+  fill: none;
+  stroke: rgba(255, 247, 211, 0.62);
+  stroke-width: 1.15;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 0 4px rgba(255, 247, 211, 0.72)) drop-shadow(0 0 12px rgba(240, 216, 153, 0.36));
+}
+
 .golden-rune {
   position: absolute;
   left: 0;
@@ -1203,11 +1227,19 @@ button {
   color: #f5f0e8;
 }
 
+.project-body .topbar {
+  display: none;
+}
+
 .timeline-page,
-.project-detail-page,
 .writing-detail-page {
   min-height: 100vh;
   padding: 8rem 1.5rem 5rem;
+}
+
+.project-detail-page {
+  min-height: 100vh;
+  padding: 5rem 1.5rem 5rem;
 }
 
 .timeline-header,
