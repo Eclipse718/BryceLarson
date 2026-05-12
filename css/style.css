@@ -247,69 +247,7 @@ button {
   text-decoration: none;
 }
 
-/* ====================== Scroll Container ====================== */
-
-.scroll-container {
-  position: fixed;
-  top: 54px;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  overflow-y: auto;
-  scroll-snap-type: y mandatory;
-  scroll-behavior: smooth;
-  scrollbar-width: auto;
-  scrollbar-color: #c9a96e #071019;
-  background:
-    radial-gradient(ellipse at 50% 8%, rgba(41, 100, 119, 0.28), transparent 42%),
-    radial-gradient(ellipse at 20% 80%, rgba(18, 75, 97, 0.20), transparent 48%),
-    linear-gradient(180deg, #08111a 0%, #0a1f2b 48%, #061018 100%);
-}
-
-.scroll-container::before,
-.scroll-container::after {
-  content: "";
-  position: fixed;
-  top: 54px;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  pointer-events: none;
-}
-
-.scroll-container::before {
-  z-index: 0;
-  opacity: 0.42;
-  background:
-    repeating-radial-gradient(ellipse at 50% 14%, rgba(180, 230, 236, 0.062) 0 2px, transparent 3px 38px),
-    radial-gradient(circle at var(--cursor-x, 50vw) var(--cursor-y-scroll, 50vh), rgba(255, 232, 155, 0.12), transparent 260px);
-}
-
-.scroll-container::after {
-  z-index: 1;
-  opacity: 0.34;
-  background:
-    radial-gradient(circle at 34% 26%, rgba(201, 169, 110, 0.22), transparent 4%),
-    radial-gradient(circle at 68% 54%, rgba(201, 169, 110, 0.15), transparent 3%),
-    radial-gradient(circle at 48% 76%, rgba(201, 169, 110, 0.12), transparent 2.5%);
-  mix-blend-mode: screen;
-}
-
-.scroll-container::-webkit-scrollbar {
-  width: 13px;
-}
-
-.scroll-container::-webkit-scrollbar-track {
-  background: #071019;
-}
-
-.scroll-container::-webkit-scrollbar-thumb {
-  background-color: #c9a96e;
-  border-radius: 999px;
-  border: 2px solid #071019;
-}
-
-/* ====================== Sections ====================== */
+/* ====================== Scroll Container ====================== */.scroll-container {  position: fixed;  top: 54px;  left: 0;  right: 0;  bottom: 0;  overflow-y: auto;  scroll-snap-type: y mandatory;  scroll-behavior: smooth;  scrollbar-width: auto;  scrollbar-color: #c9a96e #071019;  background:    radial-gradient(ellipse at 50% 8%, rgba(41, 100, 119, 0.28), transparent 42%),    radial-gradient(ellipse at 20% 80%, rgba(18, 75, 97, 0.20), transparent 48%),    linear-gradient(180deg, #08111a 0%, #0a1f2b 48%, #061018 100%);}.scroll-container::before,.scroll-container::after {  content: "";  position: fixed;  top: 54px;  left: 0;  right: 0;  bottom: 0;  pointer-events: none;}.scroll-container::before {  z-index: 0;  opacity: 0.55;  background:    repeating-radial-gradient(      ellipse at 50% 0%,      rgba(255, 232, 155, 0.18) 0 2px,      transparent 3px 38px    ),    radial-gradient(      circle at var(--cursor-x, 50vw) var(--cursor-y-scroll, 50vh),      rgba(255, 232, 155, 0.16),      transparent 300px    );}.scroll-container::after {  z-index: 1;  opacity: 0.34;  background:    radial-gradient(circle at 34% 26%, rgba(201, 169, 110, 0.22), transparent 4%),    radial-gradient(circle at 68% 54%, rgba(201, 169, 110, 0.15), transparent 3%),    radial-gradient(circle at 48% 76%, rgba(201, 169, 110, 0.12), transparent 2.5%);  mix-blend-mode: screen;}.scroll-container::-webkit-scrollbar {  width: 13px;}.scroll-container::-webkit-scrollbar-track {  background: #071019;}.scroll-container::-webkit-scrollbar-thumb {  background-color: #c9a96e;  border-radius: 999px;  border: 2px solid #071019;}/* ====================== Sections ====================== */
 
 .page-section {
   position: relative;
