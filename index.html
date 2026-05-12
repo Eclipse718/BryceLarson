@@ -459,11 +459,11 @@
     let activeProjectIndex = 0;
     let activeBookSpread = 0;
     let runeItems = [];
-    let lastRuneTime = performance.now();
-    let runeAnimationFrame = null;
+    let clickedRuneOrder = [];
     let constellationSvg = null;
     let constellationPath = null;
-    let clickedRuneOrder = [];
+    let lastRuneTime = performance.now();
+    let runeAnimationFrame = null;
 
     const mouse = {
       x: window.innerWidth / 2,
@@ -748,6 +748,7 @@
       item.element.classList.remove("rune-burst");
       void item.element.offsetWidth;
       item.element.classList.add("rune-burst");
+      item.element.classList.add("rune-lit");
 
       for (let i = 0; i < 18; i += 1) {
         createGoldSpark(
@@ -840,6 +841,9 @@
       constellationSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
       constellationSvg.classList.add("rune-constellation");
       constellationSvg.setAttribute("aria-hidden", "true");
+      constellationSvg.setAttribute("focusable", "false");
+      constellationSvg.setAttribute("viewBox", "0 0 100 100");
+      constellationSvg.setAttribute("preserveAspectRatio", "none");
 
       constellationPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
       constellationPath.classList.add("rune-constellation-path");
@@ -851,6 +855,9 @@
       if (!constellationSvg || !constellationPath) {
         return;
       }
+
+      const bounds = getRuneBounds();
+      constellationSvg.setAttribute("viewBox", "0 0 " + bounds.width.toFixed(2) + " " + bounds.height.toFixed(2));
 
       const litRunes = clickedRuneOrder.filter(function(item) {
         return item.clickedLit;
@@ -908,7 +915,7 @@
         rune.tabIndex = -1;
         rune.textContent = runeCharacters[i % runeCharacters.length];
         rune.style.fontSize = fontSize.toFixed(2) + "px";
-        rune.style.setProperty("--rune-rotation", randomBetween(-9, 9).toFixed(2) + "deg");
+        rune.style.setProperty("--rune-rotation", randomBetween(-28, 28).toFixed(2) + "deg");
         rune.style.opacity = String(0.68 + Math.min(0.16, baseBrightness * 0.08));
         const initialX = isOrbiter ? ringCenterX + Math.cos(orbitAngle) * orbitRadius : position.x;
         const initialY = isOrbiter ? ringCenterY + Math.sin(orbitAngle) * orbitRadius : position.y;
@@ -1076,14 +1083,6 @@
 
       if (toggled) {
         item.element.style.opacity = "1";
-        item.element.style.color = "rgba(255, 252, 232, 1)";
-        item.element.style.filter = "brightness(2.9) saturate(1.35)";
-        item.element.style.textShadow = [
-          "0 0 8px rgba(255, 255, 255, 0.95)",
-          "0 0 18px rgba(255, 247, 211, 0.92)",
-          "0 0 34px rgba(255, 226, 136, 0.72)",
-          "0 0 58px rgba(240, 174, 64, 0.48)"
-        ].join(", ");
         return;
       }
 
