@@ -1293,6 +1293,33 @@ button {
   transform: translateX(-3px);
 }
 
+/* ===== PDF EMBED FIX ===== */
+
+.document-stage {
+  width: min(1400px, 96vw);
+  margin: 0 auto;
+}
+
+.document-paper {
+  width: 100%;
+  height: calc(100vh - 180px);
+  border-radius: 18px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(201, 169, 110, 0.28);
+  box-shadow:
+    0 24px 60px rgba(0, 0, 0, 0.38),
+    inset 0 0 28px rgba(255, 255, 255, 0.03);
+}
+
+.document-embed {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+  background: #111;
+}
+
 /* ====================== Mobile ====================== */
 
 @media screen and (max-width: 760px) {
