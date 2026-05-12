@@ -2,23 +2,95 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>Colony | Bryce Larson</title>
 
-  <link rel="stylesheet" href="css/style.css?v=13">
+  <link rel="stylesheet" href="css/style.css?v=26">
+
+  <style>
+    .project-detail-page {
+      padding-top: 10rem;
+    }
+
+    .project-detail-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .project-gallery {
+      width: min(1100px, 92vw);
+      margin: 0 auto 3rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      align-items: stretch;
+    }
+
+    .project-media-card,
+    .project-info-card {
+      text-align: center;
+      padding: 1.35rem;
+      border: 1px solid rgba(201, 169, 110, 0.35);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.045);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+    }
+
+    .project-media-card img,
+    .project-media-card video {
+      width: 100%;
+      max-height: 340px;
+      object-fit: contain;
+      border-radius: 12px;
+      border: 2px solid rgba(201, 169, 110, 0.65);
+      background: #030c12;
+    }
+
+    .project-media-card h2,
+    .project-info-card h2 {
+      margin: 1rem 0 0.55rem;
+      color: #f5f0e8;
+      font-weight: normal;
+      letter-spacing: 0.08em;
+      text-align: center;
+    }
+
+    .project-media-card p,
+    .project-info-card p,
+    .project-info-card li {
+      color: #b9b0a3;
+      line-height: 1.6;
+      letter-spacing: 0.03em;
+      text-align: center;
+    }
+
+    .project-detail-grid {
+      width: min(900px, 92vw);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .project-info-card ul {
+      padding-left: 0;
+      list-style-position: inside;
+    }
+  </style>
 </head>
 
 <body class="project-body">
 
   <nav class="topbar" aria-label="Top navigation">
     <div class="topbar-brand">
-      <img
-        src="website-images/circlecroppedme.png"
-        alt="Bryce Larson"
-        class="topbar-photo"
-      >
+      <div class="topbar-avatar" aria-hidden="true">
+        <img
+          src="website-images/circlecroppedme.png"
+          alt=""
+          class="topbar-photo"
+        >
+      </div>
 
       <span class="topbar-name">Bryce Larson</span>
     </div>
@@ -28,6 +100,7 @@
       <a class="topbar-link" href="index.html#experience">Experience</a>
       <a class="topbar-link" href="index.html#projects">Projects</a>
       <a class="topbar-link" href="index.html#writing">Writing</a>
+      <a class="topbar-link" href="mailto:brycelarson718@gmail.com">Contact</a>
     </div>
   </nav>
 
@@ -49,42 +122,21 @@
     <section class="project-gallery" aria-label="Colony media">
 
       <article class="project-media-card">
-        <img
-          src="colony/colony1.png"
-          alt="Colony screenshot 1"
-        >
-
+        <img src="colony/colony1.png" alt="Colony screenshot 1">
         <h2>Colony Screenshot I</h2>
-
-        <p>
-          Opening screenshot from the Colony project.
-        </p>
+        <p>Opening screenshot from the Colony project.</p>
       </article>
 
       <article class="project-media-card">
-        <img
-          src="colony/colony_early_gif.gif"
-          alt="Early Colony gameplay animation"
-        >
-
+        <img src="colony/colony_early_gif.gif" alt="Early Colony gameplay animation">
         <h2>Early Prototype</h2>
-
-        <p>
-          Animated prototype footage from an earlier version of Colony.
-        </p>
+        <p>Animated prototype footage from an earlier version of Colony.</p>
       </article>
 
       <article class="project-media-card">
-        <img
-          src="colony/colony2.png"
-          alt="Colony screenshot 2"
-        >
-
+        <img src="colony/colony2.png" alt="Colony screenshot 2">
         <h2>Colony Screenshot II</h2>
-
-        <p>
-          Additional screenshot from the Colony build.
-        </p>
+        <p>Additional screenshot from the Colony build.</p>
       </article>
 
       <article class="project-media-card">
@@ -92,9 +144,7 @@
           <source src="colony/card_buy.mp4" type="video/mp4">
           Your browser does not support the video tag.
         </video>
-
         <h2>Card Buying</h2>
-
         <p>
           Demonstration of the card-buying interaction.
           If the embedded player does not load, open the video directly:
@@ -103,16 +153,9 @@
       </article>
 
       <article class="project-media-card">
-        <img
-          src="colony/colony4.png"
-          alt="Colony screenshot 4"
-        >
-
+        <img src="colony/colony4.png" alt="Colony screenshot 4">
         <h2>Colony Screenshot III</h2>
-
-        <p>
-          Additional visual from the Colony project.
-        </p>
+        <p>Additional visual from the Colony project.</p>
       </article>
 
       <article class="project-media-card">
@@ -120,9 +163,7 @@
           <source src="colony/colony_boss.mp4" type="video/mp4">
           Your browser does not support the video tag.
         </video>
-
         <h2>Boss Encounter</h2>
-
         <p>
           Gameplay footage showing a boss encounter.
           If the embedded player does not load, open the video directly:
@@ -131,16 +172,9 @@
       </article>
 
       <article class="project-media-card">
-        <img
-          src="colony/Broodmother.png"
-          alt="Broodmother boss artwork from Colony"
-        >
-
+        <img src="colony/Broodmother.png" alt="Broodmother boss artwork from Colony">
         <h2>Broodmother</h2>
-
-        <p>
-          Boss or enemy visual from the Colony project.
-        </p>
+        <p>Boss or enemy visual from the Colony project.</p>
       </article>
 
     </section>
@@ -148,7 +182,6 @@
     <section class="project-detail-grid">
       <article class="project-info-card">
         <h2>Focus</h2>
-
         <p>
           Colony explores interactive game systems, combat pacing,
           progression loops, card interactions, and encounter design.
@@ -157,7 +190,6 @@
 
       <article class="project-info-card">
         <h2>Media</h2>
-
         <ul>
           <li>Colony PNG screenshots</li>
           <li>Early prototype animation</li>
