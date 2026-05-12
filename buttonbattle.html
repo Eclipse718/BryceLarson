@@ -38,6 +38,30 @@
 
     .project-media-card {
       width: 100%;
+      position: relative;
+    }
+
+    .floating-back-button {
+      position: absolute;
+      top: 1.25rem;
+      left: 1.25rem;
+      z-index: 10;
+      padding: 0.7rem 1rem;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.72);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(201, 169, 110, 0.55);
+      color: #f5f0e8;
+      text-decoration: none;
+      letter-spacing: 0.04em;
+      font-size: 0.95rem;
+      transition: all 0.2s ease;
+    }
+
+    .floating-back-button:hover {
+      background: rgba(201, 169, 110, 0.18);
+      border-color: rgba(201, 169, 110, 0.9);
+      transform: translateY(-1px);
     }
 
     .project-media-card img,
@@ -97,6 +121,13 @@
       .project-info-card {
         padding: 1rem;
       }
+
+      .floating-back-button {
+        top: 0.9rem;
+        left: 0.9rem;
+        font-size: 0.85rem;
+        padding: 0.6rem 0.85rem;
+      }
     }
   </style>
 </head>
@@ -128,8 +159,6 @@
   <main class="project-detail-page">
 
     <header class="project-detail-header">
-      <a class="back-to-projects" href="index.html#projects">← Back to Projects</a>
-
       <h1>Button Battle Game</h1>
 
       <div class="divider"></div>
@@ -143,6 +172,8 @@
     <section class="project-gallery" aria-label="Button Battle Game media">
 
       <article class="project-media-card">
+        <a class="floating-back-button" href="index.html#projects">← Back to Projects</a>
+
         <img
           src="buttonbattle/buttonbattle1.png"
           alt="Button Battle gameplay screenshot"
