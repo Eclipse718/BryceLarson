@@ -281,7 +281,7 @@ button {
   z-index: 0;
   opacity: 0.42;
   background:
-    repeating-radial-gradient(ellipse at 50% 14%, rgba(180, 230, 236, 0.062) 0 2px, transparent 3px 38px),
+    repeating-radial-gradient(ellipse at 50% -4%, rgba(180, 230, 236, 0.062) 0 2px, transparent 3px 38px),
     radial-gradient(circle at var(--cursor-x, 50vw) var(--cursor-y-scroll, 50vh), rgba(255, 232, 155, 0.12), transparent 190px);
 }
 
@@ -323,6 +323,7 @@ button {
   padding: 2rem 1.5rem;
   overflow: hidden;
   scroll-snap-align: start;
+  z-index: 2;
   background: transparent;
 }
 
@@ -856,7 +857,9 @@ button {
   max-width: 100%;
   margin: 0 auto;
   color: #5b321f;
-  text-decoration: none;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.24em;
   transition: color 0.25s ease, transform 0.25s ease;
 }
 
