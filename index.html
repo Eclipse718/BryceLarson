@@ -27,7 +27,7 @@
         >
       </div>
 
-      <span class="topbar-name">Bryce Larson</span>
+      <span class="topbar-name">Bryce Larson <span class="topbar-version">v1.5</span></span>
     </div>
 
     <div class="topbar-links">
@@ -418,6 +418,10 @@
 
     const runeField = document.getElementById("runeField");
 
+    if (document.body.classList.contains("project-body") || document.body.classList.contains("writing-body") || document.querySelector(".project-detail-page") || document.querySelector(".writing-detail-page")) {
+      document.body.classList.add("hide-detail-topbar");
+    }
+
     const bookStories = [
       {
         title: "Window Shopping",
@@ -461,7 +465,7 @@
     let runeItems = [];
     let clickedRuneOrder = [];
     let constellationSvg = null;
-    let constellationPath = null;
+    let constellationPolyline = null;
     let lastRuneTime = performance.now();
     let runeAnimationFrame = null;
 
@@ -726,6 +730,9 @@
 
       if (!item.clickedLit) {
         item.burstUntil = 0;
+        item.frozen = false;
+        item.freezeX = null;
+        item.freezeY = null;
         item.element.classList.remove("rune-burst", "rune-lit");
         clickedRuneOrder = clickedRuneOrder.filter(function(clickedItem) {
           return clickedItem !== item;
@@ -739,9 +746,21 @@
       });
       clickedRuneOrder.push(item);
 
-      const rect = item.element.getBoundingClientRect();
-      const centerX = rect.left + rect.width / 2;
-      const centerY = rect.top + rect.height / 2;
+      const fieldRect = runeField.getBoundingClientRect();
+      const frozenX = item.smoothX;
+      const frozenY = item.smoothY;
+      const centerX = fieldRect.left + frozenX;
+      const centerY = fieldRect.top + frozenY;
+
+      item.frozen = true;
+      item.freezeX = frozenX;
+      item.freezeY = frozenY;
+      item.x = frozenX;
+      item.y = frozenY;
+      item.smoothX = frozenX;
+      item.smoothY = frozenY;
+      item.vx = 0;
+      item.vy = 0;
 
       item.burstUntil = performance.now() + 900;
 
@@ -845,14 +864,14 @@
       constellationSvg.setAttribute("viewBox", "0 0 100 100");
       constellationSvg.setAttribute("preserveAspectRatio", "none");
 
-      constellationPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
-      constellationPath.classList.add("rune-constellation-path");
-      constellationSvg.appendChild(constellationPath);
+      constellationPolyline = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
+      constellationPolyline.classList.add("rune-constellation-line");
+      constellationSvg.appendChild(constellationPolyline);
       runeField.appendChild(constellationSvg);
     }
 
     function updateConstellationLines() {
-      if (!constellationSvg || !constellationPath) {
+      if (!constellationSvg || !constellationPolyline) {
         return;
       }
 
@@ -864,17 +883,18 @@
       });
 
       if (litRunes.length < 2) {
-        constellationPath.setAttribute("d", "");
+        constellationPolyline.setAttribute("points", "");
         constellationSvg.classList.remove("has-lines");
         return;
       }
 
-      const pathData = litRunes.map(function(item, index) {
-        const command = index === 0 ? "M" : "L";
-        return command + " " + item.smoothX.toFixed(2) + " " + item.smoothY.toFixed(2);
+      const points = litRunes.map(function(item) {
+        const centerX = item.clickedLit && item.frozen ? item.freezeX : item.smoothX;
+        const centerY = item.clickedLit && item.frozen ? item.freezeY : item.smoothY;
+        return centerX.toFixed(2) + "," + centerY.toFixed(2);
       }).join(" ");
 
-      constellationPath.setAttribute("d", pathData);
+      constellationPolyline.setAttribute("points", points);
       constellationSvg.classList.add("has-lines");
     }
 
@@ -915,7 +935,9 @@
         rune.tabIndex = -1;
         rune.textContent = runeCharacters[i % runeCharacters.length];
         rune.style.fontSize = fontSize.toFixed(2) + "px";
-        rune.style.setProperty("--rune-rotation", randomBetween(-28, 28).toFixed(2) + "deg");
+        const runeRotation = randomBetween(-72, 72).toFixed(2) + "deg";
+        rune.style.setProperty("--rune-rotation", runeRotation);
+        rune.dataset.rotation = runeRotation;
         rune.style.opacity = String(0.68 + Math.min(0.16, baseBrightness * 0.08));
         const initialX = isOrbiter ? ringCenterX + Math.cos(orbitAngle) * orbitRadius : position.x;
         const initialY = isOrbiter ? ringCenterY + Math.sin(orbitAngle) * orbitRadius : position.y;
@@ -941,6 +963,9 @@
           wanderStrength: randomBetween(0.25, 0.85),
           baseBrightness: baseBrightness,
           clickedLit: false,
+          frozen: false,
+          freezeX: null,
+          freezeY: null,
           burstUntil: 0,
           isOrbiter: isOrbiter,
           orbitCenterX: ringCenterX,
@@ -1104,20 +1129,29 @@
       lastRuneTime = now;
 
       runeItems.forEach(function(item) {
-        if (item.isOrbiter) {
-          updateOrbiterRune(item, dt, bounds);
+        if (item.clickedLit && item.frozen) {
+          item.x = item.freezeX;
+          item.y = item.freezeY;
+          item.smoothX = item.freezeX;
+          item.smoothY = item.freezeY;
+          item.vx = 0;
+          item.vy = 0;
         } else {
-          updateDriftingRune(item, dt, bounds);
+          if (item.isOrbiter) {
+            updateOrbiterRune(item, dt, bounds);
+          } else {
+            updateDriftingRune(item, dt, bounds);
+          }
+
+          const bobX = item.isOrbiter ? 0 : Math.cos(item.driftPhase) * item.driftAmountX;
+          const bobY = item.isOrbiter ? 0 : Math.sin(item.driftPhase * 0.77) * item.driftAmountY;
+          const targetX = item.x + bobX;
+          const targetY = item.y + bobY;
+          const smoothing = 1 - Math.pow(0.002, dt);
+
+          item.smoothX += (targetX - item.smoothX) * smoothing;
+          item.smoothY += (targetY - item.smoothY) * smoothing;
         }
-
-        const bobX = item.isOrbiter ? 0 : Math.cos(item.driftPhase) * item.driftAmountX;
-        const bobY = item.isOrbiter ? 0 : Math.sin(item.driftPhase * 0.77) * item.driftAmountY;
-        const targetX = item.x + bobX;
-        const targetY = item.y + bobY;
-        const smoothing = 1 - Math.pow(0.002, dt);
-
-        item.smoothX += (targetX - item.smoothX) * smoothing;
-        item.smoothY += (targetY - item.smoothY) * smoothing;
 
         updateRuneGlow(item, now, bounds, item.smoothX, item.smoothY);
 
