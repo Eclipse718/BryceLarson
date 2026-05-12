@@ -759,13 +759,13 @@
     }
 
     function getRuneBounds() {
-      const rect = runeField.getBoundingClientRect();
-
+      // Keep rune math anchored to the viewport, not page content, so scrolling
+      // never pushes or displaces the rune field.
       return {
-        width: Math.max(320, rect.width || window.innerWidth),
-        height: Math.max(320, rect.height || (window.innerHeight - 54)),
-        top: rect.top || 54,
-        left: rect.left || 0
+        width: Math.max(320, window.innerWidth),
+        height: Math.max(320, window.innerHeight - 54),
+        top: 54,
+        left: 0
       };
     }
 
@@ -830,9 +830,8 @@
     function buildRuneField() {
       const runeCharacters = ["ᚠ", "ᚢ", "ᚦ", "ᚨ", "ᚱ", "ᚲ", "ᚷ", "ᚹ", "ᚺ", "ᚾ", "ᛁ", "ᛃ", "ᛇ", "ᛈ", "ᛉ", "ᛊ", "ᛏ", "ᛒ", "ᛖ", "ᛗ", "ᛚ", "ᛜ", "ᛞ", "ᛟ"];
       const bounds = getRuneBounds();
-      const runeCount = 34;
-      const orbitCount = 9;
-      const followCount = 5;
+      const runeCount = 44;
+      const orbitCount = 14;
       const ringCenterX = bounds.width / 2;
       const ringCenterY = bounds.height * 0.14;
       const ringSpacing = 38;
@@ -848,12 +847,11 @@
       for (let i = 0; i < runeCount; i += 1) {
         const rune = document.createElement("button");
         const isOrbiter = i < orbitCount;
-        const isFollower = !isOrbiter && i < orbitCount + followCount;
         const fontSize = randomBetween(10, 17);
         const baseBrightness = randomBetween(0.78, 1.46);
         const radius = Math.max(10, fontSize * 0.85);
         const position = distributedRunePosition(i, runeCount, bounds);
-        const speed = randomBetween(2.1, 4.8);
+        const speed = randomBetween(1.8, 4.2);
         const angle = Math.random() * Math.PI * 2;
         const orbitLayer = firstUsefulRing + (i % 7);
         const orbitRadius = orbitLayer * ringSpacing;
@@ -882,29 +880,25 @@
           smoothX: initialX,
           smoothY: initialY,
           driftPhase: Math.random() * Math.PI * 2,
-          driftSpeed: randomBetween(0.08, 0.18),
-          driftAmountX: randomBetween(2, 7),
-          driftAmountY: randomBetween(2, 6),
+          driftSpeed: randomBetween(0.06, 0.13),
+          driftAmountX: randomBetween(1.5, 4.5),
+          driftAmountY: randomBetween(1.5, 4.0),
           wanderPhase: Math.random() * Math.PI * 2,
-          wanderSpeed: randomBetween(0.08, 0.20),
-          wanderStrength: randomBetween(0.5, 1.4),
+          wanderSpeed: randomBetween(0.05, 0.14),
+          wanderStrength: randomBetween(0.25, 0.85),
           baseBrightness: baseBrightness,
           clickedLit: false,
           burstUntil: 0,
           isOrbiter: isOrbiter,
-          isFollower: isFollower,
-          followOffsetX: randomBetween(-72, 72),
-          followOffsetY: randomBetween(-58, 58),
-          followPull: randomBetween(0.26, 0.42),
           orbitCenterX: ringCenterX,
           orbitCenterY: ringCenterY,
           orbitAngle: orbitAngle,
-          orbitSpeed: (Math.random() < 0.5 ? -1 : 1) * randomBetween(0.0045, 0.009),
+          orbitSpeed: (Math.random() < 0.5 ? -1 : 1) * randomBetween(0.0038, 0.0072),
           orbitRadiusX: orbitRadius,
           orbitRadiusY: orbitRadius,
           orbitWobblePhase: Math.random() * Math.PI * 2,
-          orbitWobbleSpeed: randomBetween(0.06, 0.14),
-          orbitWobbleAmount: randomBetween(0.3, 1.0)
+          orbitWobbleSpeed: randomBetween(0.035, 0.08),
+          orbitWobbleAmount: randomBetween(0.15, 0.55)
         };
 
         rune.addEventListener("click", function(event) {
@@ -961,15 +955,6 @@
       item.vx += wanderX * dt;
       item.vy += wanderY * dt;
 
-      if (item.isFollower && mouse.active) {
-        const targetX = clamp(mouse.x - bounds.left + item.followOffsetX, 24, bounds.width - 24);
-        const targetY = clamp(mouse.y - bounds.top + item.followOffsetY, 24, bounds.height - 24);
-        const dx = targetX - item.x;
-        const dy = targetY - item.y;
-
-        item.vx += dx * item.followPull * dt;
-        item.vy += dy * item.followPull * dt;
-      }
 
       item.x += item.vx * dt;
       item.y += item.vy * dt;
@@ -994,8 +979,8 @@
       item.vy *= Math.pow(0.992, dt * 60);
 
       const speed = Math.hypot(item.vx, item.vy);
-      const maxSpeed = item.isFollower ? 22 : 6.2;
-      const minSpeed = item.isFollower ? 1.4 : 1.2;
+      const maxSpeed = 5.4;
+      const minSpeed = 0.9;
 
       if (speed > maxSpeed) {
         item.vx = (item.vx / speed) * maxSpeed;
@@ -1025,35 +1010,36 @@
       const viewportX = bounds.left + displayX;
       const viewportY = bounds.top + displayY;
       const distance = Math.hypot(mouse.x - viewportX, mouse.y - viewportY);
-      const glowRadius = 175;
+      const glowRadius = 135;
       const proximity = mouse.active ? Math.max(0, 1 - distance / glowRadius) : 0;
       const burst = now < item.burstUntil;
+      const toggled = item.clickedLit || burst;
       const power = Math.max(
-        proximity * proximity * 5.8,
-        item.clickedLit ? 3.2 : 0,
-        burst ? 3.8 : 0
+        proximity * proximity * 6.2,
+        item.clickedLit ? 3.9 : 0,
+        burst ? 4.4 : 0
       );
       const base = item.baseBrightness;
-      const opacity = Math.min(1, 0.66 + base * 0.13 + power * 0.12);
-      const brightness = 1.08 + base * 0.24 + power * 0.86;
-      const goldAlpha = Math.min(1, 0.46 + base * 0.18 + power * 0.22);
-      const deepGoldAlpha = Math.min(1, 0.22 + power * 0.22);
-      const whiteAlpha = Math.min(0.86, 0.08 + power * 0.16);
+      const opacity = Math.min(1, 0.58 + base * 0.13 + power * 0.10);
+      const brightness = 1.02 + base * 0.18 + power * 0.58;
+      const goldAlpha = Math.min(1, 0.38 + base * 0.16 + power * 0.19);
+      const deepGoldAlpha = Math.min(0.84, 0.12 + power * 0.17);
+      const whiteAlpha = Math.min(0.58, 0.04 + power * 0.10);
 
-      item.element.classList.toggle("rune-lit", item.clickedLit || burst);
+      item.element.classList.toggle("rune-lit", toggled);
 
-      if (item.clickedLit || burst) {
+      if (toggled) {
         item.element.style.opacity = "1";
         return;
       }
 
       item.element.style.opacity = opacity.toFixed(3);
-      item.element.style.color = "rgba(255, " + Math.round(203 + power * 9) + ", " + Math.round(82 + power * 13) + ", " + opacity.toFixed(3) + ")";
-      item.element.style.filter = "brightness(" + brightness.toFixed(2) + ") saturate(" + (1.18 + power * 0.18).toFixed(2) + ")";
+      item.element.style.color = "rgba(201, 169, 110, " + opacity.toFixed(3) + ")";
+      item.element.style.filter = "brightness(" + brightness.toFixed(2) + ") saturate(" + (1.02 + power * 0.10).toFixed(2) + ")";
       item.element.style.textShadow = [
-        "0 0 " + (5 + power * 3).toFixed(1) + "px rgba(255, 246, 220, " + whiteAlpha.toFixed(3) + ")",
-        "0 0 " + (12 + base * 5 + power * 7).toFixed(1) + "px rgba(255, 198, 72, " + goldAlpha.toFixed(3) + ")",
-        "0 0 " + (26 + base * 10 + power * 13).toFixed(1) + "px rgba(218, 139, 22, " + deepGoldAlpha.toFixed(3) + ")"
+        "0 0 " + (4 + power * 1.8).toFixed(1) + "px rgba(255, 250, 232, " + whiteAlpha.toFixed(3) + ")",
+        "0 0 " + (11 + base * 4 + power * 5).toFixed(1) + "px rgba(201, 169, 110, " + goldAlpha.toFixed(3) + ")",
+        "0 0 " + (24 + base * 8 + power * 10).toFixed(1) + "px rgba(150, 103, 42, " + deepGoldAlpha.toFixed(3) + ")"
       ].join(", ");
     }
 
