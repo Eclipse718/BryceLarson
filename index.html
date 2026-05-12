@@ -663,42 +663,55 @@
       }
     }
 
-    function animateRunes(now) {
-      const dt = Math.min(0.05, Math.max(0.001, (now - lastRuneTime) / 1000));
-      const bounds = getRuneBounds();
-      lastRuneTime = now;
+function animateRunes(now) {
+  const dt = Math.min(0.05, Math.max(0.001, (now - lastRuneTime) / 1000));
+  const bounds = getRuneBounds();
 
-      runeItems.forEach(item => {
-        item.driftPhase += item.driftSpeed;
-        item.x += item.vx * dt * 60;
-        item.y += item.vy * dt * 60;
+  lastRuneTime = now;
 
-        if (item.x < 24 || item.x > bounds.width - 24) {
-          item.vx *= -1;
-        }
+  runeItems.forEach(item => {
+    item.driftPhase += item.driftSpeed * 0.45;
 
-        if (item.y < 24 || item.y > bounds.height - 24) {
-          item.vy *= -1;
-        }
+    item.x += item.vx * dt * 18;
+    item.y += item.vy * dt * 18;
 
-        item.x = clamp(item.x, 24, bounds.width - 24);
-        item.y = clamp(item.y, 24, bounds.height - 24);
-
-        const targetX = item.x + Math.cos(item.driftPhase) * item.driftAmountX;
-        const targetY = item.y + Math.sin(item.driftPhase * 0.77) * item.driftAmountY;
-        item.smoothX += (targetX - item.smoothX) * 0.08;
-        item.smoothY += (targetY - item.smoothY) * 0.08;
-
-        updateRuneGlow(item);
-
-        const scale = item.clickedLit ? 1.32 : item.glowScale;
-        item.element.style.left = item.smoothX.toFixed(2) + "px";
-        item.element.style.top = item.smoothY.toFixed(2) + "px";
-        item.element.style.transform = "translate(-50%, -50%) rotate(var(--rune-rotation)) scale(" + scale.toFixed(3) + ")";
-      });
-
-      runeAnimationFrame = requestAnimationFrame(animateRunes);
+    if (item.x < 24 || item.x > bounds.width - 24) {
+      item.vx *= -1;
     }
+
+    if (item.y < 24 || item.y > bounds.height - 24) {
+      item.vy *= -1;
+    }
+
+    item.x = clamp(item.x, 24, bounds.width - 24);
+    item.y = clamp(item.y, 24, bounds.height - 24);
+
+    const targetX =
+      item.x +
+      Math.cos(item.driftPhase) * (item.driftAmountX * 0.32);
+
+    const targetY =
+      item.y +
+      Math.sin(item.driftPhase * 0.7) * (item.driftAmountY * 0.32);
+
+    item.smoothX += (targetX - item.smoothX) * 0.03;
+    item.smoothY += (targetY - item.smoothY) * 0.03;
+
+    updateRuneGlow(item);
+
+    const scale = item.clickedLit ? 1.32 : item.glowScale;
+
+    item.element.style.left = item.smoothX.toFixed(2) + "px";
+    item.element.style.top = item.smoothY.toFixed(2) + "px";
+
+    item.element.style.transform =
+      "translate(-50%, -50%) rotate(var(--rune-rotation)) scale(" +
+      scale.toFixed(3) +
+      ")";
+  });
+
+  runeAnimationFrame = requestAnimationFrame(animateRunes);
+}
 
     window.addEventListener("pointermove", event => {
       mouse.x = event.clientX;
