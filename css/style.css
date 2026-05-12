@@ -1173,7 +1173,13 @@ button {
   left: 50%;
   width: 4px;
   transform: translateX(-50%);
-  background: linear-gradient(to bottom, transparent, #c9a96e 7%, #c9a96e 93%, transparent);
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    #c9a96e 7%,
+    #c9a96e 93%,
+    transparent
+  );
   box-shadow: 0 0 18px rgba(201, 169, 110, 0.55);
 }
 
@@ -1191,9 +1197,17 @@ button {
   height: 22px;
   margin-top: -11px;
   border-radius: 50%;
-  background: radial-gradient(circle at 35% 35%, #f9e7b8, #c9a96e 68%, #8e6a32 100%);
+  background:
+    radial-gradient(
+      circle at 35% 35%,
+      #f9e7b8,
+      #c9a96e 68%,
+      #8e6a32 100%
+    );
   border: 2px solid rgba(255, 235, 182, 0.82);
-  box-shadow: 0 0 18px rgba(201, 169, 110, 0.82), 0 0 30px rgba(201, 169, 110, 0.34);
+  box-shadow:
+    0 0 18px rgba(201, 169, 110, 0.82),
+    0 0 30px rgba(201, 169, 110, 0.34);
 }
 
 .timeline-left {
@@ -1241,7 +1255,9 @@ button {
   padding: 0.45rem;
   background: rgba(255, 255, 255, 0.95);
   border: 2px solid #c9a96e;
-  box-shadow: 0 0 0 4px rgba(201, 169, 110, 0.10), 0 0 26px rgba(201, 169, 110, 0.22);
+  box-shadow:
+    0 0 0 4px rgba(201, 169, 110, 0.10),
+    0 0 26px rgba(201, 169, 110, 0.22);
 }
 
 .timeline-logo {
@@ -1284,7 +1300,9 @@ button {
   text-decoration: none;
   font-size: 0.95rem;
   letter-spacing: 0.06em;
-  transition: color 0.25s ease, transform 0.25s ease;
+  transition:
+    color 0.25s ease,
+    transform 0.25s ease;
 }
 
 .back-to-projects:hover,
@@ -1296,13 +1314,13 @@ button {
 /* ===== PDF EMBED FIX ===== */
 
 .document-stage {
-  width: min(1400px, 96vw);
+  width: min(1200px, 94vw);
   margin: 0 auto;
 }
 
 .document-paper {
   width: 100%;
-  height: calc(100vh - 180px);
+  height: calc(100vh - 220px);
   border-radius: 18px;
   overflow: hidden;
   background: rgba(255, 255, 255, 0.04);
