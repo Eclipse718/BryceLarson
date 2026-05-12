@@ -35,15 +35,122 @@
       color: #f5d89a;
       text-decoration: underline;
     }
+
+    .project-gallery {
+      width: min(1200px, 94vw);
+      margin: 0 auto 4rem;
+      display: flex;
+      flex-direction: column;
+      gap: 4rem;
+    }
+
+    .project-media-card,
+    .project-info-card {
+      text-align: center;
+      padding: 1.5rem;
+      border: 1px solid rgba(201, 169, 110, 0.35);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.045);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+    }
+
+    .project-media-card {
+      width: 100%;
+    }
+
+    .project-media-card img,
+    .project-media-card video {
+      width: 100%;
+      height: auto;
+      max-height: none;
+      object-fit: contain;
+      display: block;
+      border-radius: 14px;
+      border: 2px solid rgba(201, 169, 110, 0.65);
+      background: #030c12;
+    }
+
+    .project-media-card h2,
+    .project-info-card h2 {
+      margin: 1.35rem 0 0.65rem;
+      color: #f5f0e8;
+      font-weight: normal;
+      letter-spacing: 0.08em;
+      text-align: center;
+    }
+
+    .project-media-card p,
+    .project-info-card p,
+    .project-info-card li {
+      color: #b9b0a3;
+      line-height: 1.6;
+      letter-spacing: 0.03em;
+      text-align: center;
+    }
+
+    .project-detail-grid {
+      width: min(1000px, 92vw);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .project-info-card ul {
+      padding-left: 0;
+      list-style-position: inside;
+    }
+
+    @media (max-width: 700px) {
+      .project-detail-page {
+        padding-top: 8rem;
+      }
+
+      .project-gallery {
+        width: 94vw;
+        gap: 2.5rem;
+      }
+
+      .project-media-card,
+      .project-info-card {
+        padding: 1rem;
+      }
+
+      .project-back-row {
+        width: 94vw;
+        margin: -2rem auto 2rem;
+      }
+    }
   </style>
 </head>
 
 <body class="project-body">
 
+  <nav class="topbar" aria-label="Top navigation">
+    <div class="topbar-brand">
+      <div class="topbar-avatar" aria-hidden="true">
+        <img
+          src="website-images/circlecroppedme.png"
+          alt=""
+          class="topbar-photo"
+        >
+      </div>
+
+      <span class="topbar-name">Bryce Larson</span>
+    </div>
+
+    <div class="topbar-links">
+      <a class="topbar-link" href="index.html#home">Home</a>
+      <a class="topbar-link" href="index.html#experience">Experience</a>
+      <a class="topbar-link" href="index.html#projects">Projects</a>
+      <a class="topbar-link" href="index.html#writing">Writing</a>
+      <a class="topbar-link" href="mailto:brycelarson718@gmail.com">Contact</a>
+    </div>
+  </nav>
+
   <main class="project-detail-page">
 
     <header class="project-detail-header">
-
       <h1>Digital Antfarm</h1>
 
       <div class="divider"></div>
@@ -55,10 +162,106 @@
     </header>
 
     <div class="project-back-row">
-      <a class="back-to-projects" href="index.html#projects">
-        ← Back to Projects
-      </a>
+      <a class="back-to-projects" href="index.html#projects">← Back to Projects</a>
     </div>
+
+    <section class="project-gallery" aria-label="Digital Antfarm media">
+
+      <article class="project-media-card">
+        <video controls preload="metadata" playsinline>
+          <source src="digital%20antfarm/asciiland1.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+        <h2>ASCII Land I</h2>
+        <p>
+          First embedded video from the Digital Antfarm project.
+          If the embedded player does not load, open the video directly:
+          <a href="digital%20antfarm/asciiland1.mp4" target="_blank" rel="noopener noreferrer">asciiland1.mp4</a>.
+        </p>
+      </article>
+
+      <article class="project-media-card">
+        <video controls preload="metadata" playsinline>
+          <source src="digital%20antfarm/asciiland2.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+        <h2>ASCII Land II</h2>
+        <p>
+          Second embedded video from the Digital Antfarm project.
+          If the embedded player does not load, open the video directly:
+          <a href="digital%20antfarm/asciiland2.mp4" target="_blank" rel="noopener noreferrer">asciiland2.mp4</a>.
+        </p>
+      </article>
+
+      <article class="project-media-card">
+        <video controls preload="metadata" playsinline>
+          <source src="digital%20antfarm/lightning_scepter.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+        <h2>Lightning Scepter</h2>
+        <p>
+          Demonstration of the lightning scepter effect.
+          If the embedded player does not load, open the video directly:
+          <a href="digital%20antfarm/lightning_scepter.mp4" target="_blank" rel="noopener noreferrer">lightning_scepter.mp4</a>.
+        </p>
+      </article>
+
+      <article class="project-media-card">
+        <video controls preload="metadata" playsinline>
+          <source src="digital%20antfarm/ice_scepter.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+        <h2>Ice Scepter</h2>
+        <p>
+          Demonstration of the ice scepter effect.
+          If the embedded player does not load, open the video directly:
+          <a href="digital%20antfarm/ice_scepter.mp4" target="_blank" rel="noopener noreferrer">ice_scepter.mp4</a>.
+        </p>
+      </article>
+
+      <article class="project-media-card">
+        <video controls preload="metadata" playsinline>
+          <source src="digital%20antfarm/fire_scepter.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+        <h2>Fire Scepter</h2>
+        <p>
+          Demonstration of the fire scepter effect.
+          If the embedded player does not load, open the video directly:
+          <a href="digital%20antfarm/fire_scepter.mp4" target="_blank" rel="noopener noreferrer">fire_scepter.mp4</a>.
+        </p>
+      </article>
+
+      <article class="project-media-card">
+        <img
+          src="digital%20antfarm/asciilandcreativebar.png"
+          alt="ASCII Land creative bar interface"
+        >
+        <h2>Creative Bar</h2>
+        <p>Interface view from the ASCII Land creative bar.</p>
+      </article>
+
+    </section>
+
+    <section class="project-detail-grid">
+      <article class="project-info-card">
+        <h2>Focus</h2>
+        <p>
+          Digital Antfarm experiments with visual systems, simulation-like
+          behavior, text-based aesthetics, and interactive tool effects.
+        </p>
+      </article>
+
+      <article class="project-info-card">
+        <h2>Media</h2>
+        <ul>
+          <li>ASCII Land I video</li>
+          <li>ASCII Land II video</li>
+          <li>Lightning, ice, and fire scepter videos</li>
+          <li>Creative bar interface image</li>
+        </ul>
+      </article>
+    </section>
 
   </main>
 
