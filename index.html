@@ -866,18 +866,21 @@
         rune.style.fontSize = fontSize.toFixed(2) + "px";
         rune.style.setProperty("--rune-rotation", randomBetween(-9, 9).toFixed(2) + "deg");
         rune.style.opacity = String(0.68 + Math.min(0.16, baseBrightness * 0.08));
-        rune.style.left = "0px";
-        rune.style.top = "0px";
+        const initialX = isOrbiter ? ringCenterX + Math.cos(orbitAngle) * orbitRadius : position.x;
+        const initialY = isOrbiter ? ringCenterY + Math.sin(orbitAngle) * orbitRadius : position.y;
+
+        rune.style.left = initialX.toFixed(2) + "px";
+        rune.style.top = initialY.toFixed(2) + "px";
 
         const item = {
           element: rune,
-          x: isOrbiter ? ringCenterX + Math.cos(orbitAngle) * orbitRadius : position.x,
-          y: isOrbiter ? ringCenterY + Math.sin(orbitAngle) * orbitRadius : position.y,
+          x: initialX,
+          y: initialY,
           radius: radius,
           vx: Math.cos(angle) * speed,
           vy: Math.sin(angle) * speed,
-          smoothX: isOrbiter ? ringCenterX + Math.cos(orbitAngle) * orbitRadius : position.x,
-          smoothY: isOrbiter ? ringCenterY + Math.sin(orbitAngle) * orbitRadius : position.y,
+          smoothX: initialX,
+          smoothY: initialY,
           driftPhase: Math.random() * Math.PI * 2,
           driftSpeed: randomBetween(0.08, 0.18),
           driftAmountX: randomBetween(2, 7),
@@ -1079,10 +1082,9 @@
 
         updateRuneGlow(item, now, bounds, item.smoothX, item.smoothY);
 
-        item.element.style.transform =
-          "translate3d(" + item.smoothX.toFixed(2) + "px, " + item.smoothY.toFixed(2) + "px, 0) " +
-          "translate(-50%, -50%) " +
-          "rotate(var(--rune-rotation))";
+        item.element.style.left = item.smoothX.toFixed(2) + "px";
+        item.element.style.top = item.smoothY.toFixed(2) + "px";
+        item.element.style.transform = "translate(-50%, -50%) rotate(var(--rune-rotation))";
       });
 
       runeAnimationFrame = requestAnimationFrame(animateRunes);
