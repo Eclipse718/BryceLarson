@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bryce Larson</title>
-  <link rel="stylesheet" href="css/style.css?v=22">
+  <link rel="stylesheet" href="css/style.css?v=23">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 
@@ -18,7 +18,7 @@
           class="topbar-photo"
           src="website-images/circlecroppedme.png"
           alt=""
-          onerror="this.style.display='none'; this.parentElement.classList.add('avatar-failed');"
+          onerror="this.style.display='none';"
         >
       </div>
       <span class="topbar-name">Bryce Larson</span>
@@ -79,22 +79,27 @@
                 <div class="project-preview-shell"><img src="Gans/GANS Faces.png" alt="GANs Image Generation preview" class="project-preview project-preview-contain"></div>
                 <div class="project-slide-text"><h3>GANs Image Generation</h3><p>A Generative Adversarial Network for Image Generation</p></div>
               </a>
+
               <a class="project-slide" href="buttonbattle.html">
                 <div class="project-preview-shell"><img src="buttonbattle/buttonbattle1.png" alt="Button Battle Game preview" class="project-preview project-preview-contain"></div>
                 <div class="project-slide-text"><h3>Button Battle Game</h3><p>A game where you select two "buttons" to fight one another.</p></div>
               </a>
+
               <a class="project-slide" href="colony.html">
                 <div class="project-preview-shell"><img src="colony/colony1.png" alt="Colony project preview" class="project-preview project-preview-contain"></div>
                 <div class="project-slide-text"><h3>Colony</h3><p>A card-based Real Time Strategy game where the player builds a colony of magical bees to collect resources and fight off waves of mushroom-themed enemies.</p></div>
               </a>
+
               <a class="project-slide" href="digital-antfarm.html">
                 <div class="project-preview-shell"><video class="project-preview project-preview-contain project-preview-zoom" muted loop playsinline preload="metadata"><source src="digital%20antfarm/asciiland1.mp4" type="video/mp4"></video></div>
                 <div class="project-slide-text"><h3>Digital Antfarm</h3><p>An ASCII/ Dwarf fortress inspired "Digital Ant Farm" simulating a 2D Fantasy environment.</p></div>
               </a>
+
               <a class="project-slide" href="chessbot.html">
                 <div class="project-preview-shell"><video class="project-preview project-preview-contain" muted loop playsinline preload="metadata"><source src="chessbot/chessbot1.mp4" type="video/mp4"></video></div>
                 <div class="project-slide-text"><h3>Chessbot</h3><p>A chessbot program which uses an algorithmic decision tree and can use machine learning to train a chess engine.</p></div>
               </a>
+
               <a class="project-slide" href="miscellaneous.html">
                 <div class="project-preview-shell"><img src="miscellaneous/minesweeper.png" alt="Miscellaneous projects preview" class="project-preview project-preview-cover"></div>
                 <div class="project-slide-text"><h3>Miscellaneous</h3><p>Various other projects I've worked on including several games and simulations.</p></div>
@@ -208,37 +213,79 @@
 
     function scrollToSection(index) {
       const section = sections[index];
-      if (section) section.scrollIntoView({ behavior: "smooth", block: "start" });
+      if (section) {
+        section.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
     }
 
     topbarButtons.forEach(button => button.addEventListener("click", () => scrollToSection(Number(button.dataset.index))));
     sidebarButtons.forEach(button => button.addEventListener("click", () => scrollToSection(Number(button.dataset.index))));
 
     const sectionObserver = new IntersectionObserver(entries => {
-      const visibleEntry = entries.filter(entry => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-      if (!visibleEntry) return;
+      const visibleEntry = entries
+        .filter(entry => entry.isIntersecting)
+        .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+
+      if (!visibleEntry) {
+        return;
+      }
+
       const index = sections.indexOf(visibleEntry.target);
-      if (index >= 0) setActiveSection(index);
-    }, { root: scrollContainer, threshold: [0.45, 0.6, 0.75] });
+      if (index >= 0) {
+        setActiveSection(index);
+      }
+    }, {
+      root: scrollContainer,
+      threshold: [0.45, 0.6, 0.75]
+    });
+
     sections.forEach(section => sectionObserver.observe(section));
 
-    function openContactModal() { contactModal.classList.add("open"); }
-    function closeContactModal() { contactModal.classList.remove("open"); }
+    function openContactModal() {
+      contactModal.classList.add("open");
+    }
+
+    function closeContactModal() {
+      contactModal.classList.remove("open");
+    }
+
     contactOpenButton.addEventListener("click", openContactModal);
     contactCloseButton.addEventListener("click", closeContactModal);
-    contactModal.addEventListener("click", event => { if (event.target === contactModal) closeContactModal(); });
-    window.addEventListener("keydown", event => { if (event.key === "Escape") closeContactModal(); });
+
+    contactModal.addEventListener("click", event => {
+      if (event.target === contactModal) {
+        closeContactModal();
+      }
+    });
+
+    window.addEventListener("keydown", event => {
+      if (event.key === "Escape") {
+        closeContactModal();
+      }
+    });
 
     function updateProjectCarousel() {
       projectTrack.style.transform = "translateX(-" + activeProjectIndex * 100 + "%)";
+
       projectSlides.forEach((slide, index) => {
         slide.classList.toggle("active", index === activeProjectIndex);
         const video = slide.querySelector("video");
-        if (!video) return;
-        if (index === activeProjectIndex) video.play().catch(() => {});
-        else { video.pause(); video.currentTime = 0; }
+
+        if (!video) {
+          return;
+        }
+
+        if (index === activeProjectIndex) {
+          video.play().catch(() => {});
+        } else {
+          video.pause();
+          video.currentTime = 0;
+        }
       });
-      Array.from(projectDots.children).forEach((dot, index) => dot.classList.toggle("active", index === activeProjectIndex));
+
+      Array.from(projectDots.children).forEach((dot, index) => {
+        dot.classList.toggle("active", index === activeProjectIndex);
+      });
     }
 
     function setProject(index) {
@@ -254,11 +301,14 @@
       dot.addEventListener("click", () => setProject(index));
       projectDots.appendChild(dot);
     });
+
     projectPrev.addEventListener("click", () => setProject(activeProjectIndex - 1));
     projectNext.addEventListener("click", () => setProject(activeProjectIndex + 1));
     updateProjectCarousel();
 
-    function pageCount() { return Math.ceil(bookStories.length / 2); }
+    function pageCount() {
+      return Math.ceil(bookStories.length / 2);
+    }
 
     function updateBookCarousel(direction = "none") {
       const leftIndex = activeBookSpread * 2;
@@ -293,7 +343,10 @@
 
       bookPrev.disabled = activeBookSpread === 0;
       bookNext.disabled = activeBookSpread >= pageCount() - 1;
-      Array.from(bookDots.children).forEach((dot, index) => dot.classList.toggle("active", index === activeBookSpread));
+
+      Array.from(bookDots.children).forEach((dot, index) => {
+        dot.classList.toggle("active", index === activeBookSpread);
+      });
 
       if (direction !== "none") {
         turningPage.classList.remove("forward", "backward");
@@ -314,16 +367,56 @@
       });
       bookDots.appendChild(dot);
     }
-    bookPrev.addEventListener("click", () => { if (activeBookSpread > 0) { activeBookSpread -= 1; updateBookCarousel("backward"); } });
-    bookNext.addEventListener("click", () => { if (activeBookSpread < pageCount() - 1) { activeBookSpread += 1; updateBookCarousel("forward"); } });
+
+    bookPrev.addEventListener("click", () => {
+      if (activeBookSpread <= 0) {
+        return;
+      }
+      activeBookSpread -= 1;
+      updateBookCarousel("backward");
+    });
+
+    bookNext.addEventListener("click", () => {
+      if (activeBookSpread >= pageCount() - 1) {
+        return;
+      }
+      activeBookSpread += 1;
+      updateBookCarousel("forward");
+    });
+
     updateBookCarousel();
 
-    function randomBetween(min, max) { return min + Math.random() * (max - min); }
-    function clamp(value, min, max) { return Math.min(max, Math.max(min, value)); }
-    function getRuneBounds() { return { width: Math.max(320, window.innerWidth), height: Math.max(320, window.innerHeight - 54), top: 54, left: 0 }; }
+    function randomBetween(min, max) {
+      return min + Math.random() * (max - min);
+    }
+
+    function clamp(value, min, max) {
+      return Math.min(max, Math.max(min, value));
+    }
+
+    function getRuneBounds() {
+      return {
+        width: Math.max(320, window.innerWidth),
+        height: Math.max(320, window.innerHeight - 54),
+        top: 54,
+        left: 0
+      };
+    }
 
     function getRuneObstacles(bounds) {
-      const selectors = [".section-content", ".project-carousel", ".project-preview-shell", ".project-arrow", ".project-dots", ".book-carousel", ".book-shell", ".book-control", ".sidebar", ".contact-card"];
+      const selectors = [
+        ".section-content",
+        ".project-carousel",
+        ".project-preview-shell",
+        ".project-arrow",
+        ".project-dots",
+        ".book-carousel",
+        ".book-shell",
+        ".book-control",
+        ".sidebar",
+        ".contact-card"
+      ];
+
       return Array.from(document.querySelectorAll(selectors.join(", ")))
         .filter(element => {
           const rect = element.getBoundingClientRect();
@@ -349,28 +442,42 @@
       const margin = 38;
       let best = null;
       let bestScore = -Infinity;
-      for (let attempt = 0; attempt < 45; attempt += 1) {
+
+      for (let attempt = 0; attempt < 60; attempt += 1) {
         const candidate = {
           x: randomBetween(margin, bounds.width - margin),
           y: randomBetween(margin, bounds.height - margin)
         };
-        if (positionIsInObstacle(candidate.x, candidate.y, radius, obstacles)) continue;
+
+        if (positionIsInObstacle(candidate.x, candidate.y, radius, obstacles)) {
+          continue;
+        }
+
         const nearest = existingItems.reduce((minDistance, item) => {
           const distance = Math.hypot(candidate.x - item.x, candidate.y - item.y);
           return Math.min(minDistance, distance);
         }, Infinity);
+
         const edgeBalance = Math.min(candidate.x, bounds.width - candidate.x, candidate.y, bounds.height - candidate.y);
-        const score = nearest + edgeBalance * 0.15 + Math.random() * 60;
-        if (score > bestScore) { best = candidate; bestScore = score; }
+        const score = nearest + edgeBalance * 0.18 + Math.random() * 50;
+
+        if (score > bestScore) {
+          best = candidate;
+          bestScore = score;
+        }
       }
-      return best || { x: randomBetween(margin, bounds.width - margin), y: randomBetween(margin, bounds.height - margin) };
+
+      return best || {
+        x: randomBetween(margin, bounds.width - margin),
+        y: randomBetween(margin, bounds.height - margin)
+      };
     }
 
     function createGoldSpark(x, y) {
       const spark = document.createElement("span");
       spark.className = "gold-spark";
       const angle = Math.random() * Math.PI * 2;
-      const distance = 30 + Math.random() * 54;
+      const distance = 32 + Math.random() * 60;
       const size = 3 + Math.random() * 4;
       spark.style.left = x + "px";
       spark.style.top = y + "px";
@@ -386,11 +493,24 @@
     function burstRune(item) {
       item.clickedLit = !item.clickedLit;
       item.element.classList.toggle("rune-lit", item.clickedLit);
+      item.element.classList.toggle("rune-glow", item.clickedLit);
+
+      if (item.clickedLit) {
+        item.glowStrength = 1.6;
+        item.glowScale = 1.32;
+      } else {
+        item.glowStrength = 0;
+        item.glowScale = 1;
+      }
+
       item.element.classList.remove("rune-burst");
       void item.element.offsetWidth;
       item.element.classList.add("rune-burst");
+
       const rect = item.element.getBoundingClientRect();
-      for (let i = 0; i < 18; i += 1) createGoldSpark(rect.left + rect.width / 2, rect.top + rect.height / 2);
+      for (let i = 0; i < 22; i += 1) {
+        createGoldSpark(rect.left + rect.width / 2, rect.top + rect.height / 2);
+      }
     }
 
     function buildRuneField() {
@@ -398,7 +518,11 @@
       const bounds = getRuneBounds();
       const obstacles = getRuneObstacles(bounds);
       const runeCount = 44;
-      if (runeAnimationFrame) cancelAnimationFrame(runeAnimationFrame);
+
+      if (runeAnimationFrame) {
+        cancelAnimationFrame(runeAnimationFrame);
+      }
+
       runeField.innerHTML = "";
       runeItems = [];
 
@@ -407,7 +531,7 @@
         const fontSize = randomBetween(10, 17);
         const radius = Math.max(10, fontSize * 0.85);
         const position = randomSafeRunePosition(runeItems, bounds, obstacles, radius);
-        const speed = randomBetween(0.18, 0.42);
+        const speed = randomBetween(0.08, 0.32);
         const angle = Math.random() * Math.PI * 2;
         const runeRotation = randomBetween(-72, 72).toFixed(2) + "deg";
 
@@ -434,48 +558,104 @@
           driftSpeed: randomBetween(0.05, 0.13),
           driftAmountX: randomBetween(2, 7),
           driftAmountY: randomBetween(2, 7),
-          clickedLit: false
+          clickedLit: false,
+          glowStrength: 0,
+          glowScale: 1
         };
-        rune.addEventListener("click", event => { event.preventDefault(); event.stopPropagation(); burstRune(item); });
+
+        rune.addEventListener("click", event => {
+          event.preventDefault();
+          event.stopPropagation();
+          burstRune(item);
+        });
+
         runeField.appendChild(rune);
         runeItems.push(item);
       }
+
       lastRuneTime = performance.now();
       runeAnimationFrame = requestAnimationFrame(animateRunes);
     }
 
     function updateRuneGlow(item) {
-      if (!mouse.active || item.clickedLit) return;
+      if (item.clickedLit) {
+        item.element.classList.add("rune-glow");
+        item.element.style.setProperty("--rune-glow-strength", "1.6");
+        return;
+      }
+
+      if (!mouse.active) {
+        item.element.classList.remove("rune-glow");
+        item.element.style.setProperty("--rune-glow-strength", "0");
+        item.glowStrength = 0;
+        item.glowScale = 1;
+        return;
+      }
+
       const distance = Math.hypot(mouse.x - item.smoothX, mouse.y - (item.smoothY + 54));
-      item.element.classList.toggle("rune-glow", distance < 120);
+      const maxDistance = 185;
+
+      if (distance < maxDistance) {
+        const strength = 1 - distance / maxDistance;
+        item.glowStrength = 0.35 + strength * 1.1;
+        item.glowScale = 1.02 + strength * 0.22;
+        item.element.classList.add("rune-glow");
+        item.element.style.setProperty("--rune-glow-strength", item.glowStrength.toFixed(3));
+      } else {
+        item.glowStrength = 0;
+        item.glowScale = 1;
+        item.element.classList.remove("rune-glow");
+        item.element.style.setProperty("--rune-glow-strength", "0");
+      }
     }
 
     function animateRunes(now) {
       const dt = Math.min(0.05, Math.max(0.001, (now - lastRuneTime) / 1000));
       const bounds = getRuneBounds();
       lastRuneTime = now;
+
       runeItems.forEach(item => {
         item.driftPhase += item.driftSpeed;
         item.x += item.vx * dt * 60;
         item.y += item.vy * dt * 60;
-        if (item.x < 24 || item.x > bounds.width - 24) item.vx *= -1;
-        if (item.y < 24 || item.y > bounds.height - 24) item.vy *= -1;
+
+        if (item.x < 24 || item.x > bounds.width - 24) {
+          item.vx *= -1;
+        }
+
+        if (item.y < 24 || item.y > bounds.height - 24) {
+          item.vy *= -1;
+        }
+
         item.x = clamp(item.x, 24, bounds.width - 24);
         item.y = clamp(item.y, 24, bounds.height - 24);
+
         const targetX = item.x + Math.cos(item.driftPhase) * item.driftAmountX;
         const targetY = item.y + Math.sin(item.driftPhase * 0.77) * item.driftAmountY;
         item.smoothX += (targetX - item.smoothX) * 0.08;
         item.smoothY += (targetY - item.smoothY) * 0.08;
+
         updateRuneGlow(item);
+
+        const scale = item.clickedLit ? 1.32 : item.glowScale;
         item.element.style.left = item.smoothX.toFixed(2) + "px";
         item.element.style.top = item.smoothY.toFixed(2) + "px";
-        item.element.style.transform = "translate(-50%, -50%) rotate(var(--rune-rotation))";
+        item.element.style.transform = "translate(-50%, -50%) rotate(var(--rune-rotation)) scale(" + scale.toFixed(3) + ")";
       });
+
       runeAnimationFrame = requestAnimationFrame(animateRunes);
     }
 
-    window.addEventListener("pointermove", event => { mouse.x = event.clientX; mouse.y = event.clientY; mouse.active = true; });
-    window.addEventListener("pointerleave", () => { mouse.active = false; });
+    window.addEventListener("pointermove", event => {
+      mouse.x = event.clientX;
+      mouse.y = event.clientY;
+      mouse.active = true;
+    });
+
+    window.addEventListener("pointerleave", () => {
+      mouse.active = false;
+    });
+
     window.addEventListener("resize", buildRuneField);
     buildRuneField();
   </script>
