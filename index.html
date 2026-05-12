@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bryce Larson</title>
-  <link rel="stylesheet" href="css/style.css?v=23">
+  <link rel="stylesheet" href="css/style.css?v=24">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 
@@ -625,9 +625,10 @@
       const maxDistance = 185;
 
       if (distance < maxDistance) {
-        const strength = 1 - distance / maxDistance;
-        item.glowStrength = 0.35 + strength * 1.1;
-        item.glowScale = 1.02 + strength * 0.22;
+        const distanceRatio = 1 - distance / maxDistance;
+        const strength = Math.pow(distanceRatio, 2.2);
+        item.glowStrength = strength * 1.45;
+        item.glowScale = 1 + strength * 0.24;
         item.element.classList.add("rune-glow");
         item.element.style.setProperty("--rune-glow-strength", item.glowStrength.toFixed(3));
       } else {
