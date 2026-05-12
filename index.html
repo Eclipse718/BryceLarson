@@ -51,9 +51,6 @@
         <span>Contact</span>
       </button>
 
-      <button class="topbar-btn rune-toggle-btn active" id="runeToggle" title="Toggle runes" type="button" aria-pressed="true">
-        <span>Runes On</span>
-      </button>
     </div>
   </nav>
 
@@ -420,7 +417,6 @@
     const turningPage = document.getElementById("turningPage");
 
     const runeField = document.getElementById("runeField");
-    const runeToggle = document.getElementById("runeToggle");
 
     const bookStories = [
       {
@@ -463,9 +459,11 @@
     let activeProjectIndex = 0;
     let activeBookSpread = 0;
     let runeItems = [];
-    let runesEnabled = true;
     let lastRuneTime = performance.now();
     let runeAnimationFrame = null;
+    let constellationSvg = null;
+    let constellationPath = null;
+    let clickedRuneOrder = [];
 
     const mouse = {
       x: window.innerWidth / 2,
@@ -729,8 +727,17 @@
       if (!item.clickedLit) {
         item.burstUntil = 0;
         item.element.classList.remove("rune-burst", "rune-lit");
+        clickedRuneOrder = clickedRuneOrder.filter(function(clickedItem) {
+          return clickedItem !== item;
+        });
+        updateConstellationLines();
         return;
       }
+
+      clickedRuneOrder = clickedRuneOrder.filter(function(clickedItem) {
+        return clickedItem !== item;
+      });
+      clickedRuneOrder.push(item);
 
       const rect = item.element.getBoundingClientRect();
       const centerX = rect.left + rect.width / 2;
@@ -827,6 +834,41 @@
       };
     }
 
+    function createConstellationLayer() {
+      constellationSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      constellationSvg.classList.add("rune-constellation");
+      constellationSvg.setAttribute("aria-hidden", "true");
+
+      constellationPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      constellationPath.classList.add("rune-constellation-path");
+      constellationSvg.appendChild(constellationPath);
+      runeField.appendChild(constellationSvg);
+    }
+
+    function updateConstellationLines() {
+      if (!constellationSvg || !constellationPath) {
+        return;
+      }
+
+      const litRunes = clickedRuneOrder.filter(function(item) {
+        return item.clickedLit;
+      });
+
+      if (litRunes.length < 2) {
+        constellationPath.setAttribute("d", "");
+        constellationSvg.classList.remove("has-lines");
+        return;
+      }
+
+      const pathData = litRunes.map(function(item, index) {
+        const command = index === 0 ? "M" : "L";
+        return command + " " + item.smoothX.toFixed(2) + " " + item.smoothY.toFixed(2);
+      }).join(" ");
+
+      constellationPath.setAttribute("d", pathData);
+      constellationSvg.classList.add("has-lines");
+    }
+
     function buildRuneField() {
       const runeCharacters = ["ᚠ", "ᚢ", "ᚦ", "ᚨ", "ᚱ", "ᚲ", "ᚷ", "ᚹ", "ᚺ", "ᚾ", "ᛁ", "ᛃ", "ᛇ", "ᛈ", "ᛉ", "ᛊ", "ᛏ", "ᛒ", "ᛖ", "ᛗ", "ᛚ", "ᛜ", "ᛞ", "ᛟ"];
       const bounds = getRuneBounds();
@@ -843,6 +885,8 @@
 
       runeField.innerHTML = "";
       runeItems = [];
+      clickedRuneOrder = [];
+      createConstellationLayer();
 
       for (let i = 0; i < runeCount; i += 1) {
         const rune = document.createElement("button");
@@ -1073,25 +1117,11 @@
         item.element.style.transform = "translate(-50%, -50%) rotate(var(--rune-rotation))";
       });
 
+      updateConstellationLines();
+
       runeAnimationFrame = requestAnimationFrame(animateRunes);
     }
 
-    function setRunesEnabled(enabled) {
-      runesEnabled = enabled;
-      runeField.classList.toggle("runes-disabled", !runesEnabled);
-
-      if (runeToggle) {
-        runeToggle.classList.toggle("active", runesEnabled);
-        runeToggle.setAttribute("aria-pressed", String(runesEnabled));
-        runeToggle.querySelector("span").textContent = runesEnabled ? "Runes On" : "Runes Off";
-      }
-    }
-
-    if (runeToggle) {
-      runeToggle.addEventListener("click", function() {
-        setRunesEnabled(!runesEnabled);
-      });
-    }
 
     window.addEventListener("pointermove", function(event) {
       mouse.x = event.clientX;
