@@ -6,6 +6,111 @@
   <title>Bryce Larson</title>
   <link rel="stylesheet" href="css/style.css?v=25">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+  <style>
+    .golden-rune.rune-sequence {
+      color: rgba(201, 169, 110, 0.78);
+    }
+
+    .golden-rune.rune-sequence-pulse:not(.rune-lit) {
+      animation: runeSequencePulse 2s ease-in-out infinite;
+    }
+
+    @keyframes runeSequencePulse {
+      0%, 100% {
+        color: rgba(201, 169, 110, 0.38);
+        text-shadow:
+          0 0 4px rgba(201, 169, 110, 0.18),
+          0 0 12px rgba(201, 169, 110, 0.08);
+        filter: brightness(0.85);
+      }
+
+      50% {
+        color: rgba(245, 216, 154, 0.95);
+        text-shadow:
+          0 0 8px rgba(245, 216, 154, 0.65),
+          0 0 20px rgba(201, 169, 110, 0.35),
+          0 0 34px rgba(201, 169, 110, 0.18);
+        filter: brightness(1.25);
+      }
+    }
+
+    .secret-easter-section {
+      position: relative;
+    }
+
+    .secret-easter-content {
+      text-align: center;
+    }
+
+    .secret-easter-emoji {
+      display: block;
+      margin-top: 1.5rem;
+      font-size: clamp(4rem, 12vw, 9rem);
+      filter:
+        drop-shadow(0 0 18px rgba(201, 169, 110, 0.55))
+        drop-shadow(0 0 42px rgba(201, 169, 110, 0.22));
+    }
+
+    .secret-sidebar-btn {
+      opacity: 0;
+      transform: scale(0.6);
+      transition:
+        opacity 0.6s ease,
+        transform 0.6s ease,
+        box-shadow 0.6s ease;
+    }
+
+    .secret-sidebar-btn.secret-formed {
+      opacity: 1;
+      transform: scale(1);
+      box-shadow:
+        0 0 18px rgba(201, 169, 110, 0.5),
+        0 0 34px rgba(201, 169, 110, 0.22);
+    }
+
+    .gold-gather-particle {
+      position: fixed;
+      left: var(--particle-start-x);
+      top: var(--particle-start-y);
+      width: var(--particle-size);
+      height: var(--particle-size);
+      pointer-events: none;
+      z-index: 4000;
+      border-radius: 999px;
+      background: radial-gradient(circle, #fff3bf 0%, #c9a96e 48%, rgba(201, 169, 110, 0) 72%);
+      box-shadow:
+        0 0 8px rgba(245, 216, 154, 0.9),
+        0 0 18px rgba(201, 169, 110, 0.45);
+      animation: goldParticleGather 1.55s cubic-bezier(0.22, 0.9, 0.28, 1) forwards;
+      animation-delay: var(--particle-delay);
+    }
+
+    @keyframes goldParticleGather {
+      0% {
+        opacity: 0;
+        transform: translate(0, 0) scale(0.25);
+      }
+
+      12% {
+        opacity: 1;
+      }
+
+      78% {
+        opacity: 1;
+      }
+
+      100% {
+        opacity: 0;
+        transform:
+          translate(
+            calc(var(--particle-end-x) - var(--particle-start-x)),
+            calc(var(--particle-end-y) - var(--particle-start-y))
+          )
+          scale(0.08);
+      }
+    }
+  </style>
 </head>
 
 <body>
@@ -229,8 +334,12 @@
     let activeProjectIndex = 0;
     let activeBookSpread = 0;
     let runeItems = [];
+    let runeSequenceItems = [];
     let runeAnimationFrame = null;
     let lastRuneTime = performance.now();
+
+    const runeSequenceCharacters = ["ᛒ", "ᚱ", "ᛉ", "ᛈ", "ᛊ"];
+    let secretEasterTabCreated = false;
 
     const mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2, active: false };
 
@@ -518,6 +627,103 @@
       spark.addEventListener("animationend", () => spark.remove());
     }
 
+    function createGoldGatherParticle(targetX, targetY) {
+      const particle = document.createElement("span");
+      const side = Math.floor(Math.random() * 4);
+      const size = 4 + Math.random() * 6;
+
+      let startX = 0;
+      let startY = 0;
+
+      if (side === 0) {
+        startX = Math.random() * window.innerWidth;
+        startY = -20;
+      } else if (side === 1) {
+        startX = window.innerWidth + 20;
+        startY = Math.random() * window.innerHeight;
+      } else if (side === 2) {
+        startX = Math.random() * window.innerWidth;
+        startY = window.innerHeight + 20;
+      } else {
+        startX = -20;
+        startY = Math.random() * window.innerHeight;
+      }
+
+      particle.className = "gold-gather-particle";
+      particle.style.setProperty("--particle-start-x", startX + "px");
+      particle.style.setProperty("--particle-start-y", startY + "px");
+      particle.style.setProperty("--particle-end-x", targetX + "px");
+      particle.style.setProperty("--particle-end-y", targetY + "px");
+      particle.style.setProperty("--particle-size", size + "px");
+      particle.style.setProperty("--particle-delay", Math.random() * 0.36 + "s");
+
+      document.body.appendChild(particle);
+      particle.addEventListener("animationend", () => particle.remove());
+    }
+
+    function updateRuneSequencePulse() {
+      const firstUnlitRune = runeSequenceItems.find(item => !item.clickedLit);
+
+      runeSequenceItems.forEach(item => {
+        item.element.classList.toggle("rune-sequence-pulse", item === firstUnlitRune);
+      });
+
+      if (!firstUnlitRune) {
+        createSecretEasterTab();
+      }
+    }
+
+    function createSecretEasterTab() {
+      if (secretEasterTabCreated) {
+        return;
+      }
+
+      secretEasterTabCreated = true;
+
+      const secretSection = document.createElement("section");
+      secretSection.className = "page-section secret-easter-section";
+      secretSection.id = "easter-egg";
+
+      secretSection.innerHTML = `
+        <div class="section-content secret-easter-content">
+          <h2>EASTER EGG</h2>
+          <div class="divider"></div>
+          <span class="secret-easter-emoji" aria-label="Easter egg">🥚</span>
+        </div>
+      `;
+
+      scrollContainer.appendChild(secretSection);
+      sections.push(secretSection);
+      sectionObserver.observe(secretSection);
+
+      const secretIndex = sections.length - 1;
+      const secretSidebarButton = document.createElement("button");
+      secretSidebarButton.className = "sidebar-btn secret-sidebar-btn";
+      secretSidebarButton.dataset.index = String(secretIndex);
+      secretSidebarButton.type = "button";
+      secretSidebarButton.setAttribute("aria-label", "Easter Egg");
+      secretSidebarButton.innerHTML = `<span class="sidebar-icon">🥚</span>`;
+      secretSidebarButton.addEventListener("click", () => scrollToSection(secretIndex));
+
+      const sidebar = document.querySelector(".sidebar");
+      sidebar.appendChild(secretSidebarButton);
+      sidebarButtons.push(secretSidebarButton);
+
+      requestAnimationFrame(() => {
+        const rect = secretSidebarButton.getBoundingClientRect();
+        const targetX = rect.left + rect.width / 2;
+        const targetY = rect.top + rect.height / 2;
+
+        for (let i = 0; i < 90; i += 1) {
+          createGoldGatherParticle(targetX, targetY);
+        }
+
+        setTimeout(() => {
+          secretSidebarButton.classList.add("secret-formed");
+        }, 900);
+      });
+    }
+
     function burstRune(item) {
       item.clickedLit = !item.clickedLit;
       item.element.classList.toggle("rune-lit", item.clickedLit);
@@ -539,8 +745,9 @@
       for (let i = 0; i < 22; i += 1) {
         createGoldSpark(rect.left + rect.width / 2, rect.top + rect.height / 2);
       }
-    }
 
+      updateRuneSequencePulse();
+    }
 
     function buildRuneField() {
       const runeCharacters = ["ᚠ", "ᚢ", "ᚦ", "ᚨ", "ᚱ", "ᚲ", "ᚷ", "ᚹ", "ᚺ", "ᚾ", "ᛁ", "ᛃ", "ᛇ", "ᛈ", "ᛉ", "ᛊ", "ᛏ", "ᛒ", "ᛖ", "ᛗ", "ᛚ", "ᛜ", "ᛞ", "ᛟ"];
@@ -554,6 +761,7 @@
 
       runeField.innerHTML = "";
       runeItems = [];
+      runeSequenceItems = [];
 
       for (let i = 0; i < runeCount; i += 1) {
         const rune = document.createElement("button");
@@ -563,11 +771,14 @@
         const speed = randomBetween(0.08, 0.27);
         const angle = Math.random() * Math.PI * 2;
         const runeRotation = randomBetween(-72, 72).toFixed(2) + "deg";
+        const sequenceIndex = i < runeSequenceCharacters.length ? i : -1;
 
-        rune.className = "golden-rune";
+        rune.className = sequenceIndex >= 0 ? "golden-rune rune-sequence" : "golden-rune";
         rune.type = "button";
         rune.tabIndex = -1;
-        rune.textContent = runeCharacters[Math.floor(Math.random() * runeCharacters.length)];
+        rune.textContent = sequenceIndex >= 0
+          ? runeSequenceCharacters[sequenceIndex]
+          : runeCharacters[Math.floor(Math.random() * runeCharacters.length)];
         rune.style.fontSize = fontSize.toFixed(2) + "px";
         rune.style.opacity = String(randomBetween(0.58, 0.86));
         rune.style.setProperty("--rune-rotation", runeRotation);
@@ -589,7 +800,8 @@
           driftAmountY: randomBetween(2, 7),
           clickedLit: false,
           glowStrength: 0,
-          glowScale: 1
+          glowScale: 1,
+          sequenceIndex
         };
 
         rune.addEventListener("click", event => {
@@ -600,7 +812,13 @@
 
         runeField.appendChild(rune);
         runeItems.push(item);
+
+        if (sequenceIndex >= 0) {
+          runeSequenceItems.push(item);
+        }
       }
+
+      updateRuneSequencePulse();
 
       lastRuneTime = performance.now();
       runeAnimationFrame = requestAnimationFrame(animateRunes);
@@ -612,7 +830,7 @@
         item.element.style.setProperty("--rune-glow-strength", "1.6");
         return;
       }
-    
+
       if (!mouse.active) {
         item.element.classList.remove("rune-glow");
         item.element.style.setProperty("--rune-glow-strength", "0");
@@ -620,24 +838,24 @@
         item.glowScale = 1;
         return;
       }
-    
+
       const distance = Math.hypot(
         mouse.x - item.smoothX,
         mouse.y - (item.smoothY + 54)
       );
-    
+
       const maxDistance = 200;
-    
+
       if (distance < maxDistance) {
         const distanceRatio = 1 - distance / maxDistance;
-    
+
         const strength =
           distance < 120
             ? Math.pow(distanceRatio, 1.35)
             : distance < 160
               ? Math.pow(distanceRatio, 1.9)
               : Math.pow(distanceRatio, 2.6);
-    
+
         if (strength < 0.012) {
           item.glowStrength = 0;
           item.glowScale = 1;
@@ -645,12 +863,12 @@
           item.element.style.setProperty("--rune-glow-strength", "0");
           return;
         }
-    
+
         item.glowStrength = strength * 2.2;
         item.glowScale = 1 + strength * 0.34;
-    
+
         item.element.classList.add("rune-glow");
-    
+
         item.element.style.setProperty(
           "--rune-glow-strength",
           item.glowStrength.toFixed(3)
@@ -663,55 +881,55 @@
       }
     }
 
-function animateRunes(now) {
-  const dt = Math.min(0.05, Math.max(0.001, (now - lastRuneTime) / 1000));
-  const bounds = getRuneBounds();
+    function animateRunes(now) {
+      const dt = Math.min(0.05, Math.max(0.001, (now - lastRuneTime) / 1000));
+      const bounds = getRuneBounds();
 
-  lastRuneTime = now;
+      lastRuneTime = now;
 
-  runeItems.forEach(item => {
-    item.driftPhase += item.driftSpeed * 0.45;
+      runeItems.forEach(item => {
+        item.driftPhase += item.driftSpeed * 0.45;
 
-    item.x += item.vx * dt * 18;
-    item.y += item.vy * dt * 18;
+        item.x += item.vx * dt * 18;
+        item.y += item.vy * dt * 18;
 
-    if (item.x < 24 || item.x > bounds.width - 24) {
-      item.vx *= -1;
+        if (item.x < 24 || item.x > bounds.width - 24) {
+          item.vx *= -1;
+        }
+
+        if (item.y < 24 || item.y > bounds.height - 24) {
+          item.vy *= -1;
+        }
+
+        item.x = clamp(item.x, 24, bounds.width - 24);
+        item.y = clamp(item.y, 24, bounds.height - 24);
+
+        const targetX =
+          item.x +
+          Math.cos(item.driftPhase) * (item.driftAmountX * 0.32);
+
+        const targetY =
+          item.y +
+          Math.sin(item.driftPhase * 0.7) * (item.driftAmountY * 0.32);
+
+        item.smoothX += (targetX - item.smoothX) * 0.03;
+        item.smoothY += (targetY - item.smoothY) * 0.03;
+
+        updateRuneGlow(item);
+
+        const scale = item.clickedLit ? 1.32 : item.glowScale;
+
+        item.element.style.left = item.smoothX.toFixed(2) + "px";
+        item.element.style.top = item.smoothY.toFixed(2) + "px";
+
+        item.element.style.transform =
+          "translate(-50%, -50%) rotate(var(--rune-rotation)) scale(" +
+          scale.toFixed(3) +
+          ")";
+      });
+
+      runeAnimationFrame = requestAnimationFrame(animateRunes);
     }
-
-    if (item.y < 24 || item.y > bounds.height - 24) {
-      item.vy *= -1;
-    }
-
-    item.x = clamp(item.x, 24, bounds.width - 24);
-    item.y = clamp(item.y, 24, bounds.height - 24);
-
-    const targetX =
-      item.x +
-      Math.cos(item.driftPhase) * (item.driftAmountX * 0.32);
-
-    const targetY =
-      item.y +
-      Math.sin(item.driftPhase * 0.7) * (item.driftAmountY * 0.32);
-
-    item.smoothX += (targetX - item.smoothX) * 0.03;
-    item.smoothY += (targetY - item.smoothY) * 0.03;
-
-    updateRuneGlow(item);
-
-    const scale = item.clickedLit ? 1.32 : item.glowScale;
-
-    item.element.style.left = item.smoothX.toFixed(2) + "px";
-    item.element.style.top = item.smoothY.toFixed(2) + "px";
-
-    item.element.style.transform =
-      "translate(-50%, -50%) rotate(var(--rune-rotation)) scale(" +
-      scale.toFixed(3) +
-      ")";
-  });
-
-  runeAnimationFrame = requestAnimationFrame(animateRunes);
-}
 
     window.addEventListener("pointermove", event => {
       mouse.x = event.clientX;
