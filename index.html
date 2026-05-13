@@ -13,7 +13,7 @@
     }
 
     .golden-rune.rune-sequence-pulse:not(.rune-lit) {
-      animation: runeSequencePulse 2s ease-in-out infinite;
+      animation: runeSequencePulse 4s ease-in-out infinite;
     }
 
     @keyframes runeSequencePulse {
@@ -26,12 +26,13 @@
       }
 
       50% {
-        color: rgba(245, 216, 154, 0.95);
+        color: rgba(255, 252, 238, 0.98);
         text-shadow:
-          0 0 8px rgba(245, 216, 154, 0.65),
-          0 0 20px rgba(201, 169, 110, 0.35),
-          0 0 34px rgba(201, 169, 110, 0.18);
-        filter: brightness(1.25);
+          0 0 7px rgba(255, 255, 255, 0.82),
+          0 0 14px rgba(255, 246, 204, 0.72),
+          0 0 26px rgba(245, 216, 154, 0.48),
+          0 0 42px rgba(201, 169, 110, 0.22);
+        filter: brightness(1.45);
       }
     }
 
@@ -714,7 +715,7 @@
         const targetX = rect.left + rect.width / 2;
         const targetY = rect.top + rect.height / 2;
 
-        for (let i = 0; i < 90; i += 1) {
+        for (let i = 0; i < 140; i += 1) {
           createGoldGatherParticle(targetX, targetY);
         }
 
@@ -765,13 +766,13 @@
 
       for (let i = 0; i < runeCount; i += 1) {
         const rune = document.createElement("button");
-        const fontSize = randomBetween(10, 17);
+        const sequenceIndex = i < runeSequenceCharacters.length ? i : -1;
+        const fontSize = sequenceIndex >= 0 ? randomBetween(10, 17) : randomBetween(10, 17);
         const radius = Math.max(10, fontSize * 0.85);
         const position = randomSafeRunePosition(runeItems, bounds, obstacles, radius);
         const speed = randomBetween(0.08, 0.27);
         const angle = Math.random() * Math.PI * 2;
         const runeRotation = randomBetween(-72, 72).toFixed(2) + "deg";
-        const sequenceIndex = i < runeSequenceCharacters.length ? i : -1;
 
         rune.className = sequenceIndex >= 0 ? "golden-rune rune-sequence" : "golden-rune";
         rune.type = "button";
