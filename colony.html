@@ -6,7 +6,8 @@
 
   <title>Colony | Bryce Larson</title>
 
-  <link rel="stylesheet" href="css/style.css?v=26">
+  <link rel="stylesheet" href="css/style.css?v=27">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
   <style>
     .project-detail-page {
@@ -18,9 +19,16 @@
       margin-bottom: 4rem;
     }
 
+    .project-back-row,
+    .project-gallery {
+      width: min(1080px, 90vw);
+      margin-left: auto;
+      margin-right: auto;
+    }
+
     .project-back-row {
-      width: min(1200px, 94vw);
-      margin: -2rem auto 2rem;
+      margin-top: -2rem;
+      margin-bottom: 2rem;
       text-align: left;
     }
 
@@ -37,17 +45,16 @@
     }
 
     .project-gallery {
-      width: min(1200px, 94vw);
-      margin: 0 auto 4rem;
+      margin-bottom: 4rem;
       display: flex;
       flex-direction: column;
-      gap: 4rem;
+      gap: 3.6rem;
     }
 
     .project-media-card,
     .project-info-card {
       text-align: center;
-      padding: 1.5rem;
+      padding: 1.35rem;
       border: 1px solid rgba(201, 169, 110, 0.35);
       border-radius: 18px;
       background: rgba(255, 255, 255, 0.045);
@@ -60,11 +67,12 @@
 
     .project-media-card img,
     .project-media-card video {
-      width: 100%;
+      width: 90%;
       height: auto;
-      max-height: none;
+      max-height: 72vh;
       object-fit: contain;
       display: block;
+      margin: 0 auto;
       border-radius: 14px;
       border: 2px solid rgba(201, 169, 110, 0.65);
       background: #030c12;
@@ -89,7 +97,7 @@
     }
 
     .project-detail-grid {
-      width: min(1000px, 92vw);
+      width: min(900px, 88vw);
       margin: 0 auto;
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -116,6 +124,12 @@
         padding: 1rem;
       }
 
+      .project-media-card img,
+      .project-media-card video {
+        width: 100%;
+        max-height: none;
+      }
+
       .project-back-row {
         width: 94vw;
         margin: -2rem auto 2rem;
@@ -129,17 +143,22 @@
   <nav class="topbar" aria-label="Top navigation">
     <div class="topbar-brand">
       <div class="topbar-avatar" aria-hidden="true">
-        <img src="website-images/circlecroppedme.png" alt="" class="topbar-photo">
+        <img
+          src="website-images/circlecroppedme.png"
+          alt=""
+          class="topbar-photo"
+        >
       </div>
+
       <span class="topbar-name">Bryce Larson</span>
     </div>
 
     <div class="topbar-links">
-      <a class="topbar-link" href="index.html#home">Home</a>
-      <a class="topbar-link" href="index.html#experience">Experience</a>
-      <a class="topbar-link" href="index.html#projects">Projects</a>
-      <a class="topbar-link" href="index.html#writing">Writing</a>
-      <a class="topbar-link" href="mailto:brycelarson718@gmail.com">Contact</a>
+      <a class="topbar-link" href="/BryceLarson/#home">Home</a>
+      <a class="topbar-link" href="/BryceLarson/#experience">Experience</a>
+      <a class="topbar-link" href="/BryceLarson/#projects">Projects</a>
+      <a class="topbar-link" href="/BryceLarson/#writing">Writing</a>
+      <button class="topbar-btn contact-open-btn" title="Contact" type="button"><span>Contact</span></button>
     </div>
   </nav>
 
@@ -157,27 +176,48 @@
     </header>
 
     <div class="project-back-row">
-      <a class="back-to-projects" href="index.html#projects">← Back to Projects</a>
+      <a class="back-to-projects" href="/BryceLarson/#projects">← Back to Projects</a>
     </div>
 
     <section class="project-gallery" aria-label="Colony media">
 
       <article class="project-media-card">
-        <img src="colony/colony1.png" alt="Colony screenshot 1">
+        <img
+          src="colony/colony1.png"
+          alt="Colony screenshot 1"
+        >
+
         <h2>Colony Screenshot I</h2>
-        <p>Opening screenshot from the Colony project.</p>
+
+        <p>
+          Opening screenshot from the Colony project.
+        </p>
       </article>
 
       <article class="project-media-card">
-        <img src="colony/colony_early_gif.gif" alt="Early Colony gameplay animation">
+        <img
+          src="colony/colony_early_gif.gif"
+          alt="Early Colony gameplay animation"
+        >
+
         <h2>Early Prototype</h2>
-        <p>Animated prototype footage from an earlier version of Colony.</p>
+
+        <p>
+          Animated prototype footage from an earlier version of Colony.
+        </p>
       </article>
 
       <article class="project-media-card">
-        <img src="colony/colony2.png" alt="Colony screenshot 2">
+        <img
+          src="colony/colony2.png"
+          alt="Colony screenshot 2"
+        >
+
         <h2>Colony Screenshot II</h2>
-        <p>Additional screenshot from the Colony build.</p>
+
+        <p>
+          Additional screenshot from the Colony build.
+        </p>
       </article>
 
       <article class="project-media-card">
@@ -185,7 +225,9 @@
           <source src="colony/card_buy.mp4" type="video/mp4">
           Your browser does not support the video tag.
         </video>
+
         <h2>Card Buying</h2>
+
         <p>
           Demonstration of the card-buying interaction.
           If the embedded player does not load, open the video directly:
@@ -194,9 +236,16 @@
       </article>
 
       <article class="project-media-card">
-        <img src="colony/colony4.png" alt="Colony screenshot 4">
+        <img
+          src="colony/colony4.png"
+          alt="Colony screenshot 4"
+        >
+
         <h2>Colony Screenshot III</h2>
-        <p>Additional visual from the Colony project.</p>
+
+        <p>
+          Additional visual from the Colony project.
+        </p>
       </article>
 
       <article class="project-media-card">
@@ -204,7 +253,9 @@
           <source src="colony/colony_boss.mp4" type="video/mp4">
           Your browser does not support the video tag.
         </video>
+
         <h2>Boss Encounter</h2>
+
         <p>
           Gameplay footage showing a boss encounter.
           If the embedded player does not load, open the video directly:
@@ -213,9 +264,16 @@
       </article>
 
       <article class="project-media-card">
-        <img src="colony/Broodmother.png" alt="Broodmother boss artwork from Colony">
+        <img
+          src="colony/Broodmother.png"
+          alt="Broodmother boss artwork from Colony"
+        >
+
         <h2>Broodmother</h2>
-        <p>Boss or enemy visual from the Colony project.</p>
+
+        <p>
+          Boss or enemy visual from the Colony project.
+        </p>
       </article>
 
     </section>
@@ -223,6 +281,7 @@
     <section class="project-detail-grid">
       <article class="project-info-card">
         <h2>Focus</h2>
+
         <p>
           Colony explores interactive game systems, combat pacing,
           progression loops, card interactions, and encounter design.
@@ -231,6 +290,7 @@
 
       <article class="project-info-card">
         <h2>Media</h2>
+
         <ul>
           <li>Colony PNG screenshots</li>
           <li>Early prototype animation</li>
@@ -242,6 +302,69 @@
     </section>
 
   </main>
+
+  <div class="contact-modal" id="contactModal" role="dialog" aria-modal="true" aria-labelledby="contactTitle">
+    <div class="contact-card">
+      <button class="contact-close" id="contactClose" type="button" aria-label="Close contact modal">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <h2 id="contactTitle">Contact Information</h2>
+
+      <div class="contact-row">
+        <i class="fa-solid fa-envelope"></i>
+        <a href="mailto:brycelarson718@gmail.com">brycelarson718@gmail.com</a>
+      </div>
+
+      <div class="contact-row">
+        <i class="fa-solid fa-location-dot"></i>
+        <span>Seattle, Washington</span>
+      </div>
+
+      <div class="contact-socials">
+        <a href="https://www.linkedin.com/in/bryce-larson718/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+          <i class="fa-brands fa-linkedin"></i>
+        </a>
+
+        <a href="https://instagram.com/brycel717" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+          <i class="fa-brands fa-instagram"></i>
+        </a>
+
+        <a href="https://github.com/Eclipse718" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+          <i class="fa-brands fa-github"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const contactModal = document.getElementById("contactModal");
+    const contactOpenButton = document.querySelector(".contact-open-btn");
+    const contactCloseButton = document.getElementById("contactClose");
+
+    function openContactModal() {
+      contactModal.classList.add("open");
+    }
+
+    function closeContactModal() {
+      contactModal.classList.remove("open");
+    }
+
+    contactOpenButton.addEventListener("click", openContactModal);
+    contactCloseButton.addEventListener("click", closeContactModal);
+
+    contactModal.addEventListener("click", event => {
+      if (event.target === contactModal) {
+        closeContactModal();
+      }
+    });
+
+    window.addEventListener("keydown", event => {
+      if (event.key === "Escape") {
+        closeContactModal();
+      }
+    });
+  </script>
 
 </body>
 </html>
