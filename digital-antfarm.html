@@ -6,21 +6,23 @@
 
   <title>Digital Antfarm | Bryce Larson</title>
 
-  <link rel="stylesheet" href="css/style.css?v=26">
+  <link rel="stylesheet" href="css/style.css?v=27">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
   <style>
-    .project-detail-page {
-      padding-top: 10rem;
-    }
+    .project-detail-page { padding-top: 10rem; }
+    .project-detail-header { text-align: center; margin-bottom: 4rem; }
 
-    .project-detail-header {
-      text-align: center;
-      margin-bottom: 4rem;
+    .project-back-row,
+    .project-gallery {
+      width: min(1080px, 90vw);
+      margin-left: auto;
+      margin-right: auto;
     }
 
     .project-back-row {
-      width: min(1200px, 94vw);
-      margin: -2rem auto 2rem;
+      margin-top: -2rem;
+      margin-bottom: 2rem;
       text-align: left;
     }
 
@@ -37,34 +39,30 @@
     }
 
     .project-gallery {
-      width: min(1200px, 94vw);
-      margin: 0 auto 4rem;
+      margin-bottom: 4rem;
       display: flex;
       flex-direction: column;
-      gap: 4rem;
+      gap: 3.6rem;
     }
 
     .project-media-card,
     .project-info-card {
       text-align: center;
-      padding: 1.5rem;
+      padding: 1.35rem;
       border: 1px solid rgba(201, 169, 110, 0.35);
       border-radius: 18px;
       background: rgba(255, 255, 255, 0.045);
       box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
     }
 
-    .project-media-card {
-      width: 100%;
-    }
-
     .project-media-card img,
     .project-media-card video {
-      width: 100%;
+      width: 90%;
       height: auto;
-      max-height: none;
+      max-height: 72vh;
       object-fit: contain;
       display: block;
+      margin: 0 auto;
       border-radius: 14px;
       border: 2px solid rgba(201, 169, 110, 0.65);
       background: #030c12;
@@ -89,7 +87,7 @@
     }
 
     .project-detail-grid {
-      width: min(1000px, 92vw);
+      width: min(900px, 88vw);
       margin: 0 auto;
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -102,82 +100,55 @@
     }
 
     @media (max-width: 700px) {
-      .project-detail-page {
-        padding-top: 8rem;
-      }
-
-      .project-gallery {
-        width: 94vw;
-        gap: 2.5rem;
-      }
-
-      .project-media-card,
-      .project-info-card {
-        padding: 1rem;
-      }
-
-      .project-back-row {
-        width: 94vw;
-        margin: -2rem auto 2rem;
-      }
+      .project-detail-page { padding-top: 8rem; }
+      .project-gallery { width: 94vw; gap: 2.5rem; }
+      .project-media-card, .project-info-card { padding: 1rem; }
+      .project-media-card img, .project-media-card video { width: 100%; max-height: none; }
+      .project-back-row { width: 94vw; margin: -2rem auto 2rem; }
     }
   </style>
 </head>
 
 <body class="project-body">
-
   <nav class="topbar" aria-label="Top navigation">
     <div class="topbar-brand">
       <div class="topbar-avatar" aria-hidden="true">
-        <img
-          src="website-images/circlecroppedme.png"
-          alt=""
-          class="topbar-photo"
-        >
+        <img src="website-images/circlecroppedme.png" alt="" class="topbar-photo">
       </div>
-
       <span class="topbar-name">Bryce Larson</span>
     </div>
 
     <div class="topbar-links">
-      <a class="topbar-link" href="index.html#home">Home</a>
-      <a class="topbar-link" href="index.html#experience">Experience</a>
-      <a class="topbar-link" href="index.html#projects">Projects</a>
-      <a class="topbar-link" href="index.html#writing">Writing</a>
-      <a class="topbar-link" href="mailto:brycelarson718@gmail.com">Contact</a>
+      <a class="topbar-link" href="/BryceLarson/#home">Home</a>
+      <a class="topbar-link" href="/BryceLarson/#experience">Experience</a>
+      <a class="topbar-link" href="/BryceLarson/#projects">Projects</a>
+      <a class="topbar-link" href="/BryceLarson/#writing">Writing</a>
+      <button class="topbar-btn contact-open-btn" title="Contact" type="button"><span>Contact</span></button>
     </div>
   </nav>
 
   <main class="project-detail-page">
-
     <header class="project-detail-header">
       <h1>Digital Antfarm</h1>
-
       <div class="divider"></div>
-
       <p>
-        Inspired by Dwarf Fortress and Langton's Ant, the "Digital Antfarm" started with just playing around with moving ants, represented by an 'A' on a grid. 
+        Inspired by Dwarf Fortress and Langton's Ant, the "Digital Antfarm" started with just playing around with moving ants, represented by an 'A' on a grid.
         Over time it grew into a simulation of a fantasy world where there are terrains, objects, and animals which each have their own unique priority queues.
       </p>
     </header>
 
     <div class="project-back-row">
-      <a class="back-to-projects" href="index.html#projects">← Back to Projects</a>
+      <a class="back-to-projects" href="/BryceLarson/#projects">← Back to Projects</a>
     </div>
 
     <section class="project-gallery" aria-label="Digital Antfarm media">
-
       <article class="project-media-card">
         <video controls preload="metadata" playsinline>
           <source src="digital%20antfarm/asciiland1.mp4" type="video/mp4">
           Your browser does not support the video tag.
         </video>
         <h2>ASCII Land I</h2>
-        <p>
-          First embedded video from the Digital Antfarm project.
-          If the embedded player does not load, open the video directly:
-          <a href="digital%20antfarm/asciiland1.mp4" target="_blank" rel="noopener noreferrer">asciiland1.mp4</a>.
-        </p>
+        <p>First embedded video from the Digital Antfarm project.</p>
       </article>
 
       <article class="project-media-card">
@@ -186,11 +157,7 @@
           Your browser does not support the video tag.
         </video>
         <h2>ASCII Land II</h2>
-        <p>
-          Second embedded video from the Digital Antfarm project.
-          If the embedded player does not load, open the video directly:
-          <a href="digital%20antfarm/asciiland2.mp4" target="_blank" rel="noopener noreferrer">asciiland2.mp4</a>.
-        </p>
+        <p>Second embedded video from the Digital Antfarm project.</p>
       </article>
 
       <article class="project-media-card">
@@ -199,11 +166,7 @@
           Your browser does not support the video tag.
         </video>
         <h2>Lightning Scepter</h2>
-        <p>
-          Demonstration of the lightning scepter effect.
-          If the embedded player does not load, open the video directly:
-          <a href="digital%20antfarm/lightning_scepter.mp4" target="_blank" rel="noopener noreferrer">lightning_scepter.mp4</a>.
-        </p>
+        <p>Demonstration of the lightning scepter effect.</p>
       </article>
 
       <article class="project-media-card">
@@ -212,11 +175,7 @@
           Your browser does not support the video tag.
         </video>
         <h2>Ice Scepter</h2>
-        <p>
-          Demonstration of the ice scepter effect.
-          If the embedded player does not load, open the video directly:
-          <a href="digital%20antfarm/ice_scepter.mp4" target="_blank" rel="noopener noreferrer">ice_scepter.mp4</a>.
-        </p>
+        <p>Demonstration of the ice scepter effect.</p>
       </article>
 
       <article class="project-media-card">
@@ -225,31 +184,20 @@
           Your browser does not support the video tag.
         </video>
         <h2>Fire Scepter</h2>
-        <p>
-          Demonstration of the fire scepter effect.
-          If the embedded player does not load, open the video directly:
-          <a href="digital%20antfarm/fire_scepter.mp4" target="_blank" rel="noopener noreferrer">fire_scepter.mp4</a>.
-        </p>
+        <p>Demonstration of the fire scepter effect.</p>
       </article>
 
       <article class="project-media-card">
-        <img
-          src="digital%20antfarm/asciilandcreativebar.png"
-          alt="ASCII Land creative bar interface"
-        >
+        <img src="digital%20antfarm/asciilandcreativebar.png" alt="ASCII Land creative bar interface">
         <h2>Creative Bar</h2>
         <p>Interface view from the ASCII Land creative bar.</p>
       </article>
-
     </section>
 
     <section class="project-detail-grid">
       <article class="project-info-card">
         <h2>Focus</h2>
-        <p>
-          Digital Antfarm experiments with visual systems, simulation-like
-          behavior, text-based aesthetics, and interactive tool effects.
-        </p>
+        <p>Digital Antfarm experiments with visual systems, simulation-like behavior, text-based aesthetics, and interactive tool effects.</p>
       </article>
 
       <article class="project-info-card">
@@ -262,8 +210,37 @@
         </ul>
       </article>
     </section>
-
   </main>
 
+  <div class="contact-modal" id="contactModal" role="dialog" aria-modal="true" aria-labelledby="contactTitle">
+    <div class="contact-card">
+      <button class="contact-close" id="contactClose" type="button" aria-label="Close contact modal"><i class="fa-solid fa-xmark"></i></button>
+      <h2 id="contactTitle">Contact Information</h2>
+      <div class="contact-row"><i class="fa-solid fa-envelope"></i><a href="mailto:brycelarson718@gmail.com">brycelarson718@gmail.com</a></div>
+      <div class="contact-row"><i class="fa-solid fa-location-dot"></i><span>Seattle, Washington</span></div>
+      <div class="contact-socials">
+        <a href="https://www.linkedin.com/in/bryce-larson718/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+        <a href="https://instagram.com/brycel717" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+        <a href="https://github.com/Eclipse718" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const contactModal = document.getElementById("contactModal");
+    const contactOpenButton = document.querySelector(".contact-open-btn");
+    const contactCloseButton = document.getElementById("contactClose");
+
+    contactOpenButton.addEventListener("click", () => contactModal.classList.add("open"));
+    contactCloseButton.addEventListener("click", () => contactModal.classList.remove("open"));
+
+    contactModal.addEventListener("click", event => {
+      if (event.target === contactModal) contactModal.classList.remove("open");
+    });
+
+    window.addEventListener("keydown", event => {
+      if (event.key === "Escape") contactModal.classList.remove("open");
+    });
+  </script>
 </body>
 </html>
