@@ -1289,7 +1289,6 @@ button {
   line-height: 1.65;
   letter-spacing: 0.03em;
 }
-
 /* ====================== Mobile ====================== */
 
 @media screen and (max-width: 760px) {
