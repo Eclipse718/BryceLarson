@@ -1148,6 +1148,18 @@ button {
   text-transform: uppercase;
 }
 
+.timeline-header h1::after {
+  content: "";
+  display: block;
+  width: 160px;
+  height: 1px;
+  margin: 1rem auto 0;
+  background: #c9a96e;
+  box-shadow: 0 0 14px rgba(201, 169, 110, 0.45);
+}
+
+
+
 .timeline-header p,
 .writing-detail-header p,
 .project-detail-header p {
@@ -1217,7 +1229,7 @@ button {
 }
 
 .timeline-left::before {
-  right: 0;
+  right: 10px;
 }
 
 .timeline-right {
@@ -1238,7 +1250,7 @@ button {
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
   display: flex;
   align-items: center;
-  gap: 1.35rem;
+  gap: 1.6rem;
 }
 
 .timeline-left .timeline-card {
@@ -1290,6 +1302,7 @@ button {
   line-height: 1.25;
   letter-spacing: 0.03em;
 }
+
 
 .timeline-bullets {
   margin: 0;
