@@ -153,5 +153,59 @@
     });
   </script>
 
+
+  <script>
+    const timeline = document.querySelector(".timeline");
+    const timelineItems = Array.from(document.querySelectorAll(".timeline-item"));
+
+    function clampTimelineGlow(value, min, max) {
+      return Math.min(max, Math.max(min, value));
+    }
+
+    function updateTimelineGlow() {
+      if (!timeline || timelineItems.length === 0) {
+        return;
+      }
+
+      const viewportCenter = window.innerHeight / 2;
+      const slowFadeDistance = window.innerHeight * 0.92;
+      let strongestGlow = 0;
+
+      timelineItems.forEach(item => {
+        const rect = item.getBoundingClientRect();
+        const itemCenter = rect.top + rect.height / 2;
+        const distance = Math.abs(itemCenter - viewportCenter);
+
+        const rawGlow = 1 - distance / slowFadeDistance;
+        const glow = clampTimelineGlow(rawGlow, 0.08, 1);
+
+        item.style.setProperty("--timeline-glow", glow.toFixed(3));
+        item.classList.add("timeline-glow-active");
+
+        strongestGlow = Math.max(strongestGlow, glow);
+      });
+
+      timeline.style.setProperty("--timeline-line-glow", strongestGlow.toFixed(3));
+    }
+
+    let timelineGlowFrame = null;
+
+    function requestTimelineGlowUpdate() {
+      if (timelineGlowFrame) {
+        return;
+      }
+
+      timelineGlowFrame = requestAnimationFrame(() => {
+        timelineGlowFrame = null;
+        updateTimelineGlow();
+      });
+    }
+
+    window.addEventListener("scroll", requestTimelineGlowUpdate, { passive: true });
+    window.addEventListener("resize", requestTimelineGlowUpdate);
+    window.addEventListener("load", updateTimelineGlow);
+    updateTimelineGlow();
+  </script>
+
 </body>
 </html>
