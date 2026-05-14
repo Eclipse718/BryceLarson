@@ -1192,13 +1192,16 @@ button {
     #c9a96e 93%,
     transparent
   );
-  box-shadow: 0 0 18px rgba(201, 169, 110, 0.55);
+  box-shadow:
+    0 0 18px rgba(201, 169, 110, 0.42),
+    0 0 calc(14px + (34px * var(--timeline-line-glow, 0))) rgba(255, 224, 142, calc(0.16 + (0.46 * var(--timeline-line-glow, 0))));
 }
 
 .timeline-item {
   position: relative;
   width: 60%;
   margin-bottom: 4.5rem;
+  --timeline-glow: 0;
 }
 
 .timeline-item::before {
@@ -1212,14 +1215,22 @@ button {
   background:
     radial-gradient(
       circle at 35% 35%,
-      #f9e7b8,
-      #c9a96e 68%,
+      #fff8dc,
+      #e8c575 54%,
+      #c9a96e 76%,
       #8e6a32 100%
     );
-  border: 2px solid rgba(255, 235, 182, 0.82);
+  border: 2px solid rgba(255, 235, 182, calc(0.42 + (0.58 * var(--timeline-glow, 0))));
+  opacity: calc(0.44 + (0.56 * var(--timeline-glow, 0)));
+  transform: scale(calc(0.86 + (0.24 * var(--timeline-glow, 0))));
   box-shadow:
-    0 0 18px rgba(201, 169, 110, 0.82),
-    0 0 30px rgba(201, 169, 110, 0.34);
+    0 0 calc(8px + (24px * var(--timeline-glow, 0))) rgba(255, 230, 152, calc(0.24 + (0.70 * var(--timeline-glow, 0)))),
+    0 0 calc(18px + (42px * var(--timeline-glow, 0))) rgba(201, 169, 110, calc(0.12 + (0.46 * var(--timeline-glow, 0))));
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
 }
 
 .timeline-left {
@@ -1244,13 +1255,24 @@ button {
 
 .timeline-card {
   padding: 1.35rem;
-  border: 1px solid rgba(201, 169, 110, 0.35);
+  border: 1px solid rgba(201, 169, 110, calc(0.20 + (0.48 * var(--timeline-glow, 0))));
   border-radius: 16px;
-  background: rgba(255, 255, 255, 0.045);
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, calc(0.035 + (0.045 * var(--timeline-glow, 0)))),
+      rgba(255, 255, 255, calc(0.018 + (0.026 * var(--timeline-glow, 0))))
+    );
+  box-shadow:
+    0 18px 40px rgba(0, 0, 0, 0.28),
+    0 0 calc(8px + (32px * var(--timeline-glow, 0))) rgba(201, 169, 110, calc(0.04 + (0.20 * var(--timeline-glow, 0))));
   display: flex;
   align-items: center;
   gap: 1.6rem;
+  transition:
+    border-color 0.18s ease,
+    background 0.18s ease,
+    box-shadow 0.18s ease;
 }
 
 .timeline-left .timeline-card {
@@ -1323,6 +1345,35 @@ button {
   margin-bottom: 0;
 }
 
+
+
+.timeline-item.timeline-glow-active .timeline-logo-wrap {
+  box-shadow:
+    0 0 0 4px rgba(201, 169, 110, calc(0.10 + (0.20 * var(--timeline-glow, 0)))),
+    0 0 calc(20px + (34px * var(--timeline-glow, 0))) rgba(255, 225, 150, calc(0.16 + (0.34 * var(--timeline-glow, 0))));
+}
+
+.timeline-item.timeline-glow-active .timeline-text h2 {
+  color: rgba(245, 240, 232, calc(0.72 + (0.28 * var(--timeline-glow, 0))));
+  text-shadow:
+    0 0 calc(2px + (12px * var(--timeline-glow, 0))) rgba(255, 231, 160, calc(0.04 + (0.26 * var(--timeline-glow, 0))));
+}
+
+.timeline-item.timeline-glow-active .timeline-meta,
+.timeline-item.timeline-glow-active .timeline-bullets {
+  filter: brightness(calc(0.82 + (0.26 * var(--timeline-glow, 0))));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .timeline-card,
+  .timeline-item::before,
+  .timeline-logo-wrap,
+  .timeline-text h2,
+  .timeline-meta,
+  .timeline-bullets {
+    transition: none;
+  }
+}
 
 /* ====================== Mobile ====================== */
 
