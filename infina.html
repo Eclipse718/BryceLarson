@@ -7,32 +7,104 @@
 
   <title>INFINA | Bryce Larson</title>
 
-  <link rel="stylesheet" href="css/style.css?v=21">
+  <link rel="stylesheet" href="css/style.css?v=27">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+  <style>
+    .writing-detail-page {
+      padding-top: 8rem;
+      padding-bottom: 4rem;
+    }
+
+    .writing-detail-header {
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    .document-stage {
+      width: min(780px, 92vw);
+      margin: 0 auto;
+    }
+
+    .back-to-writing {
+      display: inline-flex;
+      align-items: center;
+      margin-bottom: 1rem;
+      color: #c9a96e;
+      text-decoration: none;
+      font-size: 0.95rem;
+      letter-spacing: 0.06em;
+      transition: color 0.25s ease, transform 0.25s ease;
+    }
+
+    .back-to-writing:hover {
+      color: #f0d899;
+      transform: translateX(-3px);
+    }
+
+    .document-paper {
+      width: 100%;
+      height: 94vh;
+      margin: 0 auto;
+      border-radius: 18px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(201, 169, 110, 0.28);
+      box-shadow:
+        0 24px 60px rgba(0, 0, 0, 0.38),
+        inset 0 0 28px rgba(255, 255, 255, 0.03);
+    }
+
+    .document-embed {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+      background: #111;
+    }
+
+    @media (max-width: 700px) {
+      .writing-detail-page {
+        padding-top: 7rem;
+      }
+
+      .document-stage {
+        width: 94vw;
+      }
+
+      .document-paper {
+        height: 94vh;
+      }
+    }
+  </style>
 </head>
 
 <body class="writing-body">
-  
-<nav class="topbar" aria-label="Top navigation">
-  <div class="topbar-brand">
-    <div class="topbar-avatar" aria-hidden="true">
-      <img
-        src="website-images/circlecroppedme.png"
-        alt=""
-        class="topbar-photo"
-      >
+
+  <nav class="topbar" aria-label="Top navigation">
+    <div class="topbar-brand">
+      <div class="topbar-avatar" aria-hidden="true">
+        <img
+          src="website-images/circlecroppedme.png"
+          alt=""
+          class="topbar-photo"
+        >
+      </div>
+
+      <span class="topbar-name">Bryce Larson</span>
     </div>
 
-    <span class="topbar-name">Bryce Larson</span>
-  </div>
+    <div class="topbar-links">
+      <a class="topbar-link" href="/BryceLarson/#home">Home</a>
+      <a class="topbar-link" href="/BryceLarson/#experience">Experience</a>
+      <a class="topbar-link" href="/BryceLarson/#projects">Projects</a>
+      <a class="topbar-link" href="/BryceLarson/#writing">Writing</a>
+      <button class="topbar-btn contact-open-btn" title="Contact" type="button">
+        <span>Contact</span>
+      </button>
+    </div>
+  </nav>
 
-  <div class="topbar-links">
-    <a class="topbar-link" href="index.html#home">Home</a>
-    <a class="topbar-link" href="index.html#experience">Experience</a>
-    <a class="topbar-link" href="index.html#projects">Projects</a>
-    <a class="topbar-link" href="index.html#writing">Writing</a>
-    <a class="topbar-link" href="mailto:brycelarson718@gmail.com">Contact</a>
-  </div>
-</nav>
   <main class="writing-detail-page">
 
     <header class="writing-detail-header">
@@ -40,24 +112,111 @@
 
       <div class="divider"></div>
 
-      <p>
-
-      </p>
+      <p></p>
     </header>
 
     <section class="document-stage" aria-label="INFINA document viewer">
-      <a class="back-to-writing" href="index.html#writing">← Back to Writing</a>
+
+      <a class="back-to-writing" href="/BryceLarson/#writing">
+        ← Back to Writing
+      </a>
 
       <article class="document-paper">
         <iframe
           class="document-embed"
-          src="Writings/INFINA.pdf"
+          src="Writings/INFINA.pdf#view=FitH"
           title="INFINA PDF"
         ></iframe>
       </article>
+
     </section>
 
   </main>
+
+  <div class="contact-modal" id="contactModal" role="dialog" aria-modal="true" aria-labelledby="contactTitle">
+    <div class="contact-card">
+
+      <button class="contact-close" id="contactClose" type="button" aria-label="Close contact modal">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <h2 id="contactTitle">Contact Information</h2>
+
+      <div class="contact-row">
+        <i class="fa-solid fa-envelope"></i>
+
+        <a href="mailto:brycelarson718@gmail.com">
+          brycelarson718@gmail.com
+        </a>
+      </div>
+
+      <div class="contact-row">
+        <i class="fa-solid fa-location-dot"></i>
+
+        <span>Seattle, Washington</span>
+      </div>
+
+      <div class="contact-socials">
+
+        <a
+          href="https://www.linkedin.com/in/bryce-larson718/"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="LinkedIn"
+        >
+          <i class="fa-brands fa-linkedin"></i>
+        </a>
+
+        <a
+          href="https://instagram.com/brycel717"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Instagram"
+        >
+          <i class="fa-brands fa-instagram"></i>
+        </a>
+
+        <a
+          href="https://github.com/Eclipse718"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="GitHub"
+        >
+          <i class="fa-brands fa-github"></i>
+        </a>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const contactModal = document.getElementById("contactModal");
+    const contactOpenButton = document.querySelector(".contact-open-btn");
+    const contactCloseButton = document.getElementById("contactClose");
+
+    function openContactModal() {
+      contactModal.classList.add("open");
+    }
+
+    function closeContactModal() {
+      contactModal.classList.remove("open");
+    }
+
+    contactOpenButton.addEventListener("click", openContactModal);
+    contactCloseButton.addEventListener("click", closeContactModal);
+
+    contactModal.addEventListener("click", event => {
+      if (event.target === contactModal) {
+        closeContactModal();
+      }
+    });
+
+    window.addEventListener("keydown", event => {
+      if (event.key === "Escape") {
+        closeContactModal();
+      }
+    });
+  </script>
 
 </body>
 </html>
