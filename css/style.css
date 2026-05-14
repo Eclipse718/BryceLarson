@@ -1217,7 +1217,7 @@ button {
 }
 
 .timeline-left::before {
-  right: -22px;
+  right: 0;
 }
 
 .timeline-right {
@@ -1238,7 +1238,7 @@ button {
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
   display: flex;
   align-items: center;
-  gap: 0.8rem;
+  gap: 1.35rem;
 }
 
 .timeline-left .timeline-card {
@@ -1267,9 +1267,6 @@ button {
   object-fit: contain;
 }
 
-.timeline-text {
-  padding-left: 0.45rem;
-}
 
 .timeline-text h2 {
   margin: 0 0 0.4rem;
@@ -1293,6 +1290,26 @@ button {
   line-height: 1.25;
   letter-spacing: 0.03em;
 }
+
+.timeline-bullets {
+  margin: 0;
+  padding-left: 1.25rem;
+  color: #b9b0a3;
+  line-height: 1.25;
+  letter-spacing: 0.03em;
+  text-align: left;
+  list-style-position: outside;
+}
+
+.timeline-bullets li {
+  margin-bottom: 0.55rem;
+  padding-left: 0.15rem;
+}
+
+.timeline-bullets li:last-child {
+  margin-bottom: 0;
+}
+
 
 /* ====================== Mobile ====================== */
 
