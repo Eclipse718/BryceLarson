@@ -170,8 +170,7 @@
       <div class="divider"></div>
 
       <p>
-        A generative image project exploring GAN-based image synthesis,
-        conditional training options, and generated face outputs.
+        A project exploring GAN, Generative Adversarial Network, image generation.
       </p>
     </header>
 
@@ -203,7 +202,8 @@
         <h2>Conditional Training Options</h2>
 
         <p>
-          A visual reference showing conditional model-training variations.
+          The type of faces generated can be controlled by constraining what types of images go into the image generation process.
+          The dataset I used already had the images manually tagged, so this setting just allows the user to include/ exclude images. 
         </p>
       </article>
 
@@ -216,34 +216,18 @@
         <h2>GANs Video</h2>
 
         <p>
-          A video demonstration of the GAN image-generation project.
-          If the embedded player does not load, open the video directly:
+          A video demonstration of the GAN image-generation project.<br><br>
+          GANs works by simoultaneously training two neural networks, a Generator and a Discriminator.<br>
+          The Generator attempts to learn facial patterns and is rewarded for tricking the Discriminator. Meanwhile, the Discriminator is being trained and rewarded for accurately distinguishing a real photo from image generated.<br>
+          Theoretically, in the long-term a GANs Generator might become overfit, where the Generator has learned to effectively memorize the dataset and outputs images which fool the Discriminator due to being nearly identical to a dataset image.<br>
+          In a more ideal training time, however, the Generator creates faces which draw on the pattern of what a human face tends to look like, interpolating between all the faces within the dataset.
           <a href="Gans/gansvideo.mp4" target="_blank" rel="noopener noreferrer">gansvideo.mp4</a>.
         </p>
       </article>
 
     </section>
 
-    <section class="project-detail-grid">
-      <article class="project-info-card">
-        <h2>Focus</h2>
 
-        <p>
-          This project centers on generative modeling, image synthesis,
-          and understanding how training choices influence generated results.
-        </p>
-      </article>
-
-      <article class="project-info-card">
-        <h2>Media</h2>
-
-        <ul>
-          <li>Generated image outputs</li>
-          <li>Training-option visualizations</li>
-          <li>Embedded project video with a direct fallback link</li>
-        </ul>
-      </article>
-    </section>
 
   </main>
 
