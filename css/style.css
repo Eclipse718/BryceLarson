@@ -54,7 +54,7 @@ button {
 
 .rune-field {
   position: fixed;
-  inset: 40px 0 0 0;
+  inset: 44px 0 0 0;
   z-index: 45;
   overflow: hidden;
   pointer-events: none;
@@ -164,7 +164,7 @@ button {
   left: 0;
   z-index: 200;
   width: 100%;
-  height: 40px;
+  height: 44px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -185,9 +185,9 @@ button {
 
 .topbar-avatar {
   position: relative;
-  width: 30px;
-  height: 30px;
-  flex: 0 0 30px;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
   border-radius: 50%;
   border: 1.5px solid #c9a96e;
   background: radial-gradient(circle at 35% 28%, #3f5f70, #091923 72%);
@@ -223,7 +223,7 @@ button {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  padding: 0.25rem 0.72rem;
+  padding: 0.34rem 0.78rem;
   border-radius: 999px;
   background: transparent;
   color: #c9a96e;
@@ -251,7 +251,7 @@ button {
 
 .scroll-container {
   position: fixed;
-  top: 40px;
+  top: 44px;
   left: 0;
   right: 0;
   bottom: 0;
@@ -283,7 +283,7 @@ button {
 .scroll-container::after {
   content: "";
   position: fixed;
-  top: 40px;
+  top: 44px;
   left: 0;
   right: 0;
   bottom: 0;
@@ -323,7 +323,7 @@ button {
 .page-section {
   position: relative;
   width: 100%;
-  min-height: calc(100vh - 40px);
+  min-height: calc(100vh - 44px);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -496,7 +496,7 @@ button {
 .experience-card p {
   margin: 0;
   color: #b9b0a3;
-  line-height: 1.5;
+  line-height: 1.25;
 }
 
 /* ====================== Projects ====================== */
@@ -724,7 +724,7 @@ button {
 .sidebar {
   position: fixed;
   right: 2rem;
-  top: calc(40px + ((100vh - 40px) / 2));
+  top: calc(44px + ((100vh - 44px) / 2));
   transform: translateY(-50%);
   z-index: 150;
   display: flex;
@@ -1211,7 +1211,7 @@ button {
 }
 
 .timeline-left {
-  left: -16%;
+  left: -10%;
   padding-right: 3.5rem;
   text-align: right;
 }
@@ -1267,6 +1267,10 @@ button {
   object-fit: contain;
 }
 
+.timeline-text {
+  padding-left: 0.45rem;
+}
+
 .timeline-text h2 {
   margin: 0 0 0.4rem;
   color: #f5f0e8;
@@ -1286,7 +1290,7 @@ button {
 .timeline-text p {
   margin: 0;
   color: #b9b0a3;
-  line-height: 1.5;
+  line-height: 1.25;
   letter-spacing: 0.03em;
 }
 
@@ -1294,7 +1298,7 @@ button {
 
 @media screen and (max-width: 760px) {
   .topbar {
-    height: 40px;
+    height: 44px;
     padding: 0 0.8rem;
   }
 
@@ -1320,15 +1324,15 @@ button {
   }
 
   .scroll-container {
-    top: 40px;
+    top: 44px;
   }
 
   .rune-field {
-    inset: 40px 0 0 0;
+    inset: 44px 0 0 0;
   }
 
   .page-section {
-    min-height: calc(100vh - 40px);
+    min-height: calc(100vh - 44px);
     padding: 2rem 1rem;
   }
 
@@ -1389,7 +1393,7 @@ button {
 
   .sidebar {
     right: 0.75rem;
-    top: calc(40px + ((100vh - 40px) / 2));
+    top: calc(44px + ((100vh - 44px) / 2));
   }
 
   .sidebar-btn {
@@ -1417,7 +1421,7 @@ button {
 
   .book-page p {
     font-size: 0.78rem;
-    line-height: 1.5;
+    line-height: 1.25;
   }
 
   .book-control {
