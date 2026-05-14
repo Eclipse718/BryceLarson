@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bryce Larson</title>
-  <link rel="stylesheet" href="css/style.css?v=25">
+  <link rel="stylesheet" href="css/style.css?v=26">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
   <style>
@@ -557,8 +557,8 @@
     function getRuneBounds() {
       return {
         width: Math.max(320, window.innerWidth),
-        height: Math.max(320, window.innerHeight - 54),
-        top: 54,
+        height: Math.max(320, window.innerHeight - 44),
+        top: 44,
         left: 0
       };
     }
@@ -864,7 +864,7 @@
 
       const distance = Math.hypot(
         mouse.x - item.smoothX,
-        mouse.y - (item.smoothY + 54)
+        mouse.y - (item.smoothY + 44)
       );
 
       const maxDistance = 200;
