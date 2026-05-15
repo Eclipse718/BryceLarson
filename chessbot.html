@@ -170,7 +170,7 @@
       <div class="divider"></div>
 
       <p>
-        A chess-focused automation and gameplay project shown through recorded demos.
+        A project in creating a Machine learned and algorithm based chessbot.
       </p>
     </header>
 
@@ -189,9 +189,11 @@
         <h2>Chessbot Demo I</h2>
 
         <p>
-          First embedded video from the Chessbot project.
-          If the embedded player does not load, open the video directly:
-          <a href="chessbot/chessbot1.mp4" target="_blank" rel="noopener noreferrer">chessbot1.mp4</a>.
+          Footage of the chessbot in action. This chessbot is currently much stronger when it is using a search tree algorithm as opposed to a machine learned approach.<br>
+          The search tree algorithm makes an assessment of different board states by giving each piece a weight of points and additionally assigning a weights to various positions the piece can be in. The chessbot then searches moves at a depth according to difficulty for the moves which maximize it's calculated points.<br>
+          For example, the chessbot holds that a horse is worth three points. But a horse which is placed on a central square, where it has better vision, might be worth half a point more. So the chessbot might algorithmically calculate that after trading its horse for a central horse, it's position is slightly improved.<br>
+          This same analysis is done for a variety of other pieces and conditions.
+          
         </p>
       </article>
 
@@ -204,33 +206,15 @@
         <h2>Chessbot Demo II</h2>
 
         <p>
-          Second embedded video from the Chessbot project.
-          If the embedded player does not load, open the video directly:
-          <a href="chessbot/chessbot2.mp4" target="_blank" rel="noopener noreferrer">chessbot2.mp4</a>.
+          In addition to this algorithm-based chessbot I have also made some attempts, less succesfully, at training a chessbot with machine learning.<br><br>
+          Most of my attempts with training a chessbot from scratch have involved feeding the chessbot a database of board states and using Stockfish, a much better chessbot, to "parent" my chessbot by labeling each board state with an accurate score to be used as my chessbot's training goal.<br>
+          
         </p>
       </article>
 
     </section>
 
-    <section class="project-detail-grid">
-      <article class="project-info-card">
-        <h2>Focus</h2>
 
-        <p>
-          Chessbot explores chess-oriented automation, decision-making,
-          gameplay interaction, and recorded demonstrations of the system in action.
-        </p>
-      </article>
-
-      <article class="project-info-card">
-        <h2>Media</h2>
-
-        <ul>
-          <li>Chessbot demo video I</li>
-          <li>Chessbot demo video II</li>
-        </ul>
-      </article>
-    </section>
 
   </main>
 
